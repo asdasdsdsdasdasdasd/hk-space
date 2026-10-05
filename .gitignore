@@ -1,0 +1,31 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---- 產物 ----
+# out/ 底下全部都可以重新生成（跑 scripts/ 就會再出），所以預設唔入庫。
+# 只留幾張 showcase 圖 + 渲染要用嘅 GLB 模板 + 戶型 JSON（輸入）。
+out/*
+!out/dollhouse_house.png
+!out/dollhouse_before.png
+!out/dollhouse_llm.png
+!out/dollhouse_b_before.png
+!out/dollhouse_b_llm.png
+!out/poster.png
+!out/poster_e2e.png
+!out/diag_paths.png
+!out/templates_contact_sheet.png
+!out/plan_hk_*.json
+!out/templates/
+
+# ---- 大型快取 ----
+*.pkl
+*.db
+*.db-*
+
+# ---- 系統 / 編輯器 ----
+.DS_Store
+.idea/
+.vscode/

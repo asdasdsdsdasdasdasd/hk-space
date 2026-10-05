@@ -1,0 +1,403 @@
+{
+ "_note": "固定洁具 —— 不是可移动家具，是由來去水位/煤氣喉钉死的设施。价格是占位值。",
+ "skus": [
+  {
+   "id": "fix-toilet",
+   "name_zh": "座廁",
+   "name_en": "toilet",
+   "category": "toilet",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 400,
+    "d": 700,
+    "h": 780
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     400,
+     0
+    ],
+    [
+     400,
+     700
+    ],
+    [
+     0,
+     700
+    ]
+   ],
+   "clearance": {
+    "front": 600,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "floor"
+   ],
+   "can_support": null,
+   "visual": {
+    "lightness_L": 92,
+    "opacity": 1,
+    "reflectivity": 0.35,
+    "openness": 0,
+    "color_family": "cool",
+    "visual_mass_index": 0.12
+   },
+   "price_hkd": 1800,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 0,
+   "assembly": "pre_assembled"
+  },
+  {
+   "id": "fix-basin",
+   "name_zh": "洗手盆",
+   "name_en": "wash basin",
+   "category": "basin",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 600,
+    "d": 450,
+    "h": 850
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     600,
+     0
+    ],
+    [
+     600,
+     450
+    ],
+    [
+     0,
+     450
+    ]
+   ],
+   "clearance": {
+    "front": 700,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "floor"
+   ],
+   "can_support": null,
+   "visual": {
+    "lightness_L": 94,
+    "opacity": 1,
+    "reflectivity": 0.45,
+    "openness": 0,
+    "color_family": "cool",
+    "visual_mass_index": 0.1
+   },
+   "price_hkd": 1200,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 0,
+   "assembly": "pre_assembled"
+  },
+  {
+   "id": "fix-shower",
+   "name_zh": "淋浴間",
+   "name_en": "shower",
+   "category": "shower",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 900,
+    "d": 900,
+    "h": 2000
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     900,
+     0
+    ],
+    [
+     900,
+     900
+    ],
+    [
+     0,
+     900
+    ]
+   ],
+   "clearance": {
+    "front": 600,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "floor"
+   ],
+   "can_support": null,
+   "visual": {
+    "lightness_L": 88,
+    "opacity": 0.25,
+    "reflectivity": 0.3,
+    "openness": 0.5,
+    "color_family": "cool",
+    "visual_mass_index": 0.18
+   },
+   "price_hkd": 3500,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 0,
+   "assembly": "pre_assembled"
+  },
+  {
+   "id": "fix-bathtub",
+   "name_zh": "浴缸",
+   "name_en": "bathtub",
+   "category": "bathtub",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 1500,
+    "d": 700,
+    "h": 550
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     1500,
+     0
+    ],
+    [
+     1500,
+     700
+    ],
+    [
+     0,
+     700
+    ]
+   ],
+   "clearance": {
+    "front": 600,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "floor"
+   ],
+   "can_support": null,
+   "visual": {
+    "lightness_L": 93,
+    "opacity": 1,
+    "reflectivity": 0.25,
+    "openness": 0,
+    "color_family": "cool",
+    "visual_mass_index": 0.24
+   },
+   "price_hkd": 4200,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 0,
+   "assembly": "pre_assembled"
+  },
+  {
+   "id": "fix-stove",
+   "name_zh": "灶台",
+   "name_en": "cooktop",
+   "category": "stove",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 600,
+    "d": 520,
+    "h": 850
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     600,
+     0
+    ],
+    [
+     600,
+     520
+    ],
+    [
+     0,
+     520
+    ]
+   ],
+   "clearance": {
+    "front": 900,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "floor"
+   ],
+   "can_support": null,
+   "visual": {
+    "lightness_L": 55,
+    "opacity": 1,
+    "reflectivity": 0.2,
+    "openness": 0,
+    "color_family": "cool",
+    "visual_mass_index": 0.22
+   },
+   "price_hkd": 2600,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 0,
+   "assembly": "pre_assembled"
+  },
+  {
+   "id": "fix-hood",
+   "name_zh": "抽油煙機",
+   "name_en": "range hood",
+   "category": "range_hood",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 750,
+    "d": 500,
+    "h": 570
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     750,
+     0
+    ],
+    [
+     750,
+     500
+    ],
+    [
+     0,
+     500
+    ]
+   ],
+   "clearance": {
+    "front": 0,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "wall"
+   ],
+   "can_support": null,
+   "visual": {
+    "lightness_L": 72,
+    "opacity": 1,
+    "reflectivity": 0.55,
+    "openness": 0,
+    "color_family": "cool",
+    "visual_mass_index": 0.14
+   },
+   "price_hkd": 2200,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 0,
+   "assembly": "pre_assembled"
+  },
+  {
+   "id": "fix-counter",
+   "name_zh": "廚櫃檯面",
+   "name_en": "kitchen counter",
+   "category": "kitchen_counter",
+   "retailer": "HK retail (placeholder)",
+   "dims": {
+    "w": 1200,
+    "d": 600,
+    "h": 880
+   },
+   "footprint_L": [
+    [
+     0,
+     0
+    ],
+    [
+     1200,
+     0
+    ],
+    [
+     1200,
+     600
+    ],
+    [
+     0,
+     600
+    ]
+   ],
+   "clearance": {
+    "front": 900,
+    "left": 0,
+    "right": 0,
+    "top": 0
+   },
+   "mount": [
+    "floor"
+   ],
+   "can_support": {
+    "max_load_kg": 40,
+    "top_polygon": [
+     [
+      0,
+      0
+     ],
+     [
+      1200,
+      0
+     ],
+     [
+      1200,
+      600
+     ],
+     [
+      0,
+      600
+     ]
+    ]
+   },
+   "visual": {
+    "lightness_L": 80,
+    "opacity": 1,
+    "reflectivity": 0.3,
+    "openness": 0,
+    "color_family": "cool",
+    "visual_mass_index": 0.2
+   },
+   "price_hkd": 3800,
+   "price_verified": false,
+   "url": "",
+   "stock": "in_stock",
+   "storage_volume_L": 180,
+   "assembly": "pre_assembled"
+  }
+ ]
+}

@@ -1,0 +1,656 @@
+{
+  "flat_id": "f_hk_b",
+  "units": "mm",
+  "rooms": [
+    {
+      "id": "living",
+      "label": "客廳",
+      "polygon": [
+        [
+          0,
+          4590
+        ],
+        [
+          2240,
+          4590
+        ],
+        [
+          2240,
+          1695
+        ],
+        [
+          2290,
+          1690
+        ],
+        [
+          2295,
+          1640
+        ],
+        [
+          5790,
+          1640
+        ],
+        [
+          5790,
+          0
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "area_mm2": 16162747,
+      "walls": [
+        {
+          "id": "w0",
+          "a": [
+            -105,
+            -105
+          ],
+          "b": [
+            5895,
+            -105
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w1",
+          "a": [
+            5895,
+            -105
+          ],
+          "b": [
+            5895,
+            4695
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w2",
+          "a": [
+            5895,
+            4695
+          ],
+          "b": [
+            -105,
+            4695
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w3",
+          "a": [
+            -105,
+            4695
+          ],
+          "b": [
+            -105,
+            -105
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w4",
+          "a": [
+            2295,
+            1695
+          ],
+          "b": [
+            5895,
+            1695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w5",
+          "a": [
+            2295,
+            1695
+          ],
+          "b": [
+            2295,
+            4695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w6",
+          "a": [
+            2295,
+            3295
+          ],
+          "b": [
+            5895,
+            3295
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        }
+      ],
+      "openings": [
+        {
+          "id": "n0",
+          "wall": "w0",
+          "kind": "window",
+          "center_mm": 3000,
+          "width_mm": 1500,
+          "swing": null
+        },
+        {
+          "id": "n1",
+          "wall": "w2",
+          "kind": "window",
+          "center_mm": 4800,
+          "width_mm": 1200,
+          "swing": null
+        },
+        {
+          "id": "n2",
+          "wall": "w3",
+          "kind": "window",
+          "center_mm": 1000,
+          "width_mm": 1000,
+          "swing": null
+        },
+        {
+          "id": "d3",
+          "wall": "w3",
+          "kind": "door",
+          "center_mm": 3200,
+          "width_mm": 900,
+          "swing": {
+            "dir": "in",
+            "hinge": "right"
+          }
+        },
+        {
+          "id": "d4",
+          "wall": "w4",
+          "kind": "door",
+          "center_mm": 1800,
+          "width_mm": 850,
+          "swing": {
+            "dir": "in",
+            "hinge": "left"
+          }
+        },
+        {
+          "id": "d5",
+          "wall": "w5",
+          "kind": "door",
+          "center_mm": 2300,
+          "width_mm": 750,
+          "swing": {
+            "dir": "in",
+            "hinge": "left"
+          }
+        }
+      ],
+      "height_mm": 2450,
+      "height_field": [
+        {
+          "region": [
+            [
+              2295,
+              1595
+            ],
+            [
+              5895,
+              1595
+            ],
+            [
+              5895,
+              1795
+            ],
+            [
+              2295,
+              1795
+            ]
+          ],
+          "z_max": 2050,
+          "kind": "beam"
+        }
+      ]
+    },
+    {
+      "id": "bedroom",
+      "label": "睡房",
+      "polygon": [
+        [
+          2350,
+          1750
+        ],
+        [
+          2350,
+          3240
+        ],
+        [
+          5790,
+          3240
+        ],
+        [
+          5790,
+          1750
+        ]
+      ],
+      "area_mm2": 5152520,
+      "walls": [
+        {
+          "id": "w0",
+          "a": [
+            5895,
+            -105
+          ],
+          "b": [
+            5895,
+            4695
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w1",
+          "a": [
+            2295,
+            1695
+          ],
+          "b": [
+            5895,
+            1695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w2",
+          "a": [
+            2295,
+            1695
+          ],
+          "b": [
+            2295,
+            4695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w3",
+          "a": [
+            2295,
+            3295
+          ],
+          "b": [
+            5895,
+            3295
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w4",
+          "a": [
+            3795,
+            3295
+          ],
+          "b": [
+            3795,
+            4695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        }
+      ],
+      "openings": [
+        {
+          "id": "n0",
+          "wall": "w0",
+          "kind": "window",
+          "center_mm": 2600,
+          "width_mm": 1400,
+          "swing": null
+        },
+        {
+          "id": "d1",
+          "wall": "w1",
+          "kind": "door",
+          "center_mm": 1800,
+          "width_mm": 850,
+          "swing": {
+            "dir": "in",
+            "hinge": "left"
+          }
+        },
+        {
+          "id": "d2",
+          "wall": "w3",
+          "kind": "door",
+          "center_mm": 2400,
+          "width_mm": 700,
+          "swing": {
+            "dir": "in",
+            "hinge": "right"
+          }
+        }
+      ],
+      "height_mm": 2450,
+      "height_field": [
+        {
+          "region": [
+            [
+              2295,
+              1595
+            ],
+            [
+              5895,
+              1595
+            ],
+            [
+              5895,
+              1795
+            ],
+            [
+              2295,
+              1795
+            ]
+          ],
+          "z_max": 2050,
+          "kind": "beam"
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "label": "廚房",
+      "polygon": [
+        [
+          2350,
+          3350
+        ],
+        [
+          2350,
+          4590
+        ],
+        [
+          3740,
+          4590
+        ],
+        [
+          3740,
+          3350
+        ]
+      ],
+      "area_mm2": 1737975,
+      "walls": [
+        {
+          "id": "w0",
+          "a": [
+            5895,
+            4695
+          ],
+          "b": [
+            -105,
+            4695
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w1",
+          "a": [
+            2295,
+            1695
+          ],
+          "b": [
+            2295,
+            4695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w2",
+          "a": [
+            2295,
+            3295
+          ],
+          "b": [
+            5895,
+            3295
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w3",
+          "a": [
+            3795,
+            3295
+          ],
+          "b": [
+            3795,
+            4695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        }
+      ],
+      "openings": [
+        {
+          "id": "d0",
+          "wall": "w1",
+          "kind": "door",
+          "center_mm": 2300,
+          "width_mm": 750,
+          "swing": {
+            "dir": "in",
+            "hinge": "left"
+          }
+        }
+      ],
+      "height_mm": 2450,
+      "height_field": [
+        {
+          "region": [
+            [
+              2295,
+              1595
+            ],
+            [
+              5895,
+              1595
+            ],
+            [
+              5895,
+              1795
+            ],
+            [
+              2295,
+              1795
+            ]
+          ],
+          "z_max": 2050,
+          "kind": "beam"
+        }
+      ]
+    },
+    {
+      "id": "bath",
+      "label": "浴室",
+      "polygon": [
+        [
+          3850,
+          3350
+        ],
+        [
+          3850,
+          4590
+        ],
+        [
+          5790,
+          4590
+        ],
+        [
+          5790,
+          3350
+        ]
+      ],
+      "area_mm2": 2422975,
+      "walls": [
+        {
+          "id": "w0",
+          "a": [
+            5895,
+            -105
+          ],
+          "b": [
+            5895,
+            4695
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w1",
+          "a": [
+            5895,
+            4695
+          ],
+          "b": [
+            -105,
+            4695
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 200
+        },
+        {
+          "id": "w2",
+          "a": [
+            2295,
+            3295
+          ],
+          "b": [
+            5895,
+            3295
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        },
+        {
+          "id": "w3",
+          "a": [
+            3795,
+            3295
+          ],
+          "b": [
+            3795,
+            4695
+          ],
+          "type": "partition",
+          "thickness_mm": 100
+        }
+      ],
+      "openings": [
+        {
+          "id": "d0",
+          "wall": "w2",
+          "kind": "door",
+          "center_mm": 2400,
+          "width_mm": 700,
+          "swing": {
+            "dir": "in",
+            "hinge": "right"
+          }
+        }
+      ],
+      "height_mm": 2450,
+      "height_field": [
+        {
+          "region": [
+            [
+              2295,
+              1595
+            ],
+            [
+              5895,
+              1595
+            ],
+            [
+              5895,
+              1795
+            ],
+            [
+              2295,
+              1795
+            ]
+          ],
+          "z_max": 2050,
+          "kind": "beam"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "a": "bedroom",
+      "b": "living",
+      "type": "doorway",
+      "width_mm": 850
+    },
+    {
+      "a": "living",
+      "b": "kitchen",
+      "type": "doorway",
+      "width_mm": 750
+    },
+    {
+      "a": "bath",
+      "b": "bedroom",
+      "type": "doorway",
+      "width_mm": 700
+    }
+  ],
+  "fixed_services": [
+    {
+      "id": "floor_drain_kitchen",
+      "kind": "floor_drain",
+      "room": "kitchen",
+      "point": [
+        2700,
+        4240
+      ]
+    },
+    {
+      "id": "floor_drain_bath",
+      "kind": "floor_drain",
+      "room": "bath",
+      "point": [
+        4150,
+        4290
+      ]
+    }
+  ],
+  "entry": {
+    "room": "living",
+    "point": [
+      -205,
+      1495
+    ]
+  },
+  "meta": {
+    "source": "synthetic_truth",
+    "confidence": 1.0,
+    "plan_size_mm": [
+      6000,
+      4800
+    ],
+    "px_per_mm": 0.22,
+    "rotation_deg": 1.4
+  }
+}

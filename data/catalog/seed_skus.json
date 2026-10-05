@@ -1,0 +1,10431 @@
+{
+  "schema_version": "1.0",
+  "unit": "mm",
+  "generated_by": "build_catalog.py",
+  "total": 150,
+  "price_verified_all_false": true,
+  "vmi_raw_min": 4.3e-05,
+  "vmi_raw_max": 1.089793,
+  "skus": [
+    {
+      "id": "ikea-hk-40300605",
+      "name_zh": "MALM 高架床框",
+      "name_en": "MALM High bed frame",
+      "category": "bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1560,
+        "d": 2090,
+        "h": 1000
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1560,
+          0
+        ],
+        [
+          1560,
+          2090
+        ],
+        [
+          0,
+          2090
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1560,
+            0
+          ],
+          [
+            1560,
+            2090
+          ],
+          [
+            0,
+            2090
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 78,
+        "opacity": 0.35,
+        "reflectivity": 0.15,
+        "openness": 0.6,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2303
+      },
+      "price_hkd": 2790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 420,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10300922",
+      "name_zh": "MALM 高架床框",
+      "name_en": "MALM High bed frame",
+      "category": "bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1560,
+        "d": 2090,
+        "h": 1000
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1560,
+          0
+        ],
+        [
+          1560,
+          2090
+        ],
+        [
+          0,
+          2090
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1560,
+            0
+          ],
+          [
+            1560,
+            2090
+          ],
+          [
+            0,
+            2090
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 0.35,
+        "reflectivity": 0.15,
+        "openness": 0.6,
+        "color_family": "neutral",
+        "visual_mass_index": 0.8167
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 420,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10308841",
+      "name_zh": "NEIDEN 松木床框",
+      "name_en": "NEIDEN Bed frame, pine",
+      "category": "bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1500,
+        "d": 2000,
+        "h": 400
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1500,
+          0
+        ],
+        [
+          1500,
+          2000
+        ],
+        [
+          0,
+          2000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1500,
+            0
+          ],
+          [
+            1500,
+            2000
+          ],
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.4,
+        "reflectivity": 0.1,
+        "openness": 0.7,
+        "color_family": "warm",
+        "visual_mass_index": 0.1233
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10316760",
+      "name_zh": "SONGESAND 床框",
+      "name_en": "SONGESAND Bed frame",
+      "category": "bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1570,
+        "d": 2090,
+        "h": 470
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1570,
+          0
+        ],
+        [
+          1570,
+          2090
+        ],
+        [
+          0,
+          2090
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1570,
+            0
+          ],
+          [
+            1570,
+            2090
+          ],
+          [
+            0,
+            2090
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.6,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1698
+      },
+      "price_hkd": 2690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10324679",
+      "name_zh": "SLÄKT 床框",
+      "name_en": "SLÄKT Bed frame",
+      "category": "bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1490,
+        "d": 2000,
+        "h": 550
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1490,
+          0
+        ],
+        [
+          1490,
+          2000
+        ],
+        [
+          0,
+          2000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1490,
+            0
+          ],
+          [
+            1490,
+            2000
+          ],
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.45,
+        "reflectivity": 0.12,
+        "openness": 0.5,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1353
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10332598",
+      "name_zh": "TARVA 松木床框",
+      "name_en": "TARVA Bed frame, pine",
+      "category": "bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1500,
+        "d": 2000,
+        "h": 420
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1500,
+          0
+        ],
+        [
+          1500,
+          2000
+        ],
+        [
+          0,
+          2000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1500,
+            0
+          ],
+          [
+            1500,
+            2000
+          ],
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.4,
+        "reflectivity": 0.1,
+        "openness": 0.7,
+        "color_family": "warm",
+        "visual_mass_index": 0.1295
+      },
+      "price_hkd": 1790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10340517",
+      "name_zh": "MYDAL 雙層床框",
+      "name_en": "MYDAL Bunk bed frame",
+      "category": "bunk_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 970,
+        "d": 2000,
+        "h": 1600
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          970,
+          0
+        ],
+        [
+          970,
+          2000
+        ],
+        [
+          0,
+          2000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            970,
+            0
+          ],
+          [
+            970,
+            2000
+          ],
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.4,
+        "reflectivity": 0.1,
+        "openness": 0.65,
+        "color_family": "warm",
+        "visual_mass_index": 0.319
+      },
+      "price_hkd": 1990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10348436",
+      "name_zh": "VITVAL 雙層床框",
+      "name_en": "VITVAL Bunk bed frame",
+      "category": "bunk_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 970,
+        "d": 2000,
+        "h": 1570
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          970,
+          0
+        ],
+        [
+          970,
+          2000
+        ],
+        [
+          0,
+          2000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            970,
+            0
+          ],
+          [
+            970,
+            2000
+          ],
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.4,
+        "reflectivity": 0.12,
+        "openness": 0.6,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2236
+      },
+      "price_hkd": 2290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10356355",
+      "name_zh": "TUFFING 雙層床框",
+      "name_en": "TUFFING Bunk bed frame",
+      "category": "bunk_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1050,
+        "d": 2000,
+        "h": 1600
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1050,
+          0
+        ],
+        [
+          1050,
+          2000
+        ],
+        [
+          0,
+          2000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1050,
+            0
+          ],
+          [
+            1050,
+            2000
+          ],
+          [
+            0,
+            2000
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 0.55,
+        "reflectivity": 0.1,
+        "openness": 0.4,
+        "color_family": "cool",
+        "visual_mass_index": 0.7631
+      },
+      "price_hkd": 2490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10364274",
+      "name_zh": "SMÅSTAD 高架床",
+      "name_en": "SMÅSTAD Loft bed",
+      "category": "loft_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2090,
+        "d": 1040,
+        "h": 1800
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2090,
+          0
+        ],
+        [
+          2090,
+          1040
+        ],
+        [
+          0,
+          1040
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            2090,
+            0
+          ],
+          [
+            2090,
+            1040
+          ],
+          [
+            0,
+            1040
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.5,
+        "reflectivity": 0.12,
+        "openness": 0.55,
+        "color_family": "neutral",
+        "visual_mass_index": 0.359
+      },
+      "price_hkd": 3990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10372193",
+      "name_zh": "STORÅ 高架床",
+      "name_en": "STORÅ Loft bed",
+      "category": "loft_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2090,
+        "d": 1040,
+        "h": 1830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2090,
+          0
+        ],
+        [
+          2090,
+          1040
+        ],
+        [
+          0,
+          1040
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            2090,
+            0
+          ],
+          [
+            2090,
+            1040
+          ],
+          [
+            0,
+            1040
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.4,
+        "reflectivity": 0.1,
+        "openness": 0.65,
+        "color_family": "warm",
+        "visual_mass_index": 0.4088
+      },
+      "price_hkd": 3290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10380112",
+      "name_zh": "VITVAL 高架床",
+      "name_en": "VITVAL Loft bed",
+      "category": "loft_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2000,
+        "d": 1040,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2000,
+          0
+        ],
+        [
+          2000,
+          1040
+        ],
+        [
+          0,
+          1040
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            2000,
+            0
+          ],
+          [
+            2000,
+            1040
+          ],
+          [
+            0,
+            1040
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.35,
+        "reflectivity": 0.12,
+        "openness": 0.7,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2271
+      },
+      "price_hkd": 2690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10388031",
+      "name_zh": "BRIMNES 床連儲物",
+      "name_en": "BRIMNES Bed frame with storage",
+      "category": "storage_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1560,
+        "d": 2090,
+        "h": 470
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1560,
+          0
+        ],
+        [
+          1560,
+          2090
+        ],
+        [
+          0,
+          2090
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1560,
+            0
+          ],
+          [
+            1560,
+            2090
+          ],
+          [
+            0,
+            2090
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.05,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2812
+      },
+      "price_hkd": 3490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 400,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10395950",
+      "name_zh": "NORDLI 床連儲物",
+      "name_en": "NORDLI Bed frame with storage",
+      "category": "storage_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1560,
+        "d": 2090,
+        "h": 500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1560,
+          0
+        ],
+        [
+          1560,
+          2090
+        ],
+        [
+          0,
+          2090
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1560,
+            0
+          ],
+          [
+            1560,
+            2090
+          ],
+          [
+            0,
+            2090
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.05,
+        "color_family": "cool",
+        "visual_mass_index": 0.6731
+      },
+      "price_hkd": 4290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 460,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10403869",
+      "name_zh": "MALM 床連儲物框",
+      "name_en": "MALM Bed frame with storage",
+      "category": "storage_bed",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1560,
+        "d": 2090,
+        "h": 1000
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1560,
+          0
+        ],
+        [
+          1560,
+          2090
+        ],
+        [
+          0,
+          2090
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 120,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1560,
+            0
+          ],
+          [
+            1560,
+            2090
+          ],
+          [
+            0,
+            2090
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 85,
+        "opacity": 0.7,
+        "reflectivity": 0.1,
+        "openness": 0.2,
+        "color_family": "warm",
+        "visual_mass_index": 0.3141
+      },
+      "price_hkd": 3790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 420,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10000000",
+      "name_zh": "PAX 到頂衣櫃",
+      "name_en": "PAX Wardrobe, to ceiling",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1000,
+        "d": 580,
+        "h": 2360
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1000,
+            0
+          ],
+          [
+            1000,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 30,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.8792
+      },
+      "price_hkd": 4490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 1000,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10007919",
+      "name_zh": "PAX 衣櫃",
+      "name_en": "PAX Wardrobe",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1000,
+        "d": 580,
+        "h": 2010
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1000,
+            0
+          ],
+          [
+            1000,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.2995
+      },
+      "price_hkd": 3490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 800,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10015838",
+      "name_zh": "PAX 開放式衣櫃框",
+      "name_en": "PAX Open wardrobe frame",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 750,
+        "d": 580,
+        "h": 2010
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          750,
+          0
+        ],
+        [
+          750,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            750,
+            0
+          ],
+          [
+            750,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.1,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.016
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 620,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10023757",
+      "name_zh": "KLEPPSTAD 衣櫃",
+      "name_en": "KLEPPSTAD Wardrobe",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1170,
+        "d": 550,
+        "h": 1760
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1170,
+          0
+        ],
+        [
+          1170,
+          550
+        ],
+        [
+          0,
+          550
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1170,
+            0
+          ],
+          [
+            1170,
+            550
+          ],
+          [
+            0,
+            550
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2078
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 700,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10031676",
+      "name_zh": "BRIMNES 衣櫃",
+      "name_en": "BRIMNES Wardrobe",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 780,
+        "d": 500,
+        "h": 1900
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          780,
+          0
+        ],
+        [
+          780,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            780,
+            0
+          ],
+          [
+            780,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 1.0,
+        "reflectivity": 0.15,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.5303
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 480,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10039595",
+      "name_zh": "PLATSA 薄身衣櫃",
+      "name_en": "PLATSA Wardrobe, shallow",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 420,
+        "h": 1810
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          420
+        ],
+        [
+          0,
+          420
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            420
+          ],
+          [
+            0,
+            420
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.2344
+      },
+      "price_hkd": 2290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 560,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10047514",
+      "name_zh": "BOAXEL 掛牆開放衣櫃",
+      "name_en": "BOAXEL Wall-mounted open wardrobe",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1000,
+        "d": 400,
+        "h": 2010
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          400
+        ],
+        [
+          0,
+          400
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1000,
+            0
+          ],
+          [
+            1000,
+            400
+          ],
+          [
+            0,
+            400
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.1,
+        "reflectivity": 0.12,
+        "openness": 0.95,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0147
+      },
+      "price_hkd": 1690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 480,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10055433",
+      "name_zh": "JONAXEL 網籃衣櫃組合",
+      "name_en": "JONAXEL Wardrobe combination, wire",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 750,
+        "d": 510,
+        "h": 1750
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          750,
+          0
+        ],
+        [
+          750,
+          510
+        ],
+        [
+          0,
+          510
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            750,
+            0
+          ],
+          [
+            750,
+            510
+          ],
+          [
+            0,
+            510
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.15,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0184
+      },
+      "price_hkd": 890,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 360,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10063352",
+      "name_zh": "AURDAL 衣櫃組合",
+      "name_en": "AURDAL Wardrobe combination",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 420,
+        "h": 2000
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          420
+        ],
+        [
+          0,
+          420
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            420
+          ],
+          [
+            0,
+            420
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.185
+      },
+      "price_hkd": 2390,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 580,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10071271",
+      "name_zh": "PAX 玻璃門衣櫃",
+      "name_en": "PAX Wardrobe with glass doors",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1000,
+        "d": 580,
+        "h": 2010
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1000,
+            0
+          ],
+          [
+            1000,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.3,
+        "reflectivity": 0.7,
+        "openness": 0.1,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0641
+      },
+      "price_hkd": 5290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 760,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10079190",
+      "name_zh": "VUKU 單門衣櫃",
+      "name_en": "VUKU Wardrobe",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 750,
+        "d": 500,
+        "h": 1830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          750,
+          0
+        ],
+        [
+          750,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            750,
+            0
+          ],
+          [
+            750,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1259
+      },
+      "price_hkd": 790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 340,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10087109",
+      "name_zh": "HAUGA 衣櫃",
+      "name_en": "HAUGA Wardrobe",
+      "category": "wardrobe",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1050,
+        "d": 550,
+        "h": 1990
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1050,
+          0
+        ],
+        [
+          1050,
+          550
+        ],
+        [
+          0,
+          550
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1050,
+            0
+          ],
+          [
+            1050,
+            550
+          ],
+          [
+            0,
+            550
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.4745
+      },
+      "price_hkd": 1990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 620,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10095028",
+      "name_zh": "MALM 六屜櫃",
+      "name_en": "MALM Chest of 6 drawers",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1600,
+        "d": 480,
+        "h": 780
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1600,
+          0
+        ],
+        [
+          1600,
+          480
+        ],
+        [
+          0,
+          480
+        ]
+      ],
+      "clearance": {
+        "front": 550,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1600,
+            0
+          ],
+          [
+            1600,
+            480
+          ],
+          [
+            0,
+            480
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1099
+      },
+      "price_hkd": 2490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 480,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10102947",
+      "name_zh": "MALM 三屜櫃",
+      "name_en": "MALM Chest of 3 drawers",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 800,
+        "d": 480,
+        "h": 780
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          480
+        ],
+        [
+          0,
+          480
+        ]
+      ],
+      "clearance": {
+        "front": 550,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            800,
+            0
+          ],
+          [
+            800,
+            480
+          ],
+          [
+            0,
+            480
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 1.0,
+        "reflectivity": 0.15,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2143
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 220,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10110866",
+      "name_zh": "KOPPANG 三屜櫃",
+      "name_en": "KOPPANG 3-drawer chest",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1080,
+        "d": 460,
+        "h": 840
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1080,
+          0
+        ],
+        [
+          1080,
+          460
+        ],
+        [
+          0,
+          460
+        ]
+      ],
+      "clearance": {
+        "front": 550,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1080,
+            0
+          ],
+          [
+            1080,
+            460
+          ],
+          [
+            0,
+            460
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0765
+      },
+      "price_hkd": 1190,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 300,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10118785",
+      "name_zh": "HEMNES 八屜櫃",
+      "name_en": "HEMNES 8-drawer chest",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1600,
+        "d": 500,
+        "h": 960
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1600,
+          0
+        ],
+        [
+          1600,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 550,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1600,
+            0
+          ],
+          [
+            1600,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1409
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 560,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10126704",
+      "name_zh": "BRIMNES 四屜櫃",
+      "name_en": "BRIMNES 4-drawer chest",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 780,
+        "d": 460,
+        "h": 1240
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          780,
+          0
+        ],
+        [
+          780,
+          460
+        ],
+        [
+          0,
+          460
+        ]
+      ],
+      "clearance": {
+        "front": 550,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            780,
+            0
+          ],
+          [
+            780,
+            460
+          ],
+          [
+            0,
+            460
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 1.0,
+        "reflectivity": 0.15,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.3184
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 400,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10134623",
+      "name_zh": "KALLAX 方格櫃",
+      "name_en": "KALLAX Shelving unit",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1470,
+        "d": 390,
+        "h": 770
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1470,
+          0
+        ],
+        [
+          1470,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1470,
+            0
+          ],
+          [
+            1470,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.5,
+        "reflectivity": 0.12,
+        "openness": 0.8,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0405
+      },
+      "price_hkd": 1090,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 420,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10142542",
+      "name_zh": "KALLAX 方格櫃",
+      "name_en": "KALLAX Shelving unit",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 770,
+        "d": 390,
+        "h": 770
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          770,
+          0
+        ],
+        [
+          770,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            770,
+            0
+          ],
+          [
+            770,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 0.5,
+        "reflectivity": 0.15,
+        "openness": 0.8,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0827
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 200,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10150461",
+      "name_zh": "EKET 組合櫃",
+      "name_en": "EKET Cabinet combination",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1050,
+        "d": 350,
+        "h": 700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1050,
+          0
+        ],
+        [
+          1050,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1050,
+            0
+          ],
+          [
+            1050,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.4,
+        "reflectivity": 0.1,
+        "openness": 0.7,
+        "color_family": "warm",
+        "visual_mass_index": 0.0264
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 300,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10158380",
+      "name_zh": "FABRIKÖR 玻璃門櫃",
+      "name_en": "FABRIKÖR Glass-door cabinet",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 800,
+        "d": 420,
+        "h": 1500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          420
+        ],
+        [
+          0,
+          420
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            800,
+            0
+          ],
+          [
+            800,
+            420
+          ],
+          [
+            0,
+            420
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 28,
+        "opacity": 0.3,
+        "reflectivity": 0.7,
+        "openness": 0.2,
+        "color_family": "cool",
+        "visual_mass_index": 0.0999
+      },
+      "price_hkd": 2490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 400,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10166299",
+      "name_zh": "NORDKISA 竹屜櫃",
+      "name_en": "NORDKISA Chest of drawers, bamboo",
+      "category": "cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 760,
+        "d": 400,
+        "h": 760
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          760,
+          0
+        ],
+        [
+          760,
+          400
+        ],
+        [
+          0,
+          400
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            760,
+            0
+          ],
+          [
+            760,
+            400
+          ],
+          [
+            0,
+            400
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.0636
+      },
+      "price_hkd": 1990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 180,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10791900",
+      "name_zh": "BILLY 書櫃",
+      "name_en": "BILLY Bookcase",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 800,
+        "d": 280,
+        "h": 2020
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          280
+        ],
+        [
+          0,
+          280
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            800,
+            0
+          ],
+          [
+            800,
+            280
+          ],
+          [
+            0,
+            280
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.8,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0664
+      },
+      "price_hkd": 790,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 240,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10799819",
+      "name_zh": "BILLY 書櫃",
+      "name_en": "BILLY Bookcase",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 800,
+        "d": 280,
+        "h": 2020
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          280
+        ],
+        [
+          0,
+          280
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            800,
+            0
+          ],
+          [
+            800,
+            280
+          ],
+          [
+            0,
+            280
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 30,
+        "opacity": 0.8,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "warm",
+        "visual_mass_index": 0.2325
+      },
+      "price_hkd": 990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 240,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10807738",
+      "name_zh": "BILLY 窄書櫃",
+      "name_en": "BILLY Bookcase, narrow",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 400,
+        "d": 280,
+        "h": 2020
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          400,
+          0
+        ],
+        [
+          400,
+          280
+        ],
+        [
+          0,
+          280
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            400,
+            0
+          ],
+          [
+            400,
+            280
+          ],
+          [
+            0,
+            280
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.8,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0332
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 120,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10815657",
+      "name_zh": "KALLAX 層架",
+      "name_en": "KALLAX Shelving unit",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 770,
+        "d": 390,
+        "h": 1470
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          770,
+          0
+        ],
+        [
+          770,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            770,
+            0
+          ],
+          [
+            770,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.4,
+        "reflectivity": 0.12,
+        "openness": 0.75,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0324
+      },
+      "price_hkd": 890,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 300,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10823576",
+      "name_zh": "KALLAX 層架",
+      "name_en": "KALLAX Shelving unit",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 770,
+        "d": 390,
+        "h": 1470
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          770,
+          0
+        ],
+        [
+          770,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            770,
+            0
+          ],
+          [
+            770,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 0.4,
+        "reflectivity": 0.15,
+        "openness": 0.75,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1263
+      },
+      "price_hkd": 890,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 300,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10831495",
+      "name_zh": "EKET 層架",
+      "name_en": "EKET Shelving unit",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 700,
+        "d": 350,
+        "h": 700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          700,
+          0
+        ],
+        [
+          700,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            700,
+            0
+          ],
+          [
+            700,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.4,
+        "reflectivity": 0.1,
+        "openness": 0.7,
+        "color_family": "warm",
+        "visual_mass_index": 0.0176
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 180,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10839414",
+      "name_zh": "HYLLIS 層架",
+      "name_en": "HYLLIS Shelving unit",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 270,
+        "h": 1400
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          270
+        ],
+        [
+          0,
+          270
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            270
+          ],
+          [
+            0,
+            270
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 90,
+        "opacity": 0.1,
+        "reflectivity": 0.75,
+        "openness": 0.95,
+        "color_family": "cool",
+        "visual_mass_index": 0.002
+      },
+      "price_hkd": 349,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 90,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10847333",
+      "name_zh": "IVAR 層架",
+      "name_en": "IVAR Shelving unit",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 890,
+        "d": 300,
+        "h": 1790
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          890,
+          0
+        ],
+        [
+          890,
+          300
+        ],
+        [
+          0,
+          300
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            890,
+            0
+          ],
+          [
+            890,
+            300
+          ],
+          [
+            0,
+            300
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.2,
+        "reflectivity": 0.1,
+        "openness": 0.9,
+        "color_family": "warm",
+        "visual_mass_index": 0.0245
+      },
+      "price_hkd": 1090,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 260,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10855252",
+      "name_zh": "OMAR 層架",
+      "name_en": "OMAR Shelving unit",
+      "category": "shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 900,
+        "d": 450,
+        "h": 1810
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          450
+        ],
+        [
+          0,
+          450
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            900,
+            0
+          ],
+          [
+            900,
+            450
+          ],
+          [
+            0,
+            450
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 90,
+        "opacity": 0.1,
+        "reflectivity": 0.75,
+        "openness": 0.95,
+        "color_family": "cool",
+        "visual_mass_index": 0.0067
+      },
+      "price_hkd": 990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 320,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10174218",
+      "name_zh": "BESTÅ 電視櫃",
+      "name_en": "BESTÅ TV bench",
+      "category": "tv_bench",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1800,
+        "d": 420,
+        "h": 380
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1800,
+          0
+        ],
+        [
+          1800,
+          420
+        ],
+        [
+          0,
+          420
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1800,
+            0
+          ],
+          [
+            1800,
+            420
+          ],
+          [
+            0,
+            420
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.8,
+        "reflectivity": 0.12,
+        "openness": 0.4,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0421
+      },
+      "price_hkd": 1890,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 260,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10182137",
+      "name_zh": "LACK 電視櫃",
+      "name_en": "LACK TV bench",
+      "category": "tv_bench",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1490,
+        "d": 350,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1490,
+          0
+        ],
+        [
+          1490,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 40,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1490,
+            0
+          ],
+          [
+            1490,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 1.0,
+        "reflectivity": 0.15,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1679
+      },
+      "price_hkd": 590,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 120,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10190056",
+      "name_zh": "FJÄLLBO 電視櫃",
+      "name_en": "FJÄLLBO TV bench",
+      "category": "tv_bench",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1500,
+        "d": 360,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1500,
+          0
+        ],
+        [
+          1500,
+          360
+        ],
+        [
+          0,
+          360
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 45,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1500,
+            0
+          ],
+          [
+            1500,
+            360
+          ],
+          [
+            0,
+            360
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.5,
+        "reflectivity": 0.1,
+        "openness": 0.6,
+        "color_family": "warm",
+        "visual_mass_index": 0.0312
+      },
+      "price_hkd": 1790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 180,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10197975",
+      "name_zh": "HAUGA 電視櫃",
+      "name_en": "HAUGA TV bench",
+      "category": "tv_bench",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1380,
+        "d": 410,
+        "h": 570
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1380,
+          0
+        ],
+        [
+          1380,
+          410
+        ],
+        [
+          0,
+          410
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1380,
+            0
+          ],
+          [
+            1380,
+            410
+          ],
+          [
+            0,
+            410
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 0.8,
+        "reflectivity": 0.1,
+        "openness": 0.3,
+        "color_family": "cool",
+        "visual_mass_index": 0.1065
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 220,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10205894",
+      "name_zh": "VITTSJÖ 電視櫃",
+      "name_en": "VITTSJÖ TV bench, glass",
+      "category": "tv_bench",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1000,
+        "d": 360,
+        "h": 540
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          360
+        ],
+        [
+          0,
+          360
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 35,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1000,
+            0
+          ],
+          [
+            1000,
+            360
+          ],
+          [
+            0,
+            360
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 88,
+        "opacity": 0.3,
+        "reflectivity": 0.7,
+        "openness": 0.45,
+        "color_family": "cool",
+        "visual_mass_index": 0.0064
+      },
+      "price_hkd": 1090,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 140,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10213813",
+      "name_zh": "TRONES 鞋櫃",
+      "name_en": "TRONES Shoe cabinet",
+      "category": "shoe_cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 520,
+        "d": 390,
+        "h": 390
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          520,
+          0
+        ],
+        [
+          520,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            520,
+            0
+          ],
+          [
+            520,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0145
+      },
+      "price_hkd": 350,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 60,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10221732",
+      "name_zh": "MACKAPÄR 鞋及外套櫃",
+      "name_en": "MACKAPÄR Shoe and coat cabinet",
+      "category": "shoe_cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 800,
+        "d": 350,
+        "h": 1250
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            800,
+            0
+          ],
+          [
+            800,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.85,
+        "reflectivity": 0.12,
+        "openness": 0.15,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0546
+      },
+      "price_hkd": 990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 180,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10229651",
+      "name_zh": "HEMNES 鞋櫃",
+      "name_en": "HEMNES Shoe cabinet",
+      "category": "shoe_cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 890,
+        "d": 340,
+        "h": 890
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          890,
+          0
+        ],
+        [
+          890,
+          340
+        ],
+        [
+          0,
+          340
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            890,
+            0
+          ],
+          [
+            890,
+            340
+          ],
+          [
+            0,
+            340
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0494
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 160,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10237570",
+      "name_zh": "BISSA 鞋櫃",
+      "name_en": "BISSA Shoe cabinet",
+      "category": "shoe_cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 490,
+        "d": 280,
+        "h": 940
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          490,
+          0
+        ],
+        [
+          490,
+          280
+        ],
+        [
+          0,
+          280
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            490,
+            0
+          ],
+          [
+            490,
+            280
+          ],
+          [
+            0,
+            280
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 1.0,
+        "reflectivity": 0.15,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0923
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 80,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10245489",
+      "name_zh": "EKET 開放鞋架",
+      "name_en": "EKET Open shoe shelving",
+      "category": "shoe_cabinet",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 700,
+        "d": 350,
+        "h": 700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          700,
+          0
+        ],
+        [
+          700,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            700,
+            0
+          ],
+          [
+            700,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.2,
+        "reflectivity": 0.1,
+        "openness": 0.9,
+        "color_family": "warm",
+        "visual_mass_index": 0.0088
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 120,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10411788",
+      "name_zh": "LAGKAPTEN 書桌",
+      "name_en": "LAGKAPTEN Desk",
+      "category": "desk",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 600,
+        "h": 730
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 40,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.6,
+        "reflectivity": 0.12,
+        "openness": 0.5,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0578
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10419707",
+      "name_zh": "MICKE 書桌",
+      "name_en": "MICKE Desk",
+      "category": "desk",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1050,
+        "d": 500,
+        "h": 750
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1050,
+          0
+        ],
+        [
+          1050,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 40,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1050,
+            0
+          ],
+          [
+            1050,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.9,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "neutral",
+        "visual_mass_index": 0.065
+      },
+      "price_hkd": 890,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 60,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10427626",
+      "name_zh": "ALEX 書桌",
+      "name_en": "ALEX Desk",
+      "category": "desk",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1320,
+        "d": 580,
+        "h": 760
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1320,
+          0
+        ],
+        [
+          1320,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 550,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 40,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1320,
+            0
+          ],
+          [
+            1320,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.9,
+        "reflectivity": 0.12,
+        "openness": 0.3,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0961
+      },
+      "price_hkd": 1590,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 120,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10435545",
+      "name_zh": "BEKANT 書桌",
+      "name_en": "BEKANT Desk",
+      "category": "desk",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 600,
+        "h": 720
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.1332
+      },
+      "price_hkd": 1990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10443464",
+      "name_zh": "TROTTEN 書桌",
+      "name_en": "TROTTEN Desk",
+      "category": "desk",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 700,
+        "h": 750
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          700
+        ],
+        [
+          0,
+          700
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            700
+          ],
+          [
+            0,
+            700
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 0.95,
+        "reflectivity": 0.1,
+        "openness": 0.15,
+        "color_family": "cool",
+        "visual_mass_index": 0.2471
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 80,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10451383",
+      "name_zh": "HAUGA 書桌",
+      "name_en": "HAUGA Desk",
+      "category": "desk",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1380,
+        "d": 500,
+        "h": 750
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1380,
+          0
+        ],
+        [
+          1380,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 40,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1380,
+            0
+          ],
+          [
+            1380,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 0.9,
+        "reflectivity": 0.1,
+        "openness": 0.3,
+        "color_family": "cool",
+        "visual_mass_index": 0.1923
+      },
+      "price_hkd": 1190,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 100,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10459302",
+      "name_zh": "LISABO 餐桌",
+      "name_en": "LISABO Table",
+      "category": "dining_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1400,
+        "d": 780,
+        "h": 740
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1400,
+          0
+        ],
+        [
+          1400,
+          780
+        ],
+        [
+          0,
+          780
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1400,
+            0
+          ],
+          [
+            1400,
+            780
+          ],
+          [
+            0,
+            780
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.6,
+        "reflectivity": 0.1,
+        "openness": 0.5,
+        "color_family": "warm",
+        "visual_mass_index": 0.1245
+      },
+      "price_hkd": 1990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10467221",
+      "name_zh": "EKEDALEN 伸縮餐桌",
+      "name_en": "EKEDALEN Extendable table",
+      "category": "dining_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 700,
+        "h": 750
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          700
+        ],
+        [
+          0,
+          700
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            700
+          ],
+          [
+            0,
+            700
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1156
+      },
+      "price_hkd": 2290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10475140",
+      "name_zh": "NORDEN 摺疊餐桌",
+      "name_en": "NORDEN Gateleg table",
+      "category": "dining_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 900,
+        "d": 900,
+        "h": 730
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          900
+        ],
+        [
+          0,
+          900
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 45,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            900,
+            0
+          ],
+          [
+            900,
+            900
+          ],
+          [
+            0,
+            900
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 76,
+        "opacity": 0.8,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "warm",
+        "visual_mass_index": 0.1041
+      },
+      "price_hkd": 1790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 60,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10483059",
+      "name_zh": "TARNO 餐桌",
+      "name_en": "TARNO Table",
+      "category": "dining_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1100,
+        "d": 700,
+        "h": 740
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1100,
+          0
+        ],
+        [
+          1100,
+          700
+        ],
+        [
+          0,
+          700
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 50,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1100,
+            0
+          ],
+          [
+            1100,
+            700
+          ],
+          [
+            0,
+            700
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 30,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.366
+      },
+      "price_hkd": 1490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10490978",
+      "name_zh": "LACK 邊桌",
+      "name_en": "LACK Side table",
+      "category": "side_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 550,
+        "d": 550,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          550,
+          0
+        ],
+        [
+          550,
+          550
+        ],
+        [
+          0,
+          550
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            550,
+            0
+          ],
+          [
+            550,
+            550
+          ],
+          [
+            0,
+            550
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0249
+      },
+      "price_hkd": 190,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10498897",
+      "name_zh": "GLADOM 托盤邊桌",
+      "name_en": "GLADOM Tray table",
+      "category": "side_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 450,
+        "d": 450,
+        "h": 530
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          450,
+          0
+        ],
+        [
+          450,
+          450
+        ],
+        [
+          0,
+          450
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            450,
+            0
+          ],
+          [
+            450,
+            450
+          ],
+          [
+            0,
+            450
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.3,
+        "reflectivity": 0.12,
+        "openness": 0.7,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0059
+      },
+      "price_hkd": 249,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10506816",
+      "name_zh": "NORDKISA 竹邊桌",
+      "name_en": "NORDKISA Bedside table, bamboo",
+      "category": "side_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 450,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          450
+        ],
+        [
+          0,
+          450
+        ]
+      ],
+      "clearance": {
+        "front": 450,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            450
+          ],
+          [
+            0,
+            450
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 0.9,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "warm",
+        "visual_mass_index": 0.0301
+      },
+      "price_hkd": 790,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 40,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10530573",
+      "name_zh": "ADDE 椅",
+      "name_en": "ADDE Chair",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 450,
+        "d": 500,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          450,
+          0
+        ],
+        [
+          450,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.2,
+        "reflectivity": 0.12,
+        "openness": 0.8,
+        "color_family": "neutral",
+        "visual_mass_index": 0.007
+      },
+      "price_hkd": 99,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10538492",
+      "name_zh": "JANINGE 椅",
+      "name_en": "JANINGE Chair",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 460,
+        "d": 520,
+        "h": 820
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          460,
+          0
+        ],
+        [
+          460,
+          520
+        ],
+        [
+          0,
+          520
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.8,
+        "reflectivity": 0.12,
+        "openness": 0.2,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0288
+      },
+      "price_hkd": 390,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10546411",
+      "name_zh": "TEODORES 椅",
+      "name_en": "TEODORES Chair",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 440,
+        "d": 500,
+        "h": 800
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          440,
+          0
+        ],
+        [
+          440,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 0.4,
+        "reflectivity": 0.12,
+        "openness": 0.6,
+        "color_family": "warm",
+        "visual_mass_index": 0.0193
+      },
+      "price_hkd": 290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10554330",
+      "name_zh": "ODGER 椅",
+      "name_en": "ODGER Chair",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 460,
+        "d": 520,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          460,
+          0
+        ],
+        [
+          460,
+          520
+        ],
+        [
+          0,
+          520
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.5,
+        "reflectivity": 0.1,
+        "openness": 0.5,
+        "color_family": "warm",
+        "visual_mass_index": 0.0261
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10562249",
+      "name_zh": "MARIUS 圓凳",
+      "name_en": "MARIUS Stool",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 360,
+        "d": 360,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          360,
+          0
+        ],
+        [
+          360,
+          360
+        ],
+        [
+          0,
+          360
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 18,
+        "opacity": 0.7,
+        "reflectivity": 0.45,
+        "openness": 0.3,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0307
+      },
+      "price_hkd": 99,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10570168",
+      "name_zh": "NISSE 摺凳",
+      "name_en": "NISSE Folding stool",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 400,
+        "d": 400,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          400,
+          0
+        ],
+        [
+          400,
+          400
+        ],
+        [
+          0,
+          400
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 76,
+        "opacity": 0.25,
+        "reflectivity": 0.12,
+        "openness": 0.75,
+        "color_family": "warm",
+        "visual_mass_index": 0.0039
+      },
+      "price_hkd": 199,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10578087",
+      "name_zh": "TERJE 摺椅",
+      "name_en": "TERJE Folding chair",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 440,
+        "d": 480,
+        "h": 800
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          440,
+          0
+        ],
+        [
+          440,
+          480
+        ],
+        [
+          0,
+          480
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.3,
+        "reflectivity": 0.12,
+        "openness": 0.7,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0093
+      },
+      "price_hkd": 249,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10586006",
+      "name_zh": "BEKVÄM 腳凳",
+      "name_en": "BEKVÄM Stepladder",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 430,
+        "d": 380,
+        "h": 500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          430,
+          0
+        ],
+        [
+          430,
+          380
+        ],
+        [
+          0,
+          380
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.2,
+        "reflectivity": 0.1,
+        "openness": 0.8,
+        "color_family": "warm",
+        "visual_mass_index": 0.0042
+      },
+      "price_hkd": 349,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10593925",
+      "name_zh": "FROSTA 凳",
+      "name_en": "FROSTA Stool",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 350,
+        "d": 350,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          350,
+          0
+        ],
+        [
+          350,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.6,
+        "reflectivity": 0.1,
+        "openness": 0.4,
+        "color_family": "warm",
+        "visual_mass_index": 0.0085
+      },
+      "price_hkd": 199,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10601844",
+      "name_zh": "TOBIAS 透明椅",
+      "name_en": "TOBIAS Chair, clear",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 480,
+        "d": 520,
+        "h": 830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          480,
+          0
+        ],
+        [
+          480,
+          520
+        ],
+        [
+          0,
+          520
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 88,
+        "opacity": 0.3,
+        "reflectivity": 0.7,
+        "openness": 0.7,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0068
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10609763",
+      "name_zh": "AGEN 藤編椅",
+      "name_en": "AGEN Chair, rattan",
+      "category": "chair",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 470,
+        "d": 530,
+        "h": 810
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          470,
+          0
+        ],
+        [
+          470,
+          530
+        ],
+        [
+          0,
+          530
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 66,
+        "opacity": 0.25,
+        "reflectivity": 0.08,
+        "openness": 0.75,
+        "color_family": "warm",
+        "visual_mass_index": 0.0157
+      },
+      "price_hkd": 990,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10617682",
+      "name_zh": "SÖDERHAMN 三人梳化",
+      "name_en": "SÖDERHAMN 3-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2360,
+        "d": 990,
+        "h": 830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2360,
+          0
+        ],
+        [
+          2360,
+          990
+        ],
+        [
+          0,
+          990
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 55,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.8007
+      },
+      "price_hkd": 5990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10625601",
+      "name_zh": "KIVIK 三人梳化",
+      "name_en": "KIVIK 3-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2280,
+        "d": 950,
+        "h": 830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2280,
+          0
+        ],
+        [
+          2280,
+          950
+        ],
+        [
+          0,
+          950
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 1.0,
+        "reflectivity": 0.05,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.4949
+      },
+      "price_hkd": 6990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10633520",
+      "name_zh": "EKTORP 三人梳化",
+      "name_en": "EKTORP 3-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2180,
+        "d": 880,
+        "h": 880
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2180,
+          0
+        ],
+        [
+          2180,
+          880
+        ],
+        [
+          0,
+          880
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.3098
+      },
+      "price_hkd": 5490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10641439",
+      "name_zh": "LANDSKRONA 三人梳化",
+      "name_en": "LANDSKRONA 3-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2210,
+        "d": 880,
+        "h": 780
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2210,
+          0
+        ],
+        [
+          2210,
+          880
+        ],
+        [
+          0,
+          880
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 62,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.5289
+      },
+      "price_hkd": 7990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10649358",
+      "name_zh": "NORSBORG 三人梳化",
+      "name_en": "NORSBORG 3-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2260,
+        "d": 950,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2260,
+          0
+        ],
+        [
+          2260,
+          950
+        ],
+        [
+          0,
+          950
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 42,
+        "opacity": 1.0,
+        "reflectivity": 0.08,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.9713
+      },
+      "price_hkd": 6990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10657277",
+      "name_zh": "FRIHETEN 梳化床",
+      "name_en": "FRIHETEN Sofa-bed",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2200,
+        "d": 1000,
+        "h": 830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2200,
+          0
+        ],
+        [
+          2200,
+          1000
+        ],
+        [
+          0,
+          1000
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 42,
+        "opacity": 1.0,
+        "reflectivity": 0.08,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.9718
+      },
+      "price_hkd": 7990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 120,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10665196",
+      "name_zh": "GRÖNLID 雙人梳化",
+      "name_en": "GRÖNLID 2-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1740,
+        "d": 980,
+        "h": 1040
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1740,
+          0
+        ],
+        [
+          1740,
+          980
+        ],
+        [
+          0,
+          980
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 1.0,
+        "reflectivity": 0.05,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.4882
+      },
+      "price_hkd": 6490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10673115",
+      "name_zh": "ÄPPLARYD 雙人梳化",
+      "name_en": "ÄPPLARYD 2-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1680,
+        "d": 920,
+        "h": 840
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1680,
+          0
+        ],
+        [
+          1680,
+          920
+        ],
+        [
+          0,
+          920
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.9,
+        "reflectivity": 0.12,
+        "openness": 0.1,
+        "color_family": "neutral",
+        "visual_mass_index": 0.2144
+      },
+      "price_hkd": 5990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10681034",
+      "name_zh": "VIMLE 三人梳化",
+      "name_en": "VIMLE 3-seat sofa",
+      "category": "sofa",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 2310,
+        "d": 980,
+        "h": 830
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          2310,
+          0
+        ],
+        [
+          2310,
+          980
+        ],
+        [
+          0,
+          980
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 42,
+        "opacity": 1.0,
+        "reflectivity": 0.08,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 1.0
+      },
+      "price_hkd": 8990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10514735",
+      "name_zh": "LACK 茶几",
+      "name_en": "LACK Coffee table",
+      "category": "coffee_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 900,
+        "d": 550,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          550
+        ],
+        [
+          0,
+          550
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            900,
+            0
+          ],
+          [
+            900,
+            550
+          ],
+          [
+            0,
+            550
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 22,
+        "opacity": 1.0,
+        "reflectivity": 0.15,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1594
+      },
+      "price_hkd": 449,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10522654",
+      "name_zh": "VITTSJÖ 玻璃茶几",
+      "name_en": "VITTSJÖ Coffee table, glass",
+      "category": "coffee_table",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 950,
+        "d": 500,
+        "h": 450
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          950,
+          0
+        ],
+        [
+          950,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 30,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            950,
+            0
+          ],
+          [
+            950,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 88,
+        "opacity": 0.2,
+        "reflectivity": 0.7,
+        "openness": 0.8,
+        "color_family": "cool",
+        "visual_mass_index": 0.0047
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10688953",
+      "name_zh": "KUGGIS 附蓋收納盒",
+      "name_en": "KUGGIS Box with lid",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 370,
+        "d": 540,
+        "h": 300
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          370,
+          0
+        ],
+        [
+          370,
+          540
+        ],
+        [
+          0,
+          540
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            370,
+            0
+          ],
+          [
+            370,
+            540
+          ],
+          [
+            0,
+            540
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.011
+      },
+      "price_hkd": 149,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 45,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10696872",
+      "name_zh": "DRÖNA 收納盒",
+      "name_en": "DRÖNA Box",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 330,
+        "d": 380,
+        "h": 310
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          330,
+          0
+        ],
+        [
+          330,
+          380
+        ],
+        [
+          0,
+          380
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 12,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            330,
+            0
+          ],
+          [
+            330,
+            380
+          ],
+          [
+            0,
+            380
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 42,
+        "opacity": 1.0,
+        "reflectivity": 0.08,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0207
+      },
+      "price_hkd": 59,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 30,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10704791",
+      "name_zh": "TJENA 附蓋收納盒",
+      "name_en": "TJENA Box with lid",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 250,
+        "d": 350,
+        "h": 200
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          250,
+          0
+        ],
+        [
+          250,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 8,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            250,
+            0
+          ],
+          [
+            250,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0032
+      },
+      "price_hkd": 49,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 14,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10712710",
+      "name_zh": "PAPPIS 附蓋收納盒",
+      "name_en": "PAPPIS Box with lid",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 250,
+        "d": 350,
+        "h": 200
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          250,
+          0
+        ],
+        [
+          250,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 8,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            250,
+            0
+          ],
+          [
+            250,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 1.0,
+        "reflectivity": 0.1,
+        "openness": 0.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.0045
+      },
+      "price_hkd": 79,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 14,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10720629",
+      "name_zh": "KNUFF 雜誌收納",
+      "name_en": "KNUFF Magazine file",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 180,
+        "d": 250,
+        "h": 300
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          180,
+          0
+        ],
+        [
+          180,
+          250
+        ],
+        [
+          0,
+          250
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 5,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            180,
+            0
+          ],
+          [
+            180,
+            250
+          ],
+          [
+            0,
+            250
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.6,
+        "reflectivity": 0.12,
+        "openness": 0.4,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0014
+      },
+      "price_hkd": 39,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 10,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10728548",
+      "name_zh": "VARIERA 收納箱",
+      "name_en": "VARIERA Box",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 320,
+        "d": 240,
+        "h": 150
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          320,
+          0
+        ],
+        [
+          320,
+          240
+        ],
+        [
+          0,
+          240
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 5,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            320,
+            0
+          ],
+          [
+            320,
+            240
+          ],
+          [
+            0,
+            240
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.5,
+        "reflectivity": 0.12,
+        "openness": 0.5,
+        "color_family": "neutral",
+        "visual_mass_index": 0.001
+      },
+      "price_hkd": 49,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 8,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10736467",
+      "name_zh": "SAMLA 透明收納箱",
+      "name_en": "SAMLA Box, clear",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 560,
+        "d": 390,
+        "h": 420
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          560,
+          0
+        ],
+        [
+          560,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 10,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            560,
+            0
+          ],
+          [
+            560,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 88,
+        "opacity": 0.15,
+        "reflectivity": 0.7,
+        "openness": 0.85,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0015
+      },
+      "price_hkd": 149,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 75,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10744386",
+      "name_zh": "RÅSKOG 推車",
+      "name_en": "RÅSKOG Trolley",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 350,
+        "d": 450,
+        "h": 780
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          350,
+          0
+        ],
+        [
+          350,
+          450
+        ],
+        [
+          0,
+          450
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 10,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            350,
+            0
+          ],
+          [
+            350,
+            450
+          ],
+          [
+            0,
+            450
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.2,
+        "reflectivity": 0.12,
+        "openness": 0.8,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0045
+      },
+      "price_hkd": 349,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 60,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10752305",
+      "name_zh": "DRAGGAN 竹推車",
+      "name_en": "DRAGGAN Trolley, bamboo",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 380,
+        "d": 460,
+        "h": 800
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          380,
+          0
+        ],
+        [
+          380,
+          460
+        ],
+        [
+          0,
+          460
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 10,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            380,
+            0
+          ],
+          [
+            380,
+            460
+          ],
+          [
+            0,
+            460
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 0.2,
+        "reflectivity": 0.12,
+        "openness": 0.8,
+        "color_family": "warm",
+        "visual_mass_index": 0.0077
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 70,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10760224",
+      "name_zh": "VESKEN 層架推車",
+      "name_en": "VESKEN Shelving unit",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 540,
+        "d": 180,
+        "h": 700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          540,
+          0
+        ],
+        [
+          540,
+          180
+        ],
+        [
+          0,
+          180
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 8,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            540,
+            0
+          ],
+          [
+            540,
+            180
+          ],
+          [
+            0,
+            180
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.2,
+        "reflectivity": 0.12,
+        "openness": 0.8,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0025
+      },
+      "price_hkd": 149,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 35,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10768143",
+      "name_zh": "KVISSLE 文件收納",
+      "name_en": "KVISSLE Desk organizer",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 320,
+        "d": 180,
+        "h": 180
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          320,
+          0
+        ],
+        [
+          320,
+          180
+        ],
+        [
+          0,
+          180
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 4,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            320,
+            0
+          ],
+          [
+            320,
+            180
+          ],
+          [
+            0,
+            180
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.7,
+        "reflectivity": 0.12,
+        "openness": 0.3,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0013
+      },
+      "price_hkd": 129,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 6,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10776062",
+      "name_zh": "SKUBB 布藝收納盒",
+      "name_en": "SKUBB Box, fabric",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 310,
+        "d": 550,
+        "h": 180
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          310,
+          0
+        ],
+        [
+          310,
+          550
+        ],
+        [
+          0,
+          550
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 6,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            310,
+            0
+          ],
+          [
+            310,
+            550
+          ],
+          [
+            0,
+            550
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 42,
+        "opacity": 1.0,
+        "reflectivity": 0.08,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0163
+      },
+      "price_hkd": 99,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 20,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10783981",
+      "name_zh": "TORKIS 洗衣籃",
+      "name_en": "TORKIS Laundry basket",
+      "category": "storage_box",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 390,
+        "d": 390,
+        "h": 600
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          390,
+          0
+        ],
+        [
+          390,
+          390
+        ],
+        [
+          0,
+          390
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 6,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            390,
+            0
+          ],
+          [
+            390,
+            390
+          ],
+          [
+            0,
+            390
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 58,
+        "opacity": 0.35,
+        "reflectivity": 0.15,
+        "openness": 0.65,
+        "color_family": "cool",
+        "visual_mass_index": 0.0123
+      },
+      "price_hkd": 79,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 50,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10253408",
+      "name_zh": "LACK 牆架",
+      "name_en": "LACK Wall shelf",
+      "category": "wall_shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1100,
+        "d": 260,
+        "h": 50
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1100,
+          0
+        ],
+        [
+          1100,
+          260
+        ],
+        [
+          0,
+          260
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1100,
+            0
+          ],
+          [
+            1100,
+            260
+          ],
+          [
+            0,
+            260
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.1,
+        "reflectivity": 0.12,
+        "openness": 1.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0002
+      },
+      "price_hkd": 190,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 30,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10261327",
+      "name_zh": "BERGSHULT 牆架",
+      "name_en": "BERGSHULT Wall shelf",
+      "category": "wall_shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 200,
+        "h": 40
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          200
+        ],
+        [
+          0,
+          200
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 12,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            200
+          ],
+          [
+            0,
+            200
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.1,
+        "reflectivity": 0.1,
+        "openness": 1.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.0002
+      },
+      "price_hkd": 240,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 20,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10269246",
+      "name_zh": "FJÄLLBO 牆架",
+      "name_en": "FJÄLLBO Wall shelf",
+      "category": "wall_shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 900,
+        "d": 250,
+        "h": 40
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          250
+        ],
+        [
+          0,
+          250
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            900,
+            0
+          ],
+          [
+            900,
+            250
+          ],
+          [
+            0,
+            250
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.1,
+        "reflectivity": 0.1,
+        "openness": 1.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.0002
+      },
+      "price_hkd": 290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 25,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10277165",
+      "name_zh": "EKET 掛牆層架",
+      "name_en": "EKET Wall-mounted shelving",
+      "category": "wall_shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 700,
+        "d": 350,
+        "h": 350
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          700,
+          0
+        ],
+        [
+          700,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            700,
+            0
+          ],
+          [
+            700,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.3,
+        "reflectivity": 0.1,
+        "openness": 0.8,
+        "color_family": "warm",
+        "visual_mass_index": 0.0066
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 45,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10285084",
+      "name_zh": "MOSLANDA 牆架",
+      "name_en": "MOSLANDA Wall shelf",
+      "category": "wall_shelf",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1000,
+        "d": 250,
+        "h": 50
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1000,
+          0
+        ],
+        [
+          1000,
+          250
+        ],
+        [
+          0,
+          250
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1000,
+            0
+          ],
+          [
+            1000,
+            250
+          ],
+          [
+            0,
+            250
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 30,
+        "opacity": 0.1,
+        "reflectivity": 0.12,
+        "openness": 1.0,
+        "color_family": "warm",
+        "visual_mass_index": 0.0008
+      },
+      "price_hkd": 390,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 28,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10863171",
+      "name_zh": "NISSEDAL 鏡",
+      "name_en": "NISSEDAL Mirror",
+      "category": "mirror",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 400,
+        "d": 30,
+        "h": 1500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          400,
+          0
+        ],
+        [
+          400,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 92,
+        "opacity": 1.0,
+        "reflectivity": 0.95,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0013
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10871090",
+      "name_zh": "HOVET 鏡",
+      "name_en": "HOVET Mirror",
+      "category": "mirror",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 780,
+        "d": 30,
+        "h": 1960
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          780,
+          0
+        ],
+        [
+          780,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 92,
+        "opacity": 1.0,
+        "reflectivity": 0.95,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0033
+      },
+      "price_hkd": 990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10879009",
+      "name_zh": "IKORNNES 鏡",
+      "name_en": "IKORNNES Mirror",
+      "category": "mirror",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 520,
+        "d": 30,
+        "h": 1640
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          520,
+          0
+        ],
+        [
+          520,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 92,
+        "opacity": 1.0,
+        "reflectivity": 0.95,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0018
+      },
+      "price_hkd": 790,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10886928",
+      "name_zh": "LINDBYN 鏡",
+      "name_en": "LINDBYN Mirror",
+      "category": "mirror",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 500,
+        "d": 30,
+        "h": 1600
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          500,
+          0
+        ],
+        [
+          500,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 92,
+        "opacity": 1.0,
+        "reflectivity": 0.95,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0017
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-10894847",
+      "name_zh": "LAGAN 雪櫃",
+      "name_en": "LAGAN Fridge",
+      "category": "fridge",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 550,
+        "d": 580,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          550,
+          0
+        ],
+        [
+          550,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            550,
+            0
+          ],
+          [
+            550,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0497
+      },
+      "price_hkd": 1990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10902766",
+      "name_zh": "LAGAN 雙門雪櫃",
+      "name_en": "LAGAN Fridge/freezer",
+      "category": "fridge",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 550,
+        "d": 580,
+        "h": 1350
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          550,
+          0
+        ],
+        [
+          550,
+          580
+        ],
+        [
+          0,
+          580
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            550,
+            0
+          ],
+          [
+            550,
+            580
+          ],
+          [
+            0,
+            580
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.079
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10910685",
+      "name_zh": "MEDELSTOR 雪櫃",
+      "name_en": "MEDELSTOR Fridge",
+      "category": "fridge",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 600,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 78,
+        "opacity": 1.0,
+        "reflectivity": 0.55,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0617
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10918604",
+      "name_zh": "UDDEN 雪櫃",
+      "name_en": "UDDEN Fridge/freezer",
+      "category": "fridge",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 620,
+        "h": 1850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          620
+        ],
+        [
+          0,
+          620
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            620
+          ],
+          [
+            0,
+            620
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.1263
+      },
+      "price_hkd": 4990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10926523",
+      "name_zh": "VÄRMD 雪櫃",
+      "name_en": "VÄRMD Fridge",
+      "category": "fridge",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 600,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0561
+      },
+      "price_hkd": 2490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10934442",
+      "name_zh": "LAGAN 迷你雪櫃",
+      "name_en": "LAGAN Mini fridge",
+      "category": "fridge",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 450,
+        "d": 450,
+        "h": 500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          450,
+          0
+        ],
+        [
+          450,
+          450
+        ],
+        [
+          0,
+          450
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            450,
+            0
+          ],
+          [
+            450,
+            450
+          ],
+          [
+            0,
+            450
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0185
+      },
+      "price_hkd": 990,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10942361",
+      "name_zh": "LAGAN 前置式洗衣機",
+      "name_en": "LAGAN Front-load washer",
+      "category": "washing_machine",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 520,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          520
+        ],
+        [
+          0,
+          520
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 20,
+        "right": 20,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            520
+          ],
+          [
+            0,
+            520
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0486
+      },
+      "price_hkd": 2490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10950280",
+      "name_zh": "TVÄTTAD 洗衣機",
+      "name_en": "TVÄTTAD Washing machine",
+      "category": "washing_machine",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 600,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 20,
+        "right": 20,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0561
+      },
+      "price_hkd": 3990,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10958199",
+      "name_zh": "MEDELSTOR 洗衣機",
+      "name_en": "MEDELSTOR Washing machine",
+      "category": "washing_machine",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 560,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          560
+        ],
+        [
+          0,
+          560
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 20,
+        "right": 20,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            560
+          ],
+          [
+            0,
+            560
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 78,
+        "opacity": 1.0,
+        "reflectivity": 0.55,
+        "openness": 0.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0576
+      },
+      "price_hkd": 3490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10966118",
+      "name_zh": "RENLIG 洗衣機",
+      "name_en": "RENLIG Washing machine",
+      "category": "washing_machine",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 540,
+        "h": 850
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          540
+        ],
+        [
+          0,
+          540
+        ]
+      ],
+      "clearance": {
+        "front": 600,
+        "left": 20,
+        "right": 20,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 20,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            540
+          ],
+          [
+            0,
+            540
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0505
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10974037",
+      "name_zh": "LAGAN 上置式洗衣機",
+      "name_en": "LAGAN Top-load washer",
+      "category": "washing_machine",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 560,
+        "d": 560,
+        "h": 860
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          560,
+          0
+        ],
+        [
+          560,
+          560
+        ],
+        [
+          0,
+          560
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 20,
+        "right": 20,
+        "top": 600
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 25,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            560,
+            0
+          ],
+          [
+            560,
+            560
+          ],
+          [
+            0,
+            560
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0495
+      },
+      "price_hkd": 2190,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10981956",
+      "name_zh": "MEDELSTOR 微波爐",
+      "name_en": "MEDELSTOR Microwave",
+      "category": "microwave",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 460,
+        "d": 370,
+        "h": 290
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          460,
+          0
+        ],
+        [
+          460,
+          370
+        ],
+        [
+          0,
+          370
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 50
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.009
+      },
+      "price_hkd": 690,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10989875",
+      "name_zh": "LAGAN 微波爐",
+      "name_en": "LAGAN Microwave",
+      "category": "microwave",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 440,
+        "d": 350,
+        "h": 260
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          440,
+          0
+        ],
+        [
+          440,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 50
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0073
+      },
+      "price_hkd": 490,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-10997794",
+      "name_zh": "MATÄLSKARE 微波爐",
+      "name_en": "MATÄLSKARE Microwave",
+      "category": "microwave",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 500,
+        "d": 400,
+        "h": 300
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          500,
+          0
+        ],
+        [
+          500,
+          400
+        ],
+        [
+          0,
+          400
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 50
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 18,
+        "opacity": 1.0,
+        "reflectivity": 0.45,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0451
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-11005713",
+      "name_zh": "SVÄRTA 微波爐",
+      "name_en": "SVÄRTA Microwave",
+      "category": "microwave",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 460,
+        "d": 360,
+        "h": 280
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          460,
+          0
+        ],
+        [
+          460,
+          360
+        ],
+        [
+          0,
+          360
+        ]
+      ],
+      "clearance": {
+        "front": 500,
+        "left": 0,
+        "right": 0,
+        "top": 50
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0085
+      },
+      "price_hkd": 890,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "hkretail-11013632",
+      "name_zh": "窗口式冷氣機 3/4 匹",
+      "name_en": "Window air conditioner, 3/4 HP",
+      "category": "aircon",
+      "retailer": "HK retail (placeholder)",
+      "dims": {
+        "w": 450,
+        "d": 600,
+        "h": 350
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          450,
+          0
+        ],
+        [
+          450,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 300,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0173
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "hkretail-11021551",
+      "name_zh": "窗口式冷氣機 1 匹",
+      "name_en": "Window air conditioner, 1 HP",
+      "category": "aircon",
+      "retailer": "HK retail (placeholder)",
+      "dims": {
+        "w": 560,
+        "d": 660,
+        "h": 380
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          560,
+          0
+        ],
+        [
+          560,
+          660
+        ],
+        [
+          0,
+          660
+        ]
+      ],
+      "clearance": {
+        "front": 300,
+        "left": 50,
+        "right": 50,
+        "top": 100
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0257
+      },
+      "price_hkd": 3990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "hkretail-11029470",
+      "name_zh": "分體式冷氣室內機 1 匹",
+      "name_en": "Split-type indoor unit, 1 HP",
+      "category": "aircon",
+      "retailer": "HK retail (placeholder)",
+      "dims": {
+        "w": 800,
+        "d": 200,
+        "h": 290
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          200
+        ],
+        [
+          0,
+          200
+        ]
+      ],
+      "clearance": {
+        "front": 200,
+        "left": 0,
+        "right": 0,
+        "top": 150
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0085
+      },
+      "price_hkd": 3990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "hkretail-11037389",
+      "name_zh": "分體式冷氣室內機 1.5 匹",
+      "name_en": "Split-type indoor unit, 1.5 HP",
+      "category": "aircon",
+      "retailer": "HK retail (placeholder)",
+      "dims": {
+        "w": 900,
+        "d": 220,
+        "h": 300
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          220
+        ],
+        [
+          0,
+          220
+        ]
+      ],
+      "clearance": {
+        "front": 200,
+        "left": 0,
+        "right": 0,
+        "top": 150
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0109
+      },
+      "price_hkd": 4990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "hkretail-11045308",
+      "name_zh": "移動式冷氣機",
+      "name_en": "Portable air conditioner",
+      "category": "aircon",
+      "retailer": "HK retail (placeholder)",
+      "dims": {
+        "w": 350,
+        "d": 400,
+        "h": 700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          350,
+          0
+        ],
+        [
+          350,
+          400
+        ],
+        [
+          0,
+          400
+        ]
+      ],
+      "clearance": {
+        "front": 300,
+        "left": 100,
+        "right": 100,
+        "top": 150
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 1.0,
+        "reflectivity": 0.12,
+        "openness": 0.0,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0179
+      },
+      "price_hkd": 2990,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "pre_assembled"
+    },
+    {
+      "id": "ikea-hk-11053227",
+      "name_zh": "JÄLL 晾衣架",
+      "name_en": "JÄLL Drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 600,
+        "h": 1400
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.15,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0138
+      },
+      "price_hkd": 149,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11061146",
+      "name_zh": "MULIG 晾衣架",
+      "name_en": "MULIG Drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 700,
+        "d": 500,
+        "h": 1400
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          700,
+          0
+        ],
+        [
+          700,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            700,
+            0
+          ],
+          [
+            700,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.15,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0134
+      },
+      "price_hkd": 199,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11069065",
+      "name_zh": "FROST 晾衣架",
+      "name_en": "FROST Drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 500,
+        "h": 1400
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          500
+        ],
+        [
+          0,
+          500
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            500
+          ],
+          [
+            0,
+            500
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 90,
+        "opacity": 0.15,
+        "reflectivity": 0.75,
+        "openness": 0.9,
+        "color_family": "cool",
+        "visual_mass_index": 0.0057
+      },
+      "price_hkd": 249,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11076984",
+      "name_zh": "TORKIS 晾衣架",
+      "name_en": "TORKIS Drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 800,
+        "d": 550,
+        "h": 1300
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          800,
+          0
+        ],
+        [
+          800,
+          550
+        ],
+        [
+          0,
+          550
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 12,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            800,
+            0
+          ],
+          [
+            800,
+            550
+          ],
+          [
+            0,
+            550
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 58,
+        "opacity": 0.15,
+        "reflectivity": 0.15,
+        "openness": 0.9,
+        "color_family": "cool",
+        "visual_mass_index": 0.033
+      },
+      "price_hkd": 129,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11084903",
+      "name_zh": "PRESSAD 晾衣架",
+      "name_en": "PRESSAD Drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 700,
+        "d": 400,
+        "h": 1500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          700,
+          0
+        ],
+        [
+          700,
+          400
+        ],
+        [
+          0,
+          400
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            700,
+            0
+          ],
+          [
+            700,
+            400
+          ],
+          [
+            0,
+            400
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 78,
+        "opacity": 0.15,
+        "reflectivity": 0.55,
+        "openness": 0.9,
+        "color_family": "cool",
+        "visual_mass_index": 0.0127
+      },
+      "price_hkd": 349,
+      "price_verified": false,
+      "url": "",
+      "stock": "low_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11092822",
+      "name_zh": "MULIG 掛牆晾衣架",
+      "name_en": "MULIG Wall-mounted drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 600,
+        "d": 300,
+        "h": 300
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          600,
+          0
+        ],
+        [
+          600,
+          300
+        ],
+        [
+          0,
+          300
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 8,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            600,
+            0
+          ],
+          [
+            600,
+            300
+          ],
+          [
+            0,
+            300
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.15,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0014
+      },
+      "price_hkd": 99,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11100741",
+      "name_zh": "JÄLL 掛牆晾衣架",
+      "name_en": "JÄLL Wall-mounted drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 500,
+        "d": 250,
+        "h": 250
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          500,
+          0
+        ],
+        [
+          500,
+          250
+        ],
+        [
+          0,
+          250
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 8,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            500,
+            0
+          ],
+          [
+            500,
+            250
+          ],
+          [
+            0,
+            250
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.15,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0008
+      },
+      "price_hkd": 79,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11108660",
+      "name_zh": "伸縮晾衣桿",
+      "name_en": "Extendable drying rod",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 60,
+        "h": 60
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          60
+        ],
+        [
+          0,
+          60
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 300
+      },
+      "mount": [
+        "wall"
+      ],
+      "can_support": {
+        "max_load_kg": 10,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            60
+          ],
+          [
+            0,
+            60
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 90,
+        "opacity": 0.1,
+        "reflectivity": 0.75,
+        "openness": 1.0,
+        "color_family": "cool",
+        "visual_mass_index": 0.0
+      },
+      "price_hkd": 129,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11116579",
+      "name_zh": "落地折疊晾衣架",
+      "name_en": "Folding floor drying rack",
+      "category": "drying_rack",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 900,
+        "d": 600,
+        "h": 1500
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          600
+        ],
+        [
+          0,
+          600
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            900,
+            0
+          ],
+          [
+            900,
+            600
+          ],
+          [
+            0,
+            600
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.15,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0223
+      },
+      "price_hkd": 299,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11124498",
+      "name_zh": "RISÖR 屏風",
+      "name_en": "RISÖR Room divider",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 30,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 0.2,
+        "reflectivity": 0.12,
+        "openness": 0.8,
+        "color_family": "warm",
+        "visual_mass_index": 0.0033
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11132417",
+      "name_zh": "三扇折疊屏風",
+      "name_en": "3-panel folding screen",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1350,
+        "d": 30,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1350,
+          0
+        ],
+        [
+          1350,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.35,
+        "reflectivity": 0.12,
+        "openness": 0.65,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0044
+      },
+      "price_hkd": 499,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11140336",
+      "name_zh": "四扇折疊屏風",
+      "name_en": "4-panel folding screen",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1800,
+        "d": 30,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1800,
+          0
+        ],
+        [
+          1800,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.35,
+        "reflectivity": 0.1,
+        "openness": 0.65,
+        "color_family": "warm",
+        "visual_mass_index": 0.0082
+      },
+      "price_hkd": 699,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11148255",
+      "name_zh": "兩扇布藝屏風",
+      "name_en": "2-panel fabric screen",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 900,
+        "d": 30,
+        "h": 1600
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          900,
+          0
+        ],
+        [
+          900,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 70,
+        "opacity": 0.3,
+        "reflectivity": 0.05,
+        "openness": 0.7,
+        "color_family": "warm",
+        "visual_mass_index": 0.0035
+      },
+      "price_hkd": 399,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11156174",
+      "name_zh": "紗簾屏風",
+      "name_en": "Sheer curtain screen",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1500,
+        "d": 20,
+        "h": 1900
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1500,
+          0
+        ],
+        [
+          1500,
+          20
+        ],
+        [
+          0,
+          20
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.1,
+        "reflectivity": 0.12,
+        "openness": 0.9,
+        "color_family": "neutral",
+        "visual_mass_index": 0.001
+      },
+      "price_hkd": 299,
+      "price_verified": false,
+      "url": "",
+      "stock": "out_of_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11164093",
+      "name_zh": "儲物屏風架",
+      "name_en": "Storage screen shelving",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 350,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          350
+        ],
+        [
+          0,
+          350
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 15,
+        "top_polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            1200,
+            0
+          ],
+          [
+            1200,
+            350
+          ],
+          [
+            0,
+            350
+          ]
+        ]
+      },
+      "visual": {
+        "lightness_L": 72,
+        "opacity": 0.3,
+        "reflectivity": 0.1,
+        "openness": 0.7,
+        "color_family": "warm",
+        "visual_mass_index": 0.055
+      },
+      "price_hkd": 1290,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 180,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11172012",
+      "name_zh": "藤編屏風",
+      "name_en": "Rattan screen",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1350,
+        "d": 30,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1350,
+          0
+        ],
+        [
+          1350,
+          30
+        ],
+        [
+          0,
+          30
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 66,
+        "opacity": 0.25,
+        "reflectivity": 0.08,
+        "openness": 0.75,
+        "color_family": "warm",
+        "visual_mass_index": 0.0053
+      },
+      "price_hkd": 899,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    },
+    {
+      "id": "ikea-hk-11179931",
+      "name_zh": "PVC 摺疊屏風",
+      "name_en": "PVC folding screen",
+      "category": "screen",
+      "retailer": "IKEA HK",
+      "dims": {
+        "w": 1200,
+        "d": 25,
+        "h": 1700
+      },
+      "footprint_L": [
+        [
+          0,
+          0
+        ],
+        [
+          1200,
+          0
+        ],
+        [
+          1200,
+          25
+        ],
+        [
+          0,
+          25
+        ]
+      ],
+      "clearance": {
+        "front": 0,
+        "left": 0,
+        "right": 0,
+        "top": 0
+      },
+      "mount": [
+        "floor"
+      ],
+      "can_support": {
+        "max_load_kg": 0,
+        "top_polygon": []
+      },
+      "visual": {
+        "lightness_L": 80,
+        "opacity": 0.4,
+        "reflectivity": 0.12,
+        "openness": 0.6,
+        "color_family": "neutral",
+        "visual_mass_index": 0.0037
+      },
+      "price_hkd": 399,
+      "price_verified": false,
+      "url": "",
+      "stock": "in_stock",
+      "storage_volume_L": 0,
+      "assembly": "flat_pack"
+    }
+  ]
+}

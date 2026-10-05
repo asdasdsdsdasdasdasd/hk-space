@@ -1,0 +1,1206 @@
+{
+ "generated_at": "2026-10-04T21:29:25",
+ "units": "mm (int) for the API; glTF file stores meters; Z-up, origin at footprint centre, +Y = front",
+ "out_dir": "/mnt/d/openclaw/hk-space/out/templates",
+ "counts": {
+  "templates": 30,
+  "variants": 0
+ },
+ "triangles": {
+  "min": 180,
+  "max": 13624,
+  "sum": 74060
+ },
+ "total_bytes": 4255468,
+ "items": [
+  {
+   "id": "cabinet_2door",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/cabinet_2door.glb",
+   "name_zh": "兩門櫃",
+   "name_en": "2-door cabinet",
+   "group": "櫃",
+   "file": "cabinet_2door.glb",
+   "node_names": [
+    "body",
+    "body_1",
+    "body_2",
+    "body_3",
+    "body_4",
+    "body_5",
+    "body_6",
+    "door_0",
+    "door_1",
+    "handle_door_0",
+    "handle_door_0_10",
+    "handle_door_0_11",
+    "handle_door_1",
+    "handle_door_1_14",
+    "handle_door_1_15",
+    "seam"
+   ],
+   "materials": [
+    "matte_black",
+    "metal_steel",
+    "white"
+   ],
+   "parts": 16,
+   "triangles": 808,
+   "vertices": 2424,
+   "dims_mm": [
+    800,
+    448,
+    800
+   ],
+   "z_min_mm": 0,
+   "bytes": 50028
+  },
+  {
+   "id": "cabinet_3door",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/cabinet_3door.glb",
+   "name_zh": "三門櫃",
+   "name_en": "3-door cabinet",
+   "group": "櫃",
+   "file": "cabinet_3door.glb",
+   "node_names": [
+    "body",
+    "body_1",
+    "body_2",
+    "body_3",
+    "body_4",
+    "body_5",
+    "body_6",
+    "door_0",
+    "door_1",
+    "door_2",
+    "handle_door_0",
+    "handle_door_0_11",
+    "handle_door_0_12",
+    "handle_door_1",
+    "handle_door_1_15",
+    "handle_door_1_16",
+    "handle_door_2",
+    "handle_door_2_19",
+    "handle_door_2_20",
+    "seam",
+    "seam_8"
+   ],
+   "materials": [
+    "matte_black",
+    "metal_steel",
+    "white"
+   ],
+   "parts": 21,
+   "triangles": 1032,
+   "vertices": 3096,
+   "dims_mm": [
+    1200,
+    448,
+    800
+   ],
+   "z_min_mm": 0,
+   "bytes": 62252
+  },
+  {
+   "id": "wardrobe_tall",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/wardrobe_tall.glb",
+   "name_zh": "到頂衣櫃",
+   "name_en": "full-height wardrobe",
+   "group": "櫃",
+   "file": "wardrobe_tall.glb",
+   "node_names": [
+    "body",
+    "body_1",
+    "body_2",
+    "body_3",
+    "body_4",
+    "body_5",
+    "body_6",
+    "body_7",
+    "door_0",
+    "door_1",
+    "door_2",
+    "handle_door_0",
+    "handle_door_0_12",
+    "handle_door_0_13",
+    "handle_door_1",
+    "handle_door_1_16",
+    "handle_door_1_17",
+    "handle_door_2",
+    "handle_door_2_20",
+    "handle_door_2_21",
+    "seam",
+    "seam_9",
+    "top_door_0",
+    "top_door_1",
+    "top_door_2",
+    "top_seam",
+    "top_seam_23"
+   ],
+   "materials": [
+    "matte_black",
+    "metal_chrome",
+    "metal_steel",
+    "white_oak"
+   ],
+   "parts": 27,
+   "triangles": 1380,
+   "vertices": 4140,
+   "dims_mm": [
+    1200,
+    649,
+    2400
+   ],
+   "z_min_mm": 0,
+   "bytes": 84352
+  },
+  {
+   "id": "open_shelf",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/open_shelf.glb",
+   "name_zh": "開放格櫃",
+   "name_en": "open grid shelf",
+   "group": "櫃",
+   "file": "open_shelf.glb",
+   "node_names": [
+    "back",
+    "divider",
+    "shelf",
+    "shelf_3",
+    "shelf_4",
+    "side",
+    "side_1"
+   ],
+   "materials": [
+    "oak"
+   ],
+   "parts": 7,
+   "triangles": 420,
+   "vertices": 1260,
+   "dims_mm": [
+    770,
+    390,
+    770
+   ],
+   "z_min_mm": 0,
+   "bytes": 25996
+  },
+  {
+   "id": "drawer_chest",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/drawer_chest.glb",
+   "name_zh": "抽屜櫃",
+   "name_en": "drawer chest",
+   "group": "櫃",
+   "file": "drawer_chest.glb",
+   "node_names": [
+    "body",
+    "body_1",
+    "body_2",
+    "body_3",
+    "body_4",
+    "body_5",
+    "drawer_0",
+    "drawer_1",
+    "drawer_2",
+    "drawer_3",
+    "handle_0",
+    "handle_0_11",
+    "handle_0_12",
+    "handle_1",
+    "handle_1_15",
+    "handle_1_16",
+    "handle_2",
+    "handle_2_19",
+    "handle_2_20",
+    "handle_3",
+    "handle_3_23",
+    "handle_3_24",
+    "seam",
+    "seam_7",
+    "seam_8"
+   ],
+   "materials": [
+    "matte_black",
+    "metal_steel",
+    "white"
+   ],
+   "parts": 25,
+   "triangles": 1196,
+   "vertices": 3588,
+   "dims_mm": [
+    800,
+    529,
+    1000
+   ],
+   "z_min_mm": 0,
+   "bytes": 66264
+  },
+  {
+   "id": "tv_console",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/tv_console.glb",
+   "name_zh": "電視櫃",
+   "name_en": "TV console",
+   "group": "櫃",
+   "file": "tv_console.glb",
+   "node_names": [
+    "body",
+    "body_1",
+    "body_2",
+    "body_3",
+    "body_4",
+    "body_5",
+    "door_l",
+    "door_r",
+    "handle",
+    "handle_11",
+    "handle_12",
+    "handle_14",
+    "handle_15",
+    "handle_16",
+    "leg",
+    "leg_18",
+    "leg_19",
+    "leg_20",
+    "niche_door",
+    "seam",
+    "seam_8"
+   ],
+   "materials": [
+    "matte_black",
+    "metal_black",
+    "metal_steel",
+    "walnut"
+   ],
+   "parts": 21,
+   "triangles": 1060,
+   "vertices": 3180,
+   "dims_mm": [
+    1500,
+    449,
+    450
+   ],
+   "z_min_mm": 0,
+   "bytes": 64984
+  },
+  {
+   "id": "shoe_cabinet",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/shoe_cabinet.glb",
+   "name_zh": "鞋櫃",
+   "name_en": "shoe cabinet",
+   "group": "櫃",
+   "file": "shoe_cabinet.glb",
+   "node_names": [
+    "body",
+    "body_1",
+    "body_2",
+    "body_3",
+    "body_4",
+    "body_5",
+    "body_6",
+    "body_7",
+    "body_8",
+    "door_0",
+    "door_1",
+    "handle_door_0",
+    "handle_door_0_12",
+    "handle_door_0_13",
+    "handle_door_1",
+    "handle_door_1_16",
+    "handle_door_1_17",
+    "leg",
+    "leg_19",
+    "leg_20",
+    "leg_21",
+    "seam"
+   ],
+   "materials": [
+    "matte_black",
+    "metal_black",
+    "metal_steel",
+    "white"
+   ],
+   "parts": 22,
+   "triangles": 1120,
+   "vertices": 3360,
+   "dims_mm": [
+    900,
+    398,
+    1000
+   ],
+   "z_min_mm": 0,
+   "bytes": 65732
+  },
+  {
+   "id": "bed_single",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_single.glb",
+   "name_zh": "單人床",
+   "name_en": "single bed",
+   "group": "床",
+   "file": "bed_single.glb",
+   "node_names": [
+    "frame",
+    "frame_1",
+    "frame_10",
+    "frame_11",
+    "frame_12",
+    "frame_13",
+    "frame_14",
+    "frame_2",
+    "frame_3",
+    "frame_4",
+    "frame_5",
+    "frame_6",
+    "frame_7",
+    "frame_8",
+    "frame_9",
+    "mattress",
+    "pillow"
+   ],
+   "materials": [
+    "bedding",
+    "birch",
+    "mattress",
+    "metal_black"
+   ],
+   "parts": 17,
+   "triangles": 4228,
+   "vertices": 12684,
+   "dims_mm": [
+    900,
+    1900,
+    755
+   ],
+   "z_min_mm": 0,
+   "bytes": 273268
+  },
+  {
+   "id": "bed_double",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_double.glb",
+   "name_zh": "雙人床",
+   "name_en": "double bed",
+   "group": "床",
+   "file": "bed_double.glb",
+   "node_names": [
+    "frame",
+    "frame_1",
+    "frame_10",
+    "frame_11",
+    "frame_12",
+    "frame_13",
+    "frame_14",
+    "frame_15",
+    "frame_2",
+    "frame_3",
+    "frame_4",
+    "frame_5",
+    "frame_6",
+    "frame_7",
+    "frame_8",
+    "frame_9",
+    "mattress",
+    "pillow_0",
+    "pillow_1"
+   ],
+   "materials": [
+    "bedding",
+    "mattress",
+    "metal_black",
+    "oak"
+   ],
+   "parts": 19,
+   "triangles": 5952,
+   "vertices": 17856,
+   "dims_mm": [
+    1500,
+    2000,
+    800
+   ],
+   "z_min_mm": 0,
+   "bytes": 336108
+  },
+  {
+   "id": "bed_loft",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_loft.glb",
+   "name_zh": "高架床",
+   "name_en": "loft bed",
+   "group": "床",
+   "file": "bed_loft.glb",
+   "node_names": [
+    "desk_leg",
+    "desk_leg_25",
+    "desk_top",
+    "guard",
+    "ladder_rail",
+    "ladder_rail_18",
+    "ladder_rung",
+    "ladder_rung_20",
+    "ladder_rung_21",
+    "ladder_rung_22",
+    "mattress",
+    "post",
+    "post_1",
+    "post_2",
+    "post_3",
+    "rail",
+    "rail_5",
+    "rail_6",
+    "rail_7",
+    "slat",
+    "slat_10",
+    "slat_11",
+    "slat_12",
+    "slat_13",
+    "slat_14",
+    "slat_9"
+   ],
+   "materials": [
+    "birch",
+    "mattress"
+   ],
+   "parts": 26,
+   "triangles": 3164,
+   "vertices": 9492,
+   "dims_mm": [
+    1001,
+    1901,
+    2150
+   ],
+   "z_min_mm": 0,
+   "bytes": 209408
+  },
+  {
+   "id": "bed_storage",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_storage.glb",
+   "name_zh": "收納床(油壓)",
+   "name_en": "hydraulic storage bed",
+   "group": "床",
+   "file": "bed_storage.glb",
+   "node_names": [
+    "base",
+    "deck",
+    "headboard",
+    "lifter",
+    "mattress",
+    "pillow_0",
+    "pillow_1",
+    "plinth",
+    "seam"
+   ],
+   "materials": [
+    "bedding",
+    "charcoal",
+    "mattress",
+    "metal_black",
+    "white_oak"
+   ],
+   "parts": 9,
+   "triangles": 5352,
+   "vertices": 16056,
+   "dims_mm": [
+    1500,
+    2010,
+    800
+   ],
+   "z_min_mm": 0,
+   "bytes": 308848
+  },
+  {
+   "id": "bunk_bed",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/bunk_bed.glb",
+   "name_zh": "上下舖",
+   "name_en": "bunk bed",
+   "group": "床",
+   "file": "bunk_bed.glb",
+   "node_names": [
+    "guard",
+    "ladder_rail",
+    "ladder_rail_28",
+    "ladder_rung",
+    "ladder_rung_30",
+    "ladder_rung_31",
+    "ladder_rung_32",
+    "ladder_rung_33",
+    "mattress_lower",
+    "mattress_upper",
+    "post",
+    "post_1",
+    "post_2",
+    "post_3",
+    "rail_lower",
+    "rail_lower_5",
+    "rail_lower_6",
+    "rail_lower_7",
+    "rail_upper",
+    "rail_upper_16",
+    "rail_upper_17",
+    "rail_upper_18",
+    "slat_lower",
+    "slat_lower_10",
+    "slat_lower_11",
+    "slat_lower_12",
+    "slat_lower_13",
+    "slat_lower_9",
+    "slat_upper",
+    "slat_upper_20",
+    "slat_upper_21",
+    "slat_upper_22",
+    "slat_upper_23",
+    "slat_upper_24"
+   ],
+   "materials": [
+    "birch",
+    "mattress"
+   ],
+   "parts": 34,
+   "triangles": 5248,
+   "vertices": 15744,
+   "dims_mm": [
+    1001,
+    1901,
+    1930
+   ],
+   "z_min_mm": 0,
+   "bytes": 286600
+  },
+  {
+   "id": "desk",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/desk.glb",
+   "name_zh": "書桌",
+   "name_en": "desk",
+   "group": "桌",
+   "file": "desk.glb",
+   "node_names": [
+    "apron",
+    "apron_2",
+    "drawer_0",
+    "drawer_box",
+    "handle_d0",
+    "handle_d0_10",
+    "handle_d0_11",
+    "leg",
+    "leg_4",
+    "leg_5",
+    "leg_6",
+    "top"
+   ],
+   "materials": [
+    "metal_black",
+    "metal_steel",
+    "oak"
+   ],
+   "parts": 12,
+   "triangles": 596,
+   "vertices": 1788,
+   "dims_mm": [
+    1200,
+    609,
+    750
+   ],
+   "z_min_mm": 0,
+   "bytes": 38952
+  },
+  {
+   "id": "dining_table",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/dining_table.glb",
+   "name_zh": "餐桌",
+   "name_en": "dining table",
+   "group": "桌",
+   "file": "dining_table.glb",
+   "node_names": [
+    "apron",
+    "apron_2",
+    "apron_3",
+    "apron_4",
+    "leg",
+    "leg_6",
+    "leg_7",
+    "leg_8",
+    "top"
+   ],
+   "materials": [
+    "oak"
+   ],
+   "parts": 9,
+   "triangles": 524,
+   "vertices": 1572,
+   "dims_mm": [
+    1200,
+    750,
+    750
+   ],
+   "z_min_mm": 0,
+   "bytes": 31444
+  },
+  {
+   "id": "side_table",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/side_table.glb",
+   "name_zh": "邊桌",
+   "name_en": "side table",
+   "group": "桌",
+   "file": "side_table.glb",
+   "node_names": [
+    "leg",
+    "leg_2",
+    "leg_3",
+    "stretcher",
+    "top"
+   ],
+   "materials": [
+    "walnut"
+   ],
+   "parts": 5,
+   "triangles": 384,
+   "vertices": 1152,
+   "dims_mm": [
+    450,
+    450,
+    550
+   ],
+   "z_min_mm": 0,
+   "bytes": 29352
+  },
+  {
+   "id": "chair",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/chair.glb",
+   "name_zh": "單椅",
+   "name_en": "chair",
+   "group": "座",
+   "file": "chair.glb",
+   "node_names": [
+    "back_post",
+    "back_post_6",
+    "back_slat",
+    "back_slat_8",
+    "back_slat_9",
+    "leg",
+    "leg_2",
+    "leg_3",
+    "leg_4",
+    "seat",
+    "stretcher",
+    "stretcher_11"
+   ],
+   "materials": [
+    "oak"
+   ],
+   "parts": 12,
+   "triangles": 672,
+   "vertices": 2016,
+   "dims_mm": [
+    460,
+    520,
+    850
+   ],
+   "z_min_mm": 0,
+   "bytes": 41060
+  },
+  {
+   "id": "sofa_2",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/sofa_2.glb",
+   "name_zh": "雙人沙發",
+   "name_en": "2-seat sofa",
+   "group": "座",
+   "file": "sofa_2.glb",
+   "node_names": [
+    "arm",
+    "arm_6",
+    "back_cushion_0",
+    "back_cushion_1",
+    "back_frame",
+    "frame",
+    "leg",
+    "leg_1",
+    "leg_2",
+    "leg_3",
+    "seat_cushion_0",
+    "seat_cushion_1"
+   ],
+   "materials": [
+    "fabric_grey",
+    "walnut"
+   ],
+   "parts": 12,
+   "triangles": 10296,
+   "vertices": 30888,
+   "dims_mm": [
+    1500,
+    850,
+    770
+   ],
+   "z_min_mm": 0,
+   "bytes": 523956
+  },
+  {
+   "id": "sofa_3",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/sofa_3.glb",
+   "name_zh": "三人沙發",
+   "name_en": "3-seat sofa",
+   "group": "座",
+   "file": "sofa_3.glb",
+   "node_names": [
+    "arm",
+    "arm_6",
+    "back_cushion_0",
+    "back_cushion_1",
+    "back_cushion_2",
+    "back_frame",
+    "frame",
+    "leg",
+    "leg_1",
+    "leg_2",
+    "leg_3",
+    "seat_cushion_0",
+    "seat_cushion_1",
+    "seat_cushion_2"
+   ],
+   "materials": [
+    "fabric_grey",
+    "walnut"
+   ],
+   "parts": 14,
+   "triangles": 13624,
+   "vertices": 40872,
+   "dims_mm": [
+    2000,
+    900,
+    770
+   ],
+   "z_min_mm": 0,
+   "bytes": 644704
+  },
+  {
+   "id": "chaise_longue",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/chaise_longue.glb",
+   "name_zh": "貴妃椅",
+   "name_en": "chaise longue",
+   "group": "座",
+   "file": "chaise_longue.glb",
+   "node_names": [
+    "arm",
+    "back_cushion",
+    "frame",
+    "leg",
+    "leg_1",
+    "leg_2",
+    "leg_3",
+    "seat_cushion",
+    "throw_pillow"
+   ],
+   "materials": [
+    "fabric_blue",
+    "fabric_sand",
+    "walnut"
+   ],
+   "parts": 9,
+   "triangles": 6908,
+   "vertices": 20724,
+   "dims_mm": [
+    1580,
+    710,
+    600
+   ],
+   "z_min_mm": 0,
+   "bytes": 439256
+  },
+  {
+   "id": "shelf_unit",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/shelf_unit.glb",
+   "name_zh": "層架",
+   "name_en": "shelf unit",
+   "group": "收納",
+   "file": "shelf_unit.glb",
+   "node_names": [
+    "back",
+    "leg",
+    "leg_10",
+    "leg_11",
+    "leg_9",
+    "shelf",
+    "shelf_3",
+    "shelf_4",
+    "shelf_5",
+    "shelf_6",
+    "side",
+    "side_1"
+   ],
+   "materials": [
+    "metal_black",
+    "oak"
+   ],
+   "parts": 12,
+   "triangles": 672,
+   "vertices": 2016,
+   "dims_mm": [
+    800,
+    350,
+    1800
+   ],
+   "z_min_mm": 0,
+   "bytes": 39192
+  },
+  {
+   "id": "storage_box",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/storage_box.glb",
+   "name_zh": "收納箱",
+   "name_en": "storage box",
+   "group": "收納",
+   "file": "storage_box.glb",
+   "node_names": [
+    "body",
+    "clip",
+    "clip_3",
+    "lid"
+   ],
+   "materials": [
+    "fabric_linen"
+   ],
+   "parts": 4,
+   "triangles": 3448,
+   "vertices": 10344,
+   "dims_mm": [
+    406,
+    404,
+    299
+   ],
+   "z_min_mm": 0,
+   "bytes": 229592
+  },
+  {
+   "id": "wall_shelf",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/wall_shelf.glb",
+   "name_zh": "掛牆層架",
+   "name_en": "wall shelf",
+   "group": "收納",
+   "file": "wall_shelf.glb",
+   "node_names": [
+    "board_0",
+    "board_1",
+    "bracket",
+    "bracket_2",
+    "bracket_6",
+    "bracket_7",
+    "upright",
+    "upright_4"
+   ],
+   "materials": [
+    "metal_black",
+    "white_oak"
+   ],
+   "parts": 8,
+   "triangles": 480,
+   "vertices": 1440,
+   "dims_mm": [
+    900,
+    250,
+    500
+   ],
+   "z_min_mm": 0,
+   "bytes": 27136
+  },
+  {
+   "id": "pegboard",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/pegboard.glb",
+   "name_zh": "洞洞板",
+   "name_en": "pegboard",
+   "group": "收納",
+   "file": "pegboard.glb",
+   "node_names": [
+    "board",
+    "hook_0",
+    "hook_1",
+    "hook_2",
+    "hook_3",
+    "hook_4",
+    "hook_5"
+   ],
+   "materials": [
+    "birch",
+    "metal_steel"
+   ],
+   "parts": 7,
+   "triangles": 1572,
+   "vertices": 4716,
+   "dims_mm": [
+    800,
+    93,
+    600
+   ],
+   "z_min_mm": 0,
+   "bytes": 112128
+  },
+  {
+   "id": "fridge",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/fridge.glb",
+   "name_zh": "雪櫃",
+   "name_en": "fridge",
+   "group": "電器",
+   "file": "fridge.glb",
+   "node_names": [
+    "body",
+    "door_lower",
+    "door_upper",
+    "handle",
+    "handle_4",
+    "handle_5",
+    "handle_6",
+    "handle_7",
+    "handle_8",
+    "kick",
+    "vent"
+   ],
+   "materials": [
+    "charcoal",
+    "metal_steel",
+    "plastic_white"
+   ],
+   "parts": 11,
+   "triangles": 508,
+   "vertices": 1524,
+   "dims_mm": [
+    600,
+    710,
+    1700
+   ],
+   "z_min_mm": 0,
+   "bytes": 33528
+  },
+  {
+   "id": "washer",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/washer.glb",
+   "name_zh": "洗衣機",
+   "name_en": "washing machine",
+   "group": "電器",
+   "file": "washer.glb",
+   "node_names": [
+    "body",
+    "door_glass",
+    "door_ring",
+    "filter",
+    "knob",
+    "panel"
+   ],
+   "materials": [
+    "glass_dark",
+    "metal_chrome",
+    "plastic_grey",
+    "plastic_white"
+   ],
+   "parts": 6,
+   "triangles": 708,
+   "vertices": 2124,
+   "dims_mm": [
+    600,
+    627,
+    850
+   ],
+   "z_min_mm": 0,
+   "bytes": 54972
+  },
+  {
+   "id": "microwave",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/microwave.glb",
+   "name_zh": "微波爐",
+   "name_en": "microwave",
+   "group": "電器",
+   "file": "microwave.glb",
+   "node_names": [
+    "body",
+    "door_glass",
+    "handle",
+    "handle_4",
+    "handle_5",
+    "panel",
+    "trim"
+   ],
+   "materials": [
+    "glass_dark",
+    "metal_black",
+    "metal_steel",
+    "plastic_grey"
+   ],
+   "parts": 7,
+   "triangles": 344,
+   "vertices": 1032,
+   "dims_mm": [
+    500,
+    445,
+    300
+   ],
+   "z_min_mm": 0,
+   "bytes": 25732
+  },
+  {
+   "id": "air_conditioner",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/air_conditioner.glb",
+   "name_zh": "冷氣機",
+   "name_en": "split AC (indoor)",
+   "group": "電器",
+   "file": "air_conditioner.glb",
+   "node_names": [
+    "body",
+    "display",
+    "flap",
+    "intake"
+   ],
+   "materials": [
+    "metal_black",
+    "plastic_grey",
+    "plastic_white"
+   ],
+   "parts": 4,
+   "triangles": 240,
+   "vertices": 720,
+   "dims_mm": [
+    850,
+    215,
+    300
+   ],
+   "z_min_mm": 0,
+   "bytes": 18600
+  },
+  {
+   "id": "screen_divider",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/screen_divider.glb",
+   "name_zh": "屏風",
+   "name_en": "folding screen",
+   "group": "其他",
+   "file": "screen_divider.glb",
+   "node_names": [
+    "frame_0_0",
+    "frame_0_1",
+    "frame_1_0",
+    "frame_1_1",
+    "frame_2_0",
+    "frame_2_1",
+    "panel_0",
+    "panel_1",
+    "panel_2"
+   ],
+   "materials": [
+    "fabric_linen",
+    "oak"
+   ],
+   "parts": 9,
+   "triangles": 540,
+   "vertices": 1620,
+   "dims_mm": [
+    550,
+    571,
+    1800
+   ],
+   "z_min_mm": 0,
+   "bytes": 39364
+  },
+  {
+   "id": "mirror",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/mirror.glb",
+   "name_zh": "鏡",
+   "name_en": "full-length mirror",
+   "group": "其他",
+   "file": "mirror.glb",
+   "node_names": [
+    "foot",
+    "frame",
+    "glass"
+   ],
+   "materials": [
+    "mirror",
+    "oak"
+   ],
+   "parts": 3,
+   "triangles": 180,
+   "vertices": 540,
+   "dims_mm": [
+    600,
+    160,
+    1600
+   ],
+   "z_min_mm": 0,
+   "bytes": 14128
+  },
+  {
+   "id": "drying_rack",
+   "kind": "template",
+   "path": "/mnt/d/openclaw/hk-space/out/templates/drying_rack.glb",
+   "name_zh": "晾衫架",
+   "name_en": "drying rack",
+   "group": "其他",
+   "file": "drying_rack.glb",
+   "node_names": [
+    "bar_0",
+    "bar_1",
+    "bar_2",
+    "bar_3",
+    "bar_4",
+    "bar_5",
+    "bar_6",
+    "beam",
+    "beam_5",
+    "foot",
+    "foot_29",
+    "foot_30",
+    "foot_31",
+    "low_bar",
+    "low_bar_27",
+    "low_rail",
+    "post",
+    "post_1",
+    "post_3",
+    "post_4",
+    "wing_bar",
+    "wing_bar_16",
+    "wing_bar_18",
+    "wing_bar_20",
+    "wing_bar_22",
+    "wing_bar_24",
+    "wing_rail",
+    "wing_rail_15",
+    "wing_rail_17",
+    "wing_rail_19",
+    "wing_rail_21",
+    "wing_rail_23"
+   ],
+   "materials": [
+    "metal_alu",
+    "plastic_grey"
+   ],
+   "parts": 32,
+   "triangles": 1404,
+   "vertices": 4212,
+   "dims_mm": [
+    1158,
+    1254,
+    1405
+   ],
+   "z_min_mm": 0,
+   "bytes": 78532
+  }
+ ]
+}
