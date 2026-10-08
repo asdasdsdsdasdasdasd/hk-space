@@ -22,8 +22,10 @@
         ]
       ],
       "area_mm2": 10138800,
-      "id": "living",
       "label": "客廳",
+      "label_source": "image",
+      "label_score": 0.814,
+      "id": "living",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -157,8 +159,10 @@
         ]
       ],
       "area_mm2": 8605200,
-      "id": "bedroom",
       "label": "睡房",
+      "label_source": "image",
+      "label_score": 0.798,
+      "id": "bedroom",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -278,8 +282,10 @@
         ]
       ],
       "area_mm2": 8029500,
-      "id": "kitchen",
-      "label": "廚房",
+      "label": "飯廳",
+      "label_source": "image",
+      "label_score": 0.829,
+      "id": "dining",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -405,8 +411,10 @@
         ]
       ],
       "area_mm2": 3806400,
-      "id": "bath",
-      "label": "浴室",
+      "label": "廚房",
+      "label_source": "area-rank",
+      "label_score": 0.0,
+      "id": "kitchen",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -527,8 +535,10 @@
         ]
       ],
       "area_mm2": 3074400,
-      "id": "storage",
-      "label": "儲物房",
+      "label": "浴室",
+      "label_source": "image",
+      "label_score": 0.724,
+      "id": "bath",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -643,8 +653,10 @@
         ]
       ],
       "area_mm2": 2964600,
-      "id": "dining",
-      "label": "飯廳",
+      "label": "儲物房",
+      "label_source": "image",
+      "label_score": 0.852,
+      "id": "storage",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -718,16 +730,22 @@
   ],
   "connections": [
     {
-      "a": "kitchen",
+      "a": "dining",
       "b": "living",
       "type": "doorway",
       "width_mm": 1150
     },
     {
       "a": "bedroom",
-      "b": "kitchen",
+      "b": "dining",
       "type": "doorway",
       "width_mm": 810
+    },
+    {
+      "a": "bath",
+      "b": "kitchen",
+      "type": "doorway",
+      "width_mm": 660
     },
     {
       "a": "storage",
@@ -736,20 +754,14 @@
       "width_mm": 660
     },
     {
-      "a": "dining",
-      "b": "storage",
-      "type": "doorway",
-      "width_mm": 660
-    },
-    {
-      "a": "bath",
+      "a": "kitchen",
       "b": "living",
       "type": "doorway",
       "width_mm": 770
     },
     {
-      "a": "kitchen",
-      "b": "bath",
+      "a": "dining",
+      "b": "kitchen",
       "type": "doorway",
       "width_mm": 760
     }
@@ -805,6 +817,6 @@
       "按承重墙≈200mm 反推比例尺 5.000 mm/px (未经尺寸标注校验)"
     ],
     "rectified_image": "out/plan_hk_c_rectified.png",
-    "overlay": "out/floorplan_overlay_c.png"
+    "overlay": "/mnt/d/openclaw/hk-space/out/floorplan_overlay.png"
   }
 }

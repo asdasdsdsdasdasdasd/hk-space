@@ -30,8 +30,10 @@
         ]
       ],
       "area_mm2": 16207500,
-      "id": "living",
       "label": "客廳",
+      "label_source": "image",
+      "label_score": 0.816,
+      "id": "living",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -207,8 +209,10 @@
         ]
       ],
       "area_mm2": 5125600,
-      "id": "bedroom",
       "label": "睡房",
+      "label_source": "image",
+      "label_score": 0.836,
+      "id": "bedroom",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -331,8 +335,10 @@
         ]
       ],
       "area_mm2": 2405600,
-      "id": "kitchen",
-      "label": "廚房",
+      "label": "浴室",
+      "label_source": "image",
+      "label_score": 0.599,
+      "id": "bath",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -423,8 +429,10 @@
         ]
       ],
       "area_mm2": 1723600,
-      "id": "bath",
-      "label": "浴室",
+      "label": "廚房",
+      "label_source": "image",
+      "label_score": 0.61,
+      "id": "kitchen",
       "height_mm": 2450,
       "height_field": [],
       "walls": [
@@ -504,14 +512,14 @@
       "width_mm": 818
     },
     {
-      "a": "kitchen",
+      "a": "bath",
       "b": "bedroom",
       "type": "doorway",
       "width_mm": 664
     },
     {
       "a": "living",
-      "b": "bath",
+      "b": "kitchen",
       "type": "doorway",
       "width_mm": 718
     }
@@ -583,6 +591,6 @@
     },
     "warnings": [],
     "rectified_image": "out/plan_hk_b_rectified.png",
-    "overlay": "out/floorplan_overlay_b.png"
+    "overlay": "/mnt/d/openclaw/hk-space/out/floorplan_overlay.png"
   }
 }

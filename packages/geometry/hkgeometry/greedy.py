@@ -49,9 +49,15 @@ def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
     圆判定为 0 侵占，但人根本过不去。
     """
     poly = room.usable_geo()
+    # ★ 上限要按「所有門加起來」算，唔可以逐扇門獨立算。
+    #   踩過的坑：睡房（可用 3380x1430 = 4.83m²）有兩扇門，
+    #   每扇 900x1200 = 1.08m² 都低於 30% 的 1.45m²，所以兩扇都冇被收縮 ——
+    #   加起來 2.16m² = 45%，把房中間整條吃掉，一張 990x2060 的單人床
+    #   左右都塞唔入（實測：睡房輸出冇床）。
+    n_doors = max(1, sum(1 for o in room.openings if o.kind == "door"))
     cap = MAX_DOOR_ZONE_FRAC * poly.area
-    if width * depth > cap:
-        depth = int(max(MIN_DOOR_DEPTH, cap / width))
+    if width * depth * n_doors > cap:
+        depth = int(max(MIN_DOOR_DEPTH, (cap / n_doors) / width))
     zones = []
     for op in room.openings:
         if op.kind != "door":

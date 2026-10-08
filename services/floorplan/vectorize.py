@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -561,6 +562,171 @@ def ocr_dimension_tokens(bw: np.ndarray) -> Tuple[List[dict], str]:
     return tokens, "template"
 
 
+
+
+# ============================================================================
+# 4c. 房间标签识别（同样是模板匹配, 不训练模型）
+# ============================================================================
+# ★ 为什么要做这一步：vectorize 原来**只按面积排名**猜标签
+#   （最大=客廳, 第二大=睡房, 第三=廚房, 第四=浴室）。
+#   plan_hk_a / plan_hk_c 碰巧都对, 但 plan_hk_b 里**浴室(2.41m²)比廚房(1.72m²)大**,
+#   于是厨房和浴室被整间对调 —— 灶台摆进了浴室, 马桶摆进了厨房,
+#   而且图看起来完全正常。户型图上是**写着房名的**, 应该去读它。
+ROOM_LABEL_VOCAB = ["客廳", "睡房", "廚房", "浴室", "儲物房", "飯廳", "房間"]
+
+_LABEL_TPL: Optional[Dict[str, np.ndarray]] = None
+LABEL_TPL_SIZE = (64, 32)          # (宽, 高)
+
+
+def _label_templates() -> Dict[str, np.ndarray]:
+    """用系统 CJK 字体渲染候选房名当模板。"""
+    global _LABEL_TPL
+    if _LABEL_TPL is not None:
+        return _LABEL_TPL
+    from PIL import Image, ImageDraw, ImageFont
+    font_path = None
+    for p in ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+              "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc",
+              "/usr/share/fonts/truetype/arphic/uming.ttc",
+              "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"):
+        if Path(p).exists():
+            font_path = p
+            break
+    if font_path is None:
+        _LABEL_TPL = {}
+        return _LABEL_TPL
+    try:
+        f = ImageFont.truetype(font_path, 120)
+    except Exception:
+        _LABEL_TPL = {}
+        return _LABEL_TPL
+    tpl: Dict[str, np.ndarray] = {}
+    for lab in ROOM_LABEL_VOCAB:
+        im = Image.new("L", (140 * len(lab) + 80, 200), 255)
+        ImageDraw.Draw(im).text((40, 100), lab, font=f, fill=0, anchor="lm")
+        a = np.asarray(im)
+        ys, xs = np.where(a < 128)
+        if len(ys) == 0:
+            continue
+        crop = a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+        g = cv2.resize(crop, LABEL_TPL_SIZE, interpolation=cv2.INTER_AREA).astype(np.float32)
+        g = 255.0 - g
+        g = (g - g.min()) / max(1e-6, g.max() - g.min())
+        tpl[lab] = g
+    _LABEL_TPL = tpl
+    return tpl
+
+
+def _score_wide(a: np.ndarray, b: np.ndarray, r: int = 2) -> float:
+    """和 _score 一样, 但允许更多像素的平移 (房名比数字大, 对齐误差也大)。"""
+    best = -1.0
+    for dy in range(-r, r + 1):
+        for dx in range(-r, r + 1):
+            bb = np.roll(np.roll(b, dy, 0), dx, 1)
+            best = max(best, float(1.0 - np.abs(a - bb).mean()))
+    return best
+
+
+def _read_label_from(mask: np.ndarray, inner: np.ndarray, tpl: Dict[str, np.ndarray],
+                     min_score: float) -> Tuple[str, float]:
+    """从一个二值图里读房名（已假定笔画是粗的）。"""
+    h, w = mask.shape
+    n, lab, stats, _ = cv2.connectedComponentsWithStats(mask, 8)
+    comps = []
+    for i in range(1, n):
+        x, y, ww, hh, a = (int(stats[i, 0]), int(stats[i, 1]), int(stats[i, 2]),
+                           int(stats[i, 3]), int(stats[i, 4]))
+        if a < 20 or hh < 8 or ww < 4:
+            continue
+        if ww / max(1, hh) > 6:                 # 又长又扁 = 墙线 / 尺寸线
+            continue
+        if ww > 0.6 * w or hh > 0.6 * h:
+            continue
+        if inner[y:y + hh, x:x + ww].min() == 0:    # 必须整块在房间内部
+            if os.environ.get("HKSPACE_DEBUG_LABELS") and \
+                    inner[y:y + hh, x:x + ww].max() > 0:
+                print("      drop(fractional): (%d,%d,%d,%d,a=%d)" % (x, y, ww, hh, a))
+            continue
+        comps.append((i, x, y, ww, hh))
+    if os.environ.get("HKSPACE_DEBUG_LABELS"):
+        print("      comps kept: %d  %s" % (len(comps), comps[:8]))
+    if not comps:
+        return "", 0.0
+    # 同一个词的几个字 y 中心相近、字高相近、水平间距小 (间距按**字高**算,
+    # 不能按全图组件中位高 —— 尺寸数字只有房名的 1/2.3 高, 会把容差压得太小)
+    comps.sort(key=lambda c: c[1])
+    groups: List[List[tuple]] = []
+    for c in comps:
+        yc, hh = c[2] + c[4] / 2.0, c[4]
+        put = False
+        for g in groups:
+            gh = float(np.mean([q[4] for q in g]))
+            gy = float(np.mean([q[2] + q[4] / 2.0 for q in g]))
+            gx1 = max(q[1] + q[3] for q in g)
+            if abs(hh - gh) > 0.35 * gh:
+                continue
+            if abs(yc - gy) > 0.30 * max(gh, hh):
+                continue
+            if (c[1] - gx1) >= 0.55 * max(gh, hh):
+                continue
+            g.append(c)
+            put = True
+            break
+        if not put:
+            groups.append([c])
+    if os.environ.get("HKSPACE_DEBUG_LABELS"):
+        print("      groups(all): %s" % [len(g) for g in groups])
+    groups = [g for g in groups if len(g) >= 2]
+    if not groups:
+        return "", 0.0
+    grp = max(groups, key=lambda g: sum(q[3] * q[4] for q in g))
+    ids = [q[0] for q in grp]
+    x0 = min(q[1] for q in grp)
+    y0 = min(q[2] for q in grp)
+    x1 = max(q[1] + q[3] for q in grp)
+    y1 = max(q[2] + q[4] for q in grp)
+    crop = np.isin(lab[y0:y1 + 1, x0:x1 + 1], ids).astype(np.uint8) * 255
+    if crop.size == 0:
+        return "", 0.0
+    g = cv2.resize(crop, LABEL_TPL_SIZE, interpolation=cv2.INTER_AREA).astype(np.float32)
+    g = (g - g.min()) / max(1e-6, g.max() - g.min())
+    scored = sorted(((_score_wide(g, t), lab_) for lab_, t in tpl.items()), reverse=True)
+    if not scored:
+        return "", 0.0
+    sc, lab_ = scored[0]
+    return (lab_, float(sc)) if sc >= min_score else ("", float(sc))
+
+
+def read_room_label(bw: np.ndarray, poly_px, tpl: Dict[str, np.ndarray],
+                    min_score: float = 0.58) -> Tuple[str, float]:
+    """在一间房的轮廓里找出房名文字, 和候选标签做模板匹配。
+
+    返回 (标签, 相似度)。读不到就返回空字符串 —— **宁可退回按面积猜,
+    也不要贴一个错标签上去**。
+
+    ★ 两个坑:
+      ① 极性: bw 里 255 = 墨, 模板也要转成「墨 = 高值」, 两边同号才比得上。
+         第一版多做了一次 255-x, 把图里的字反过来比, 所有房名都失败(0.45-0.55 全是噪声)。
+      ② 细线会串字: 门弧横穿房名时（plan_hk_b 的「廚房」就是这样）,
+         字被并进一个大组件, 然后因为不完整落在房内被丢掉。
+         所以**两种输入都试**: 原图 + 5x5 开运算（去掉 ≈4px 的墙线/门弧, 保住 ≈8px 的笔画）,
+         取分高的那个。只试一种的话, 总有一半房间读唔到。
+    """
+    if not tpl or len(poly_px) < 3:
+        return "", 0.0
+    h, w = bw.shape
+    m = np.zeros((h, w), np.uint8)
+    cv2.fillPoly(m, [np.asarray(poly_px, np.int32)], 255)
+    inner = cv2.erode(m, np.ones((15, 15), np.uint8))
+    opened = cv2.morphologyEx(bw, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
+    best_lab, best_sc = "", 0.0
+    for mask in (bw, opened):
+        lab_, sc = _read_label_from(mask, inner, tpl, min_score)
+        if sc > best_sc:
+            best_lab, best_sc = lab_, sc
+    return best_lab, best_sc
+
+
 def _consensus(cands: List[tuple], tol: float = 0.06):
     """把候选比例尺聚类, 取「权重和最大」的那一簇 (比直接取中位数抗误读)。"""
     if not cands:
@@ -1027,7 +1193,7 @@ ID_BY_RANK = ["living", "bedroom", "kitchen", "bath", "storage", "dining", "room
 
 
 def build_room_json(walls_mm, openings_mm, rooms_px, scale, origin_px, params,
-                    meta_extra: dict):
+                    meta_extra: dict, labels_px: Optional[List[tuple]] = None):
     ox, oy = origin_px
     gxs = sorted({round(((w["_px"]["center"] - ox) * scale + s * w["thickness_mm"] / 2.0) / 10.0) * 10
                   for w in walls_mm if w["axis"] == "v" for s in (-1, 1)})
@@ -1038,7 +1204,7 @@ def build_room_json(walls_mm, openings_mm, rooms_px, scale, origin_px, params,
     tol = max(120.0, 60.0 * scale)
 
     rooms = []
-    for r in rooms_px:
+    for ri, r in enumerate(rooms_px):
         poly_mm = [((x - ox) * scale, (y - oy) * scale) for (x, y) in r["px"]]
         snapped = snap_ortho(poly_mm, gxs_np, gys_np, tol)
         poly = [[int(round(x)), int(round(y))] for (x, y) in snapped]
@@ -1047,11 +1213,35 @@ def build_room_json(walls_mm, openings_mm, rooms_px, scale, origin_px, params,
             x1, y1 = poly[i]
             x2, y2 = poly[(i + 1) % len(poly)]
             area += x1 * y2 - x2 * y1
-        rooms.append(dict(polygon=poly, area_mm2=int(abs(area) / 2.0)))
+        lab, sc = (labels_px[ri] if labels_px and ri < len(labels_px) else ("", 0.0))
+        rooms.append(dict(polygon=poly, area_mm2=int(abs(area) / 2.0),
+                          _ocr_label=lab, _ocr_score=round(float(sc), 3)))
     rooms.sort(key=lambda r: -r["area_mm2"])
+    label_to_id = dict(zip(LABEL_BY_RANK, ID_BY_RANK))
+    # ① 圖上寫住房名就信圖
+    n_ocr = 0
+    for r in rooms:
+        ocr = r.pop("_ocr_label", "")
+        r["label"] = ocr
+        r["label_source"] = "image" if ocr else ""
+        r["label_score"] = r.pop("_ocr_score", 0.0)
+        if ocr:
+            n_ocr += 1
+    # ② 讀唔到嘅，由**剩下未用過嘅房名**裡按面積排名補。
+    #    唔可以獨立按排名猜：兩間房可能拿到同一個名（實測 plan_hk_c
+    #    出現過兩間「浴室」、冇「廚房」）。房名係互斥的。
+    pool = [l for l in LABEL_BY_RANK if l not in {r["label"] for r in rooms}]
     for i, r in enumerate(rooms):
-        r["id"] = ID_BY_RANK[i] if i < len(ID_BY_RANK) else "room%d" % i
-        r["label"] = LABEL_BY_RANK[i] if i < len(LABEL_BY_RANK) else "房間"
+        if r["label_source"] == "image":
+            continue
+        want = LABEL_BY_RANK[i] if i < len(LABEL_BY_RANK) else "房間"
+        pick = want if want in pool else (pool[0] if pool else "房間")
+        if pick in pool:
+            pool.remove(pick)
+        r["label"] = pick
+        r["label_source"] = "area-rank"
+    for i, r in enumerate(rooms):
+        r["id"] = label_to_id.get(r["label"], ID_BY_RANK[i] if i < len(ID_BY_RANK) else "room%d" % i)
         r["height_mm"] = DEFAULT_HEIGHT_MM
         r["height_field"] = []
         r["walls"] = []
@@ -1342,8 +1532,22 @@ def vectorize(image_path: Path, out_path: Path, params: Params,
 
     warnings: List[str] = list(notes)
     meta_extra = dict(warnings=warnings)
+    labels_px = []
+    tpl = _label_templates()
+    for r in rooms_px:
+        lab, sc = read_room_label(bw, r["px"], tpl)
+        labels_px.append((lab, sc))
+        if os.environ.get("HKSPACE_DEBUG_LABELS"):
+            xs = [p[0] for p in r["px"]]
+            ys = [p[1] for p in r["px"]]
+            print("   [dbg] room%d bbox=(%d,%d,%d,%d) poly=%s -> %r %.2f"
+                  % (len(labels_px), min(xs), min(ys), max(xs) - min(xs),
+                     max(ys) - min(ys), [[int(a), int(b)] for a, b in r["px"]], lab, sc))
+    if tpl:
+        print("   房名辨識: %s" % (["%s(%s)" % (l or "?", round(s, 2)) for l, s in labels_px]))
     rooms, connections, entry, offset_mm = build_room_json(
-        walls_mm, opens_mm, rooms_px, scale, (0.0, 0.0), params, meta_extra)
+        walls_mm, opens_mm, rooms_px, scale, (0.0, 0.0), params, meta_extra,
+        labels_px=labels_px)
 
     conf, det = compute_confidence(result["scale_source"], rooms, walls_mm, opens_mm,
                                    residual, ink, meta_extra.get("warnings", []))

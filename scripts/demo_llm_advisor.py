@@ -98,6 +98,31 @@ def snapshot(flat, house, advices) -> dict:
     }
 
 
+ESSENTIAL_INST_CATEGORIES = {"bed", "bunk_bed", "loft_bed", "storage_bed",
+                             "toilet", "basin", "bathtub", "shower",
+                             "stove", "kitchen_counter", "sofa"}
+
+
+def _judge_loss(items, placed_before: set, placed_after: set, dropped_now: set):
+    """改動之後有冇「整少咗嘢」。
+
+    ★ 唔可以只比「邊幾件唔見咗」—— 換細一號床之後，床入咗、床頭櫃出咗，
+      兩邊各有得失，件數一樣。以前寫成「少咗任何一件都算輸」，
+      結果 plan_hk_b 第 1 輪嘅「換細床」（唯一可以令睡房有床嘅動作）
+      被自己嘅守衛駁回，閉環之後所有輪次都用返大床 —— 睡房永遠冇床。
+      正確問法係：① 總件數有冇少？② **主體家具**（床/梳化/馬桶/灶台）有冇被擠走？
+    """
+    lost = (placed_before - placed_after) - dropped_now
+    bad = []
+    if len(placed_after) < len(placed_before):
+        bad.append("就位家具由 %d 件減到 %d 件" % (len(placed_before), len(placed_after)))
+    cat = {p.inst: p.category for p in items}
+    hard_lost = {i for i in lost if cat.get(i) in ESSENTIAL_INST_CATEGORIES}
+    if hard_lost:
+        bad.append("主體家具被擠走（%s）" % "、".join(sorted(hard_lost)))
+    return lost, bad
+
+
 def all_advice(flat, house, items, assign):
     """顧問意見 = 逐間房嘅「放唔落 / 擺唔好」+ 全屋嘅「冇房放得落」。"""
     unassigned = [p for p in items if p.inst not in assign]
@@ -315,11 +340,32 @@ def main() -> None:
                 print("    重解用時 %.1fs" % (time.time() - t2))
             else:
                 print("    （沒有真正生效的重解動作）")
+
+        # ★ 通道① 單獨裁決。為什麼要分開判：
+        #   實測 plan_hk_b 第 1 輪同時有「換細書枱/床」（重解，正確）同
+        #   「挪一挪」（補丁，反而令硬傷上升）。整輪一齊回滾的話，
+        #   連正確嘅換細都一齊撤銷 —— 之後所有輪次都用返嗰張
+        #   1560x2090 嘅大床，睡房永遠冇床。
+        #   兩個通道各自存檔、各自裁決，一個失敗唔拖另一個落水。
+        h_r, placed_r = hard_total(flat, house), placed_set(house)
+        dropped_now = {d.target for d in decisions if d.action == "drop_item"}
+        lost_r, bad_r = _judge_loss(items, placed_before, placed_r, dropped_now)
+        if h_r > h_before:
+            bad_r.insert(0, "硬傷由 %d 條增至 %d 條" % (h_before, h_r))
+        if bad_r and any(d.channel == "resolve" for d in decisions):
+            banner("第 %d 輪通道①裁決：⛔ 不通過，回滾" % rnd)
+            print("    理由：%s" % "；".join(bad_r))
+            items, assign, house = bak
+            feedback.append("你上一輪經「加約束重解」做嘅改動被駁回：%s。" % "；".join(bad_r))
+            h_r, placed_r = h_before, placed_before
+        elif any(d.channel == "resolve" for d in decisions):
+            print("\n    ✅ 通道①裁決：通過（硬傷 %d -> %d）" % (h_before, h_r))
         else:
             print("\n    （LLM 沒有選重解通道）")
 
         if patches:
             banner("第 %d 步：通道② 局部補丁（引擎自己搜方向）" % rnd)
+            house_pre_patch = copy.deepcopy(house)
             for d in patches:
                 rid = assign.get(d.target)
                 lay = house.by_room.get(rid) if rid else None
@@ -354,28 +400,24 @@ def main() -> None:
                 feedback.append("【%s】所有動作都試過或者唔可行 —— 請 keep，"
                                 "並喺 reason 講明要定制 / 跨零售商比價。" % a.headline)
 
-        # ---- 裁決
+        # ---- 通道② 裁決（補丁係原地改座標，回滾唔使重解，好便宜）
         h_after, placed_after = hard_total(flat, house), placed_set(house)
-        dropped_now = {d.target for d in decisions if d.action == "drop_item"}
-        lost = (placed_before - placed_after) - dropped_now
-        bad = []
-        if h_after > h_before:
-            bad.append("硬傷由 %d 條增至 %d 條" % (h_before, h_after))
+        bad_p = []
+        if patches and h_after > h_r:
+            bad_p.append("硬傷由 %d 條增至 %d 條" % (h_r, h_after))
+        if bad_p:
+            banner("第 %d 輪通道②裁決：⛔ 不通過，回滾" % rnd)
+            print("    理由：%s" % "；".join(bad_p))
+            house = house_pre_patch
+            h_after = h_r
+            placed_after = placed_set(house)
+            feedback.append("你上一輪叫嘅局部補丁被駁回：%s。"
+                            "挪位只可以改善，唔可以整差。" % "；".join(bad_p))
+        elif patches:
+            print("\n    ✅ 通道②裁決：通過（硬傷 %d -> %d）" % (h_r, h_after))
+        lost, _ = _judge_loss(items, placed_before, placed_after, dropped_now)
         if lost:
-            bad.append("有家具被靜靜雞擠走（%s）" % "、".join(sorted(lost)))
-        if bad:
-            banner("第 %d 輪裁決：⛔ 不通過，回滾" % rnd)
-            print("    理由：%s" % "；".join(bad))
-            print("    （LLM 提議，幾何裁決 —— 這一輪的改動已全部撤銷）")
-            items, assign, house = bak
-            feedback.append(
-                "你上一輪的改動被引擎**駁回**：%s。"
-                "原因係「改一間房唔可以整壞另一間房」。請換一個唔會令情況變差嘅做法；"
-                "可用動作只有 shrink_sku / try_nudge / move_item / keep。"
-                % "；".join(bad))
-        else:
-            print("\n    ✅ 裁決：通過（硬傷 %d -> %d，就位 %d -> %d）"
-                  % (h_before, h_after, len(placed_before), len(placed_after)))
+            print("    ⚠️ 注意：有主體家具喺呢輪之後冇咗位（%s）" % "、".join(sorted(lost)))
 
         # ---- 重新評估
         advices = all_advice(flat, house, items, assign)

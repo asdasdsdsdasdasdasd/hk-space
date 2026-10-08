@@ -222,6 +222,12 @@ def feasibility(advice: Advice, catalog: list[dict] | None,
     items_by_inst = items_by_inst or {}
     lines: list[str] = []
     _rooms_cache: dict = {}
+    r_here = None
+    if flat is not None and advice.room:
+        try:
+            r_here = flat.room(advice.room)
+        except Exception:
+            r_here = None
     placed_set = set()
     if house is not None:
         placed_set = {q.inst for lay in house.by_room.values() for q in lay.placements}
@@ -231,11 +237,14 @@ def feasibility(advice: Advice, catalog: list[dict] | None,
             continue
         # 格式固定成 "<action> <inst>：可行/唔可行 — <原因>"，
         # 一行一個動作 —— 這行字既要餵 LLM，也要被 driver 解析返出來。
-        sm = _pick_smaller(catalog, p.category, p.w, p.d)
+        sm = _pick_smaller(catalog, p.category, p.w, p.d, room=r_here)
         if sm is None:
             sw, sd, n = smallest_in_category(catalog, p.category)
             lines.append("shrink_sku %s：唔可行 — 庫裏 %d 款 %s 最細係 %dx%d，"
-                         "你手上已經係 %dx%d" % (s, n, p.category, sw, sd, p.w, p.d))
+                         "而呢間房 %s，冇一款塞得入"
+                         % (s, n, p.category, sw, sd,
+                            "只有 %.1f m²" % (r_here.usable_geo().area / 1e6)
+                            if r_here is not None else "太細"))
         else:
             lines.append("shrink_sku %s：可行 — 可換成 %dx%d"
                          % (s, sm["dims"]["w"], sm["dims"]["d"]))
@@ -566,8 +575,17 @@ class LLMClient:
 # ④ 執行動作 —— 確定性代碼，LLM 碰不到這裏
 # --------------------------------------------------------------------------
 
+def _dims_fit(w: int, d: int, room) -> bool:
+    """這件家具塞唔塞得入呢間房（用可用邊界，唔算通道）。"""
+    if room is None:
+        return True
+    minx, miny, maxx, maxy = room.usable_geo().bounds
+    rw, rd = maxx - minx, maxy - miny
+    return (w <= rw and d <= rd) or (w <= rd and d <= rw)
+
+
 def _pick_smaller(catalog: list[dict], category: str, cur_w: int, cur_d: int,
-                  max_w: int = 0, max_d: int = 0) -> dict | None:
+                  max_w: int = 0, max_d: int = 0, room=None) -> dict | None:
     """同品類裏比現在更小的款式。
 
     兩種模式：
@@ -583,6 +601,11 @@ def _pick_smaller(catalog: list[dict], category: str, cur_w: int, cur_d: int,
         if s.get("category") != category:
             continue
         w, d = s["dims"]["w"], s["dims"]["d"]
+        # ★ 「換細一號」只有在**換完之後真係塞得入呢間房**才算可行。
+        #   唔檢查的話：睡房淨深 1430mm，而庫裏「下一個尺寸」係 1490x2000 ——
+        #   引擎照樣報「可行」，LLM 換完一樣放唔落，白行一輪。
+        if not _dims_fit(w, d, room):
+            continue
         if max_w or max_d:
             # 上限 = min(LLM 給的, 現在的) —— LLM 睇唔到庫，
             # 佢随口寫 1500x800 唔代表佢想換一件**更大**嘅（踩過：
@@ -763,10 +786,19 @@ def apply_decisions(items: list[Placement], assign: dict[str, str],
                 notes.append("[skip] %s 是固定件，型號改了也裝不回原位（來去水位固定）"
                              % d.target)
                 continue
+            r_target = None
+            if flat is not None:
+                rid_t = assign.get(d.target)
+                if rid_t:
+                    try:
+                        r_target = flat.room(rid_t)
+                    except Exception:
+                        r_target = None
             s = _pick_smaller(catalog, p.category,
                               p.w, p.d,
                               int(d.params.get("max_w") or 0),
-                              int(d.params.get("max_d") or 0))
+                              int(d.params.get("max_d") or 0),
+                              room=r_target)
             if s is None:
                 sw, sd, n = smallest_in_category(catalog, p.category)
                 lw = int(d.params.get("max_w") or 0)

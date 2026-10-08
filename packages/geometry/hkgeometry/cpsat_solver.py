@@ -42,8 +42,40 @@ from .types import FRONT_CLEARANCE, Layout, Placement, Room, front_dir
 #   求解器於是「解決問題」的方法係唔擺張梳化。客戶的梳化唔係可以咁消失嘅。
 MISSING_WEIGHT = 12
 
+# ★ 但唔係每一件都一樣重要。
+#   實測 plan_hk_b 睡房（3380x1430，放 990x2060 單人床 + 衣櫃 + 床頭櫃）：
+#   三件擺唔晒，求解器就在「唔擺床」同「唔擺床頭櫃」之間揀 ——
+#   兩者罰分一樣，於是佢揀咗**唔擺床**（因為淨返嘅位擺床頭櫃分數更高）。
+#   結果係一間冇床嘅睡房。定義房間功能嘅家具要罰重好多。
+ESSENTIAL_CATEGORIES = {"bed", "bunk_bed", "loft_bed", "storage_bed",
+                        "toilet", "basin", "bathtub", "shower",
+                        "stove", "kitchen_counter", "sofa"}
+ESSENTIAL_FACTOR = 4
+
 # 啟發式錨定順序全部有硬傷時，再試幾條隨機順序（見 solve_cpsat 末尾）
 RESTARTS = 10
+
+
+def _missing_penalty(items, lay) -> int:
+    """漏放罰分 —— 定義房間功能嘅家具（床/馬桶/灶台/梳化）罰重 4 倍。"""
+    got = {p.inst for p in lay.placements}
+    return sum(MISSING_WEIGHT * (ESSENTIAL_FACTOR if it.category in ESSENTIAL_CATEGORIES
+                                 else 1)
+               for it in items if it.inst not in got)
+
+
+def _scale_zone(z, f: float):
+    """把門洞走道按比例縮細（以自身中心為準）。
+
+    doors 裡兩種形式都有：door_approach_zones 回傳 (id, poly)，
+    entry_corridor_zones 回傳純 poly —— 兩種都要吃得下。
+    """
+    if isinstance(z, (tuple, list)):
+        return (z[0], _scale_zone(z[1], f))
+    b = z.bounds
+    cx, cy = (b[0] + b[2]) / 2.0, (b[1] + b[3]) / 2.0
+    hw, hh = (b[2] - b[0]) * f / 2.0, (b[3] - b[1]) * f / 2.0
+    return shapely.box(cx - hw, cy - hh, cx + hw, cy + hh)
 
 BACK_TO_WALL_HARD = {"wardrobe", "cabinet", "shelf", "tv_bench", "shoe_cabinet",
                      "drawer_chest", "fridge", "washing_machine", "bed",
@@ -642,13 +674,52 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
         # 曾经只比 len(lv.hard)，结果「少放一件家具」反而硬伤更少、分数更高 ——
         # 电视柜放不下就直接不放，求解器还觉得自己很对。
         missing = max(0, len(items) - len(lay.placements))
-        key = (len(lv.hard) + MISSING_WEIGHT * missing, -round(sp.score, 1))
+        key = (len(lv.hard) + _missing_penalty(items, lay), -round(sp.score, 1))
         if verbose:
             print("   [order %d] %s  宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                   % (oi, " ".join(p.inst.strip("#") for p in anchors_order[:3]),
                      len(lv.hard), missing, sp.score))
         if best is None or key < best[0]:
             best = (key, lay, info, lv, sp)
+
+    # ★ 放寬階梯：原尺寸的門洞走道放唔落時，再試「走道縮到 60%」。
+    #   為什麼要這樣：plan_hk_b 的睡房 3380x1430，兩扇門在兩條長邊上，
+    #   各 900x1200 的走道加起來把整間房封死 —— 一張 990x2060 的單人床
+    #   左右都塞唔入，結果輸出**一間冇床嘅睡房**。
+    #   縮到 60% 之後仍然唔准壓住門框（人仲要行得入），只係唔再要求
+    #   整條 900x1200 全空。這是一條階梯：本來就夠位嘅房第一輪就放得落，
+    #   根本行唔到這裡，所以唔會影響大房。
+    #   階梯一路收到 25%：實測 plan_hk_b 睡房（1430mm 深、兩扇門在兩條長邊上）
+    #   收到 40% 都仲係放唔落 —— 因為房間淨深只夠 990，而兩條走道加起來
+    #   無論幾淺都會切斷整個深度。收到 25%（≈300mm）就變成「只係唔准壓住門扇」，
+    #   床先擺得入。冇這一步，輸出就係一間冇床嘅睡房。
+    for _frac in ((0.6, 0.4, 0.25, 0.0) if best is not None and doors
+                  and (len(items) - len(best[1].placements)) > 0 else ()):
+        if len(items) - len(best[1].placements) == 0:
+            break
+        # frac=0 要走「完全冇走道」，唔可以留一個退化多邊形 ——
+        # shapely.box(cx,cy,cx,cy) 係一個點，intersects 仲係會中，等於冇放寬過。
+        small = [] if _frac <= 0 else [_scale_zone(z, _frac) for z in doors]
+        for oi, anchors_order in enumerate(orders):
+            lay, info = _solve_with_order(room, items, anchors_order, emap, W, corridors,
+                                          small, spines, time_limit_s, seed, False,
+                                          soft_paths=soft_paths)
+            if not lay.placements:
+                continue
+            from .livability import check_livability
+            from .spaciousness import spaciousness_report
+            lv = check_livability(room, lay)
+            sp = spaciousness_report(room, lay, emap, corridors)
+            missing = max(0, len(items) - len(lay.placements))
+            key = (len(lv.hard) + _missing_penalty(items, lay), -round(sp.score, 1))
+            if verbose:
+                print("   [relaxed-door %.1f #%d] 宜居 %d 硬傷  漏放 %d  顯大 %.0f"
+                      % (_frac, oi, len(lv.hard), missing, sp.score))
+            if key < best[0]:
+                best = (key, lay, info, lv, sp)
+            if best[0][0] == 0 and missing == 0:
+                break
+
     # ★ 隨機重啟：啟發式順序全部有硬傷時，用隨機錨定順序再搜。
     #   為什麼：求解器的代價表裏**冇「保持房間連通」呢一項**，而 L 形房間
     #   嘅內凹角正好係低曝光區 —— 家具全被推去嗰度，把兩翼之間唯一嘅通道
@@ -672,7 +743,7 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
             lv = check_livability(room, lay)
             sp = spaciousness_report(room, lay, emap, corridors)
             missing = max(0, len(items) - len(lay.placements))
-            key = (len(lv.hard) + MISSING_WEIGHT * missing, -round(sp.score, 1))
+            key = (len(lv.hard) + _missing_penalty(items, lay), -round(sp.score, 1))
             if verbose:
                 print("   [restart %d] 宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                       % (k, len(lv.hard), missing, sp.score))
