@@ -27,6 +27,15 @@ from .types import Layout, Placement, Room, front_dir
 GRID = 150            # 候选位置步长（mm）
 DOOR_W = 900          # 门洞走道宽
 DOOR_D = 1200         # 门洞走道往房内伸的深度
+# ★ 門口走道**唔可以食晒間房**。
+#   實測 plan_hk_b 浴室：可用面積 1.57m²，而 900x1200 的走道 = 1.08m² = 69%，
+#   於是馬桶／洗手盆／淋浴間全部「放不下」，求解器最後只擺得落一塊
+#   400x30 的鏡（唯一塞得入剩餘空隙嘅嘢）—— 出來係一間**冇馬桶嘅浴室**。
+#   修法：走道面積上限 = 房間可用面積的 MAX_DOOR_ZONE_FRAC，
+#   先減深度，深度下限 MIN_DOOR_DEPTH（夠開門同企入去）。
+#   大房完全唔受影響（16m² 客廳上限 4.8m² > 1.08m²）。
+MAX_DOOR_ZONE_FRAC = 0.30
+MIN_DOOR_DEPTH = 600
 # 深度只取 1200mm：够站进去、够关门就够了。
 # 曾经取 1500 并且再叠一条 2200mm 的「主通道」，结果把 3040 深的睡房吃掉
 # 75%，床一件都放不下（NO-SOLUTION）。两者本来就是重复的。
@@ -40,6 +49,9 @@ def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
     圆判定为 0 侵占，但人根本过不去。
     """
     poly = room.usable_geo()
+    cap = MAX_DOOR_ZONE_FRAC * poly.area
+    if width * depth > cap:
+        depth = int(max(MIN_DOOR_DEPTH, cap / width))
     zones = []
     for op in room.openings:
         if op.kind != "door":

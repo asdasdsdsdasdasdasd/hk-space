@@ -133,26 +133,44 @@ def _unreachable_items(room: Room, layout: Layout, person_mm: int = 600,
     ex, ey = room.entrance_point()
     ix = int(min(max(0, round((ex - minx - cell / 2) / cell)), nx - 1))
     iy = int(min(max(0, round((ey - miny - cell / 2) / cell)), ny - 1))
-    src = lab[iy, ix]
-    if src == 0:                      # 门口被堵死，整屋不可达
-        return [p.inst for p in layout.placements]
     def to_cell(px, py):
         jx = int(round((px - minx - cell / 2) / cell))
         jy = int(round((py - miny - cell / 2) / cell))
         return min(max(0, jx), nx - 1), min(max(0, jy), ny - 1)
 
-    def nearest_free(jxc, jyc, radius=12):
+    def nearest_free(jxc, jyc, radius=12, want=None):
         """在前方邻域里找最近的自由格 —— 探针点常常正好落在缓冲边界上，
-        直接取样会误报「走不到」。半径 12 格 = 1200mm。"""
+        直接取样会误报「走不到」。半径 12 格 = 1200mm。
+
+        want=None 表示「任何非 0 格都可以」（找起點時用）；
+        否則只在同一個連通域裡找。"""
         best, bd = None, 10 ** 9
         for dy in range(-radius, radius + 1):
             for dx in range(-radius, radius + 1):
                 jx, jy = jxc + dx, jyc + dy
-                if 0 <= jx < nx and 0 <= jy < ny and lab[jy, jx] == src:
-                    d = dx * dx + dy * dy
-                    if d < bd:
-                        bd, best = d, (jx, jy)
+                if not (0 <= jx < nx and 0 <= jy < ny):
+                    continue
+                lv = lab[jy, jx]
+                if lv == 0:
+                    continue
+                if want is not None and lv != want:
+                    continue
+                d = dx * dx + dy * dy
+                if d < bd:
+                    bd, best = d, (jx, jy)
         return best
+
+    src = lab[iy, ix]
+    if src == 0:
+        # ★ 門口格被家具緩衝蓋住 ≠ 整間房走唔到。
+        #   實測 plan_hk_b 浴室（1.57m²，深 1180mm）：門口探測點正好落在
+        #   馬桶的 300mm 緩衝裡，舊版就直接 return「全部家具都走唔到」——
+        #   一間正常嘅浴室被報成三件都行唔到。正確做法係由**最近的自由格**
+        #   開始淹水，唔係放棄。
+        nf = nearest_free(ix, iy)
+        if nf is None:
+            return [p.inst for p in layout.placements]
+        src = lab[nf[1], nf[0]]
 
     out = []
     for p in layout.placements:
@@ -163,7 +181,7 @@ def _unreachable_items(room: Room, layout: Layout, person_mm: int = 600,
         jx, jy = to_cell(px, py)
         if lab[jy, jx] == src:
             continue
-        if nearest_free(jx, jy) is None:
+        if nearest_free(jx, jy, want=src) is None:
             out.append(p.inst)
     return out
 

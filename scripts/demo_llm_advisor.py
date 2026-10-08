@@ -26,7 +26,7 @@ sys.path.insert(0, os.path.join(ROOT, "scripts"))
 from hkgeometry.advisory import advise, render_for_customer
 from hkgeometry.greedy import GreedyWeights
 from hkgeometry.house import assign_rooms, load_flat, solve_house, verify_house
-from hkgeometry.llm_advisor import (LLMClient, apply_decisions, try_nudge)
+from hkgeometry.llm_advisor import (LOCAL_BASE, LLMClient, apply_decisions, try_nudge)
 from hkgeometry.livability import check_livability
 from hkgeometry.types import Placement
 from hkgeometry.viz import setup_font
@@ -143,6 +143,14 @@ def main() -> None:
                     help="用罐頭回應代替真調模型；可給多個路徑用逗號分隔（每輪一個）")
     ap.add_argument("--no-render", action="store_true")
     ap.add_argument("--temperature", type=float, default=0.2)
+    ap.add_argument("--llm-url", default="",
+                    help="OpenAI 兼容端點；留空 = DeepSeek 官方 API")
+    ap.add_argument("--llm-model", default="",
+                    help="模型 id（deepseek-flash / deepseek-v4-pro）")
+    ap.add_argument("--llm-effort", default="low",
+                    help="DeepSeek 的 reasoning_effort：low / high / max")
+    ap.add_argument("--local", action="store_true",
+                    help="改用本機 llama-server（127.0.0.1:8080）")
     ap.add_argument("--max-drops", type=int, default=2,
                     help="整個閉環最多可以丟幾件家具（丟嘢一定會令分數上升，必須設限）")
     ap.add_argument("--max-advices", type=int, default=5,
@@ -229,9 +237,18 @@ def main() -> None:
             dbg = {"raw": raw, "dropped": dropped, "system": "", "user": ""}
             print("    [mock] %s" % path)
         else:
-            client = LLMClient()
+            if args.local:
+                args.llm_url = args.llm_url or LOCAL_BASE
+            client = LLMClient(base_url=args.llm_url or None,
+                               model=args.llm_model or None,
+                               effort=args.llm_effort)
+            print("    LLM: %s" % client.describe())
+            if client.api_key in ("", "sk-local"):
+                print("    ⚠️ 冇搵到 API key —— 睇 HKSPACE_LLM_KEY / "
+                      "DEEPSEEK_API_KEY / ~/.dsh/.credentials.yaml")
+                return
             try:
-                print("    model list: %s" % client.list_models())
+                print("    model list: %s" % client.list_models()[:6])
             except Exception as e:
                 print("    ⚠️ 連不上 LLM: %s" % e)
                 return

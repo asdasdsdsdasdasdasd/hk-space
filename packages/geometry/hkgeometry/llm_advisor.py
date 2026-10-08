@@ -25,6 +25,7 @@ import re
 import urllib.error
 import urllib.request
 from dataclasses import dataclass, field
+from urllib.parse import urlparse
 
 from .advisory import Advice, front_clearance
 from .types import FRONT_CLEARANCE, Layout, Placement, Room
@@ -91,7 +92,9 @@ SYSTEM_PROMPT = """你是香港小型住宅（納米樓 / 上車盤）的室內�
    - keep       : 接受現狀。            params: {"inst": "#toilet"}
 3. 下列品類是**固定潔具/廚具**，釘死在來去水位上，**不准 move_item、不准 drop_item**，
    只能 keep 或 shrink_sku：toilet basin bathtub shower stove range_hood kitchen_counter sink。
-4. 每條顧問意見都要有**恰好一條**決定。不要遺漏，不要自己發明新問題。
+4. 每條顧問意見都要有決定；一條意見如果涉及**多件家具**（例如「廚房有 3 件放不下：
+   #fridge、#washer、#counter」），就**逐件各給一條**。不要遺漏，同一件不要重複，
+   也不要自己發明新的問題。
 5. 選擇優先級（由便宜到貴）：
    try_nudge < shrink_sku < move_item < drop_item。
    能挪 200mm 解決的，就不要換款式；能換款式解決的，就不要丟掉。
@@ -293,7 +296,8 @@ def build_prompt(advices: list[Advice], flat=None, house=None,
         payload.update(extra)
 
     tail = (
-        "請為上面 %d 條顧問意見各給恰好一條決定，輸出 JSON 陣列。"
+        "請為上面 %d 條顧問意見給出決定，輸出 JSON 陣列。"
+        "一條意見涉及幾件家具就出幾條（每件一條），同一件唔好重複。"
         % len(advices)
         if advices else
         "上面沒有任何顧問意見 —— 請輸出空陣列 []。"
@@ -396,28 +400,76 @@ def parse_decisions(text: str, allowed_targets: set[str] | None = None
 
 # --------------------------------------------------------------------------
 # ③ 調模型（OpenAI 兼容 /chat/completions，只用標準庫）
+#
+# ★ 默認走 **DeepSeek 官方 API（V4.1 Flash）**。
+#   本地 llama.cpp 一樣支援 —— 把 base_url 指去 127.0.0.1:8080/v1，
+#   dialect 會自動切過去。兩個 API 方言唔同，唔可以混：
+#     · llama.cpp + Qwen：chat_template_kwargs={"enable_thinking": false}
+#     · DeepSeek 官方：reasoning_effort = low / high / max
 # --------------------------------------------------------------------------
+
+DEEPSEEK_BASE = "https://api.deepseek.com/v1"
+DEEPSEEK_MODEL = "deepseek-flash"        # = DeepSeek-V4.1-Flash（1M ctx，支援圖片）
+LOCAL_BASE = "http://127.0.0.1:8080/v1"
+LOCAL_MODEL = "Qwen3.8-27B-Q4_K_M.gguf"
 
 # ★ 刻意**不**繼承 OPENAI_BASE_URL：這台機器上那個變數指向 localhost:8000，
 #   而 8000 上沒有任何東西在聽（實測 Connection refused）。
-#   llama.cpp 的 llama-server 固定開在 127.0.0.1:8080，所以默認就是它。
-DEFAULT_BASE = os.environ.get("HKSPACE_LLM_URL", "http://127.0.0.1:8080/v1")
-DEFAULT_KEY = os.environ.get("HKSPACE_LLM_KEY",
-                             os.environ.get("OPENAI_API_KEY", "sk-local"))
+DEFAULT_BASE = os.environ.get("HKSPACE_LLM_URL", DEEPSEEK_BASE)
+DEFAULT_MODEL = os.environ.get("HKSPACE_LLM_MODEL", DEEPSEEK_MODEL)
+
+
+def find_api_key() -> str:
+    """找 API key：先環境變數，再 DSH 的憑證檔。
+
+    ★ key 只會留在記憶體裡：唔會入 repo、唔會入 log、唔會入 prompt。
+      所以呢個函數回傳嘅字串**永遠唔應該被 print 出來**。
+    """
+    for env in ("HKSPACE_LLM_KEY", "DEEPSEEK_API_KEY"):
+        v = os.environ.get(env)
+        if v:
+            return v
+    cands = [os.path.expanduser("~/.dsh/.credentials.yaml")]
+    if os.environ.get("DSH_HOME"):
+        cands.append(os.path.join(os.environ["DSH_HOME"], ".credentials.yaml"))
+    for p in cands:
+        try:
+            with open(p, encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("DEEPSEEK_API_KEY:"):
+                        return line.split(":", 1)[1].strip().strip('"').strip("'")
+        except OSError:
+            continue
+    return ""
 
 
 class LLMClient:
     def __init__(self, base_url: str | None = None, model: str | None = None,
                  api_key: str | None = None, timeout: float = 300.0,
-                 thinking: bool = False):
+                 thinking: bool = False, effort: str = "low"):
         self.base_url = (base_url or DEFAULT_BASE).rstrip("/")
         if not self.base_url.endswith("/v1"):
             self.base_url += "/v1"
-        self.model = model or os.environ.get("HKSPACE_LLM_MODEL", "local")
-        self.api_key = api_key or DEFAULT_KEY
+        host = urlparse(self.base_url).hostname or ""
+        # 本機 = llama.cpp 方言；api.deepseek.com = DeepSeek 官方方言
+        self.dialect = "llamacpp" if host in ("127.0.0.1", "localhost", "::1")             else "deepseek"
+        if model:
+            self.model = model
+        elif self.dialect == "llamacpp":
+            self.model = os.environ.get("HKSPACE_LLM_MODEL", LOCAL_MODEL)
+        else:
+            self.model = DEFAULT_MODEL
+        self.api_key = api_key or find_api_key() or "sk-local"
         self.timeout = timeout
         self.thinking = thinking
+        self.effort = effort
         self.calls: list[dict] = []
+
+    def describe(self) -> str:
+        return "%s / %s (%s, effort=%s)" % (
+            urlparse(self.base_url).hostname, self.model, self.dialect,
+            self.effort if self.dialect == "deepseek" else "n/a")
 
     def list_models(self) -> list[str]:
         req = urllib.request.Request(self.base_url + "/models",
@@ -427,12 +479,33 @@ class LLMClient:
         return [m.get("id", "") for m in data.get("data", [])]
 
     def chat(self, system: str, user: str, temperature: float = 0.2,
-             max_tokens: int = 2000) -> str:
-        # ★ 關掉思考：這是**結構化輸出**任務（只吐一個 JSON 陣列），
-        #   思考純屬浪費。實測 Qwen3.8-27B 開著思考時，
-        #   max_tokens=3000 會被 reasoning_content 全部吃光，
-        #   content 回來是空字串（finish_reason=length），
-        #   表現出來就是「模型輸出裏找不到 JSON」。關掉之後 22 tokens 就結束。
+             max_tokens: int = 0) -> str:
+        """要 JSON 的結構化輸出。
+
+        ★ 兩個方言的「思考」要分開處理：
+          · llama.cpp + Qwen：直接關掉思考（chat_template_kwargs）。
+          · DeepSeek V4.1：冇「關」呢個選項（只得 low/high/max），
+            所以只能**俾足額度**。實測 effort=low 喺 prompt 變大之後
+            仍然會用光 2000 tokens 去思考，content 回來係空字串
+            （finish_reason=length）—— 表現就係「模型冇輸出」。
+            所以 DeepSeek 預設 8000，而且截斷時會加倍重試一次。
+        """
+        if not max_tokens:
+            max_tokens = 8000 if self.dialect == "deepseek" else 2000
+        for attempt in (0, 1):
+            txt, finish = self._post(system, user, temperature, max_tokens)
+            if txt:
+                return txt
+            if finish == "length" and attempt == 0:
+                print("    [llm] 輸出被 max_tokens=%d 截斷（思考食晒額度），"
+                      "加倍重試" % max_tokens)
+                max_tokens *= 2
+                continue
+            return ""
+        return ""
+
+    def _post(self, system: str, user: str, temperature: float,
+              max_tokens: int) -> tuple[str, str]:
         body = {
             "model": self.model,
             "messages": [{"role": "system", "content": system},
@@ -440,8 +513,14 @@ class LLMClient:
             "temperature": temperature,
             "max_tokens": max_tokens,
             "stream": False,
-            "chat_template_kwargs": {"enable_thinking": bool(self.thinking)},
         }
+        if self.dialect == "llamacpp":
+            body["chat_template_kwargs"] = {"enable_thinking": bool(self.thinking)}
+        elif self.effort:
+            # DeepSeek V4.1 支援 low / high / max，默認 high。
+            # 呢個任務係「照住結構化事實揀一個動作」，low 就夠，
+            # 而且 reasoning token 係收費嘅。
+            body["reasoning_effort"] = self.effort
         req = urllib.request.Request(
             self.base_url + "/chat/completions",
             data=json.dumps(body).encode("utf-8"),
@@ -455,18 +534,20 @@ class LLMClient:
             raise RuntimeError("LLM HTTP %s: %s" % (e.code, e.read()[:400])) from e
         ch = data["choices"][0]
         msg = ch.get("message") or {}
+        finish = ch.get("finish_reason") or ""
         txt = (msg.get("content") or "").strip()
-        if not txt:
-            # 思考被截斷時 content 是空的，reasoning 裏往往已經有 JSON，
-            # 寧可拿它去解析，也不要回一個空字串假裝模型沒說話。
+        # ★ 唔可以隨手拎 reasoning_content 當答案。
+        #   思考過程裏模型會寫「草稿 JSON」，拎去解析等於**拿未完成嘅想法當決定**。
+        #   只在「被截斷 + content 全空」時才退而求其次，而且記低旗標。
+        if not txt and finish == "length":
             txt = (msg.get("reasoning_content") or "").strip()
             if txt:
                 self.truncated_thinking = True
         u = data.get("usage") or {}
-        self.last_finish = ch.get("finish_reason")
+        self.last_finish = finish
         self.calls.append({"in": u.get("prompt_tokens"), "out": u.get("completion_tokens"),
-                           "finish": self.last_finish, "chars": len(txt)})
-        return txt
+                           "finish": finish, "chars": len(txt)})
+        return txt, finish
 
     def decide(self, advices: list[Advice], flat=None, house=None,
                allowed_targets: set[str] | None = None,
