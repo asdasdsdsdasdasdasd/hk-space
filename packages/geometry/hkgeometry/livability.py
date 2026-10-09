@@ -56,6 +56,10 @@ class LivabilityReport:
         return [v for v in self.violations if v.severity == "hard"]
 
     @property
+    def soft(self):
+        return [v for v in self.violations if v.severity != "hard"]
+
+    @property
     def score(self) -> float:
         """0-100。硬伤扣得重。"""
         s = 100.0
@@ -303,6 +307,31 @@ def check_livability(room: Room, layout: Layout) -> LivabilityReport:
             "walkway_blocked", "hard", [inst],
             "從大門走不到 %s 前面（人寬 %dmm 過不去）" % (inst, WALK_MIN_MM),
             "騰出通道"))
+
+    # ── ⑨ 門口走道唔可以被家具占
+    #    ★ 少了這條，求解器就會把衣櫃擺正浴室門口 —— 實測 plan_hk_b：
+    #      睡房嘅衣櫃（750x580）壓住浴室門走道 0.386m²，成扇門開唔到。
+    #      走道縮放（放寬階梯）之後更加容易發生，因為放寬本身就係
+    #      「容許家具踩入走道」。所以走道必須由**宜居檢查**獨立把關，
+    #      唔可以只靠建模階段嘅硬過濾。
+    from .greedy import door_approach_zones
+    for _oid, z in door_approach_zones(room):
+        hit = []
+        for p in layout.placements:
+            a = p.footprint().intersection(z).area / 1e6
+            if a > 0.03:
+                hit.append((p.inst, a))
+        if hit:
+            names = "、".join(i for i, _ in hit)
+            # ★ 用 soft 而唔係 hard：1.43m 深的睡房裡，床一定要踩到門洞走道
+            #   （實測：避開走道的合法位置 = 0 個）。如果算 hard，求解器就會
+            #   用「唔擺床」來消滅這條硬傷 —— 又回到「冇床嘅睡房」。
+            #   所以它只做兩件事：① 引擎永遠先試把家具挪出去（L2.5 修復遍）
+            #   ② 挪唔到就老實報出來，交俾顧客決定。
+            rep.violations.append(Violation(
+                "door_blocked", "soft", [i for i, _ in hit],
+                "門口走道被 %s 擋住咗（%.2f m²），扇門開唔到" % (names, sum(a for _, a in hit)),
+                "把擋住門口的家具挪開"))
 
     # ── ⑧ 沙发背对门（坐下正对门口会不安）
     if sofa:

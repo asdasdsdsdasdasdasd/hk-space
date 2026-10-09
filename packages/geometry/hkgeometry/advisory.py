@@ -183,17 +183,19 @@ def advise(flat, house, requested: dict, unassigned: list | None = None) -> list
         #    外層閉環見到「0 條意見」就以為搞掂收工 —— 實測客廳剩 1 條硬傷
         #    卻報 0 條顧問意見，閉環提早收斂。硬傷必須全部浮上水面。
         handled = {"walkway_blocked", "sofa_faces_tv"}
-        for v in lv.hard:
-            if v.rule in handled:
-                continue
+        # ★ door_blocked 係 soft（細房裡真係可能避唔開），但佢一定要有人認領 ——
+        #   一扇開唔到嘅門係顧客必須知嘅事，唔可以靜靜雞過去。
+        pending = [v for v in lv.hard if v.rule not in handled] +                   [v for v in lv.soft if v.rule == "door_blocked"]
+        for v in pending:
             out.append(Advice(
                 room=r.id, room_label=r.label or r.id, kind="blocked",
-                severity="high", subjects=list(v.subjects),
+                severity="high" if v.severity == "hard" else "medium",
+                subjects=list(v.subjects),
                 headline="%s %s" % (r.label or r.id, v.detail),
                 detail=v.detail,
                 options=list(RULE_OPTIONS.get(v.rule,
-                                              ["換更小尺寸的款式", "移到其他房間",
-                                               "改為定制（貼合尺寸）"])),
+                                              ["把擋住門口的家具挪開",
+                                               "換個位置", "改為定制（貼合尺寸）"])),
                 facts={"rule": v.rule, "subjects": list(v.subjects), "detail": v.detail}))
     return out
 

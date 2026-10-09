@@ -652,6 +652,16 @@ def _fits(room: Room, p: Placement, others: list[Placement]) -> bool:
     return True
 
 
+def _door_block_area(room: Room, lay: Layout) -> float:
+    """全房門口走道被家具占咗幾多 m²。"""
+    from .greedy import door_approach_zones
+    tot = 0.0
+    for _oid, z in door_approach_zones(room):
+        for p in lay.placements:
+            tot += p.footprint().intersection(z).area
+    return tot / 1e6
+
+
 def try_nudge(room: Room, lay: Layout, inst: str, step_mm: int = 50,
               max_steps: int = 14) -> tuple[bool, int, int, str]:
     """局部補丁：在原位附近螺旋搜索，找一個「確實修好了問題」的位移。
@@ -678,7 +688,13 @@ def try_nudge(room: Room, lay: Layout, inst: str, step_mm: int = 50,
     #   （挪完之後那件背唔到牆 / 開唔到門），外層裁決照樣整輪回滾，白做。
     lv_before = check_livability(room, lay)
     h_before = len(lv_before.hard)
-    rules_on = {v.rule for v in lv_before.hard if inst in v.subjects}
+    # ★ 門口走道用「被占面積」做目標，唔係「有冇踩到」。
+    #   為什麼：細房裡 3 件家具一齊踩住同一條走道時，單獨挪走衣櫃
+    #   唔會令 violation 消失，二元判定就當「冇改善」而唔肯郁 ——
+    #   但實際上 0.41m² → 0.20m² 就係「度門由開唔到變成開得到」。
+    a_before = _door_block_area(room, lay)
+    rules_on = {v.rule for v in (lv_before.hard + lv_before.soft)
+                if v.rule in ("walkway_blocked", "door_blocked") and inst in v.subjects}
     un_before = set(_unreachable_items(room, lay))
 
     ox, oy = p.x, p.y
@@ -694,6 +710,7 @@ def try_nudge(room: Room, lay: Layout, inst: str, step_mm: int = 50,
         p.x, p.y = ox + dx, oy + dy
         if moved and not _fits(room, p, others):
             continue
+
         have, _ = front_clearance(room, lay, p)
         if need and have + 20 < need:
             continue                      # 前淨空不足，直接淘汰
@@ -715,10 +732,13 @@ def try_nudge(room: Room, lay: Layout, inst: str, step_mm: int = 50,
         if len(lv_after.hard) > h_before:
             continue                      # 修一件、整壞兩件，唔換
         still = [v for v in lv_after.hard
-                 if inst in v.subjects and v.rule in rules_on]
+                 if inst in v.subjects and v.rule in rules_on
+                 and v.rule != "door_blocked"]
         if still:
-            continue                      # 呢件自己嘅問題冇修好
-        gain = (h_before - len(lv_after.hard)) + (1.0 if rules_on else 0.0)
+            continue                      # 呢件自己嘅硬問題冇修好
+        a_after = _door_block_area(room, lay)
+        # 目標 = 硬傷條數 + 門口走道被占面積(m²)。兩者都係「越細越好」。
+        gain = (h_before + a_before) - (len(lv_after.hard) + a_after)
         scored.append((gain, -0.02 * (abs(dx) + abs(dy)), dx, dy, have,
                        len(lv_after.hard)))
     p.x, p.y = ox, oy

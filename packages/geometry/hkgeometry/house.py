@@ -445,8 +445,10 @@ def solve_house(flat: Flat, items: list[Placement], weights: GreedyWeights | Non
             continue
         r = flat.room(rid)
         for _pass in range(3):
-            stuck = sorted({v.subjects[0] for v in check_livability(r, lay).hard
-                            if v.rule == "walkway_blocked" and v.subjects})
+            _lv = check_livability(r, lay)
+            stuck = sorted({s for v in (_lv.hard + _lv.soft)
+                            if v.rule in ("walkway_blocked", "door_blocked")
+                            for s in v.subjects})
             if not stuck:
                 break
             moved = False
