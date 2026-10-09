@@ -36,43 +36,41 @@ DOOR_D = 1200         # 门洞走道往房内伸的深度
 #   大房完全唔受影響（16m² 客廳上限 4.8m² > 1.08m²）。
 MAX_DOOR_ZONE_FRAC = 0.30
 MIN_DOOR_DEPTH = 600
+# 门槛带：门框正下方这条带任何情况都不准摆东西（外开门/推拉门在房内只需要它）
+THRESHOLD_MM = 150.0
 # 深度只取 1200mm：够站进去、够关门就够了。
 # 曾经取 1500 并且再叠一条 2200mm 的「主通道」，结果把 3040 深的睡房吃掉
 # 75%，床一件都放不下（NO-SOLUTION）。两者本来就是重复的。
 
 
 def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
-    """每扇门 -> 一块伸进房间的矩形走道。
+    """每扇门 -> 一块**必须留空**的区域。形状取决于开门方式。
 
-    为什么不用「半径 900 的圆」：圆只保证不压在门上，
-    **不保证人能从门走进来**。实测沙发可以卡在两扇门中间只留 20mm 空隙，
-    圆判定为 0 侵占，但人根本过不去。
+    · 内开（香港默认，也是绝大多数的做法）：门扇扫掠区 = 以铰链为圆心、
+      半径 = 门扇宽的四分之一圆，锚在**铰链那一侧**。门开尽时门扇贴墙，
+      所以真正要空的只有门框旁边那一块。
+    · 外开 / 推拉：门不向房内扫，房内只需要一条 150mm 的门槛带。
+
+    ★ 为什么值得分开算：以前一律用「门洞宽 x 900-1200 的矩形走道」，
+      等于假设每扇门都在房中间扫出一大块方形 —— 两侧都要求净空，
+      还假设门宽一律 900。实测 plan_hk_b 睡房（3380x1430、两扇内开门），
+      这种保守模型算出来「床无论怎么放都踩到门」；
+      换成铰链侧的四分之一圆之后，扫掠区只占门框一侧，
+      另一侧（和门洞正前方）都空出来了。
+
+    为什么不用「半径 900 的圆」：圆会同时向两侧要求净空，
+    而内开门只在铰链侧扫掠 —— 那等于凭空多要一倍的面积。
     """
     poly = room.usable_geo()
-    # ★ 上限要按「所有門加起來」算，唔可以逐扇門獨立算。
-    #   踩過的坑：睡房（可用 3380x1430 = 4.83m²）有兩扇門，
-    #   每扇 900x1200 = 1.08m² 都低於 30% 的 1.45m²，所以兩扇都冇被收縮 ——
-    #   加起來 2.16m² = 45%，把房中間整條吃掉，一張 990x2060 的單人床
-    #   左右都塞唔入（實測：睡房輸出冇床）。
     doors = [o for o in room.openings if o.kind == "door"]
     n_doors = max(1, len(doors))
-    # ★ 逐扇門用自己的門寬，唔好一律用 900。
-    #   900 係「假設所有門都係 900 闊」嘅保守值；實測 plan_hk_b 睡房兩扇門
-    #   淨係 818 同 664 —— 用 900 即係每邊多要 41/118mm，
-    #   在一間 1430mm 深嘅房裡，呢 118mm 就係「擺得落床」同「擺唔落」嘅分別。
-    #   真實系統應該仲要記低開門方向（內開/外開/推拉），因為只有內開門
-    #   才需要房內留出整塊門扇掃掠區。呢一層數據我哋未收集，所以先用門寬做代理。
     cap = MAX_DOOR_ZONE_FRAC * poly.area
-    if width == DOOR_W and doors:
-        tot_w = sum(min(DOOR_W, o.width_mm + 100) for o in doors)
-        if tot_w * depth > cap:
-            depth = int(max(MIN_DOOR_DEPTH, cap / max(1.0, tot_w)))
-    elif width * depth * n_doors > cap:
-        depth = int(max(MIN_DOOR_DEPTH, (cap / n_doors) / width))
+    # 先用一个粗估的总面积去决定要不要收缩（精确面积在下面逐个算）
+    approx = sum(min(DOOR_W, o.width_mm + 100) for o in doors) * max(150.0, depth) * 0.5
+    if approx > cap:
+        depth = int(max(MIN_DOOR_DEPTH, depth * cap / approx))
     zones = []
-    for op in room.openings:
-        if op.kind != "door":
-            continue
+    for op in doors:
         wall = next((w for w in room.walls if w.id == op.wall), None)
         if wall is None:
             continue
@@ -85,22 +83,34 @@ def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
         nx, ny = -uy, ux
         if not poly.contains(Point(px + nx * 200, py + ny * 200)):
             nx, ny = -nx, -ny
-        w_here = width if width != DOOR_W else min(DOOR_W, op.width_mm + 100)
+        open_w = float(op.width_mm) or float(width)
+        w_here = min(float(DOOR_W), open_w + 100.0)
         half = w_here / 2.0
-        zx, zy = px - ux * half, py - uy * half
-        corners = [(zx, zy), (zx + ux * w_here, zy + uy * w_here),
-                   (zx + ux * w_here + nx * depth, zy + uy * w_here + ny * depth),
-                   (zx + nx * depth, zy + ny * depth)]
-        zones.append((op.id, shapely.Polygon(corners)))
+        # 門檻帶：門框正下方一條窄帶，任何情況都唔准擺嘢
+        thr = shapely.Polygon([
+            (px - ux * half, py - uy * half),
+            (px + ux * half, py + uy * half),
+            (px + ux * half + nx * THRESHOLD_MM, py + uy * half + ny * THRESHOLD_MM),
+            (px - ux * half + nx * THRESHOLD_MM, py - uy * half + ny * THRESHOLD_MM)])
+        sw = op.swing or {}
+        direction = (sw.get("dir") or "in").lower()
+        if direction in ("out", "sliding", "slide"):
+            zones.append((op.id, thr))
+            continue
+        # 内开：铰链在 center -/+ u*half；"left" 约定为靠 wall.a 那一端
+        hinge_sign = -1.0 if (sw.get("hinge") or "left") == "left" else 1.0
+        hx, hy = px + ux * hinge_sign * half, py + uy * hinge_sign * half
+        # 门扇由「贴墙」扫到「垂直入房」-> 扫掠区由 (-hinge_sign*u) 和 n 张成
+        ex, ey = -hinge_sign * ux, -hinge_sign * uy
+        sq = shapely.Polygon([
+            (hx, hy),
+            (hx + ex * open_w, hy + ey * open_w),
+            (hx + ex * open_w + nx * open_w, hy + ey * open_w + ny * open_w),
+            (hx + nx * open_w, hy + ny * open_w)])
+        disc = Point(hx, hy).buffer(open_w, quad_segs=12)
+        swept = disc.intersection(sq)
+        zones.append((op.id, swept.union(thr)))
     return zones
-
-
-def _candidates(room: Room, w: int, d: int, rot: int):
-    if rot in (90, 270):
-        w, d = d, w
-    poly = room.usable_geo()
-    minx, miny, maxx, maxy = poly.bounds
-    out = []
     x = minx
     while x + w <= maxx + 1:
         y = miny

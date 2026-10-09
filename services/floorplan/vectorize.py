@@ -1295,8 +1295,13 @@ def build_room_json(walls_mm, openings_mm, rooms_px, scale, origin_px, params,
             for k, src in enumerate(room.get("_wall_src", [])):
                 if src == op.get("wall"):
                     wid = "w%d" % k
-            # 门扇在墙的哪一侧: swing 记录的 s 与「门开向」是否同一个房间
-            wdir = "in" if (op["swing"] == "in") == (s == 1) else "out"
+            # ★ 香港住宅默认内开门 —— 直接写 "in"，不再靠门弧几何去猜。
+            #   为什么：门弧的像素推断经常反（实测 plan_hk_b 睡房两扇门
+            #   都被判成 out，而 truth 是 in），而开门方向决定了房内要不要
+            #   留整块门扇扫掠区 —— 猜错就等于凭空多要／少要半间房。
+            #   外开门 / 推拉门在图上会有明确画法，未来应该用「门弧在哪一侧」
+            #   做**确认**而不是**默认**。
+            wdir = "in"
             room["openings"].append(dict(
                 id="%s%d" % ("d" if op["kind"] == "door" else "n", len(room["openings"])),
                 wall=wid, kind=op["kind"], center_mm=c_mm, width_mm=int(op["width_mm"]),

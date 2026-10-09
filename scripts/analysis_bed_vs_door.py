@@ -88,6 +88,15 @@ def main() -> None:
     print()
     print("%-40s %-9s %-11s %s" % ("淨空模型（走道寬 x 深）", "走道總面積",
                                    "最少重疊", "完全唔踩的位置"))
+    # 先用「现行模型」——按门上记录的开门方式算（香港默认内开，铰链侧四分之一圆）
+    from hkgeometry.greedy import door_approach_zones
+    cur = door_approach_zones(room)
+    if cur:
+        b, clear = sweep(poly, [z for _i, z in cur], args.w, args.d, args.step)
+        print("%-40s %-9.2f %-11.3f %d"
+              % ("现行模型（内开=铰链侧 1/4 圆 + 门槛带）",
+                 sum(z.area for _i, z in cur) / 1e6, b[0], clear))
+
     rows = [("900 寬（保守，假設所有門都 900）x 805 深", 900, 805),
             ("實際門寬 x 805 深", None, 805),
             ("實際門寬 x 600 深", None, 600),

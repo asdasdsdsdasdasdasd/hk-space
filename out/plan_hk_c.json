@@ -248,7 +248,7 @@
           "center_mm": 1685,
           "width_mm": 810,
           "swing": {
-            "dir": "out",
+            "dir": "in",
             "hinge": "right"
           }
         },
@@ -363,7 +363,7 @@
           "center_mm": 1685,
           "width_mm": 1150,
           "swing": {
-            "dir": "out",
+            "dir": "in",
             "hinge": "left"
           }
         },
@@ -490,7 +490,7 @@
           "center_mm": 4365,
           "width_mm": 770,
           "swing": {
-            "dir": "out",
+            "dir": "in",
             "hinge": "right"
           }
         },
@@ -509,7 +509,7 @@
           "center_mm": 1190,
           "width_mm": 760,
           "swing": {
-            "dir": "out",
+            "dir": "in",
             "hinge": "left"
           }
         }
@@ -616,7 +616,7 @@
           "center_mm": 990,
           "width_mm": 660,
           "swing": {
-            "dir": "out",
+            "dir": "in",
             "hinge": "left"
           }
         },
@@ -721,7 +721,7 @@
           "center_mm": 990,
           "width_mm": 660,
           "swing": {
-            "dir": "out",
+            "dir": "in",
             "hinge": "right"
           }
         }
