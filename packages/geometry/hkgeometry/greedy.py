@@ -54,9 +54,20 @@ def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
     #   每扇 900x1200 = 1.08m² 都低於 30% 的 1.45m²，所以兩扇都冇被收縮 ——
     #   加起來 2.16m² = 45%，把房中間整條吃掉，一張 990x2060 的單人床
     #   左右都塞唔入（實測：睡房輸出冇床）。
-    n_doors = max(1, sum(1 for o in room.openings if o.kind == "door"))
+    doors = [o for o in room.openings if o.kind == "door"]
+    n_doors = max(1, len(doors))
+    # ★ 逐扇門用自己的門寬，唔好一律用 900。
+    #   900 係「假設所有門都係 900 闊」嘅保守值；實測 plan_hk_b 睡房兩扇門
+    #   淨係 818 同 664 —— 用 900 即係每邊多要 41/118mm，
+    #   在一間 1430mm 深嘅房裡，呢 118mm 就係「擺得落床」同「擺唔落」嘅分別。
+    #   真實系統應該仲要記低開門方向（內開/外開/推拉），因為只有內開門
+    #   才需要房內留出整塊門扇掃掠區。呢一層數據我哋未收集，所以先用門寬做代理。
     cap = MAX_DOOR_ZONE_FRAC * poly.area
-    if width * depth * n_doors > cap:
+    if width == DOOR_W and doors:
+        tot_w = sum(min(DOOR_W, o.width_mm + 100) for o in doors)
+        if tot_w * depth > cap:
+            depth = int(max(MIN_DOOR_DEPTH, cap / max(1.0, tot_w)))
+    elif width * depth * n_doors > cap:
         depth = int(max(MIN_DOOR_DEPTH, (cap / n_doors) / width))
     zones = []
     for op in room.openings:
@@ -74,10 +85,11 @@ def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
         nx, ny = -uy, ux
         if not poly.contains(Point(px + nx * 200, py + ny * 200)):
             nx, ny = -nx, -ny
-        half = width / 2.0
+        w_here = width if width != DOOR_W else min(DOOR_W, op.width_mm + 100)
+        half = w_here / 2.0
         zx, zy = px - ux * half, py - uy * half
-        corners = [(zx, zy), (zx + ux * width, zy + uy * width),
-                   (zx + ux * width + nx * depth, zy + uy * width + ny * depth),
+        corners = [(zx, zy), (zx + ux * w_here, zy + uy * w_here),
+                   (zx + ux * w_here + nx * depth, zy + uy * w_here + ny * depth),
                    (zx + nx * depth, zy + ny * depth)]
         zones.append((op.id, shapely.Polygon(corners)))
     return zones
