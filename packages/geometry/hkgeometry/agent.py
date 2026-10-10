@@ -229,6 +229,41 @@ class DesignAgent:
                 res["room_currently_has"] = [p.inst for p in lay.placements]
         return res
 
+    def _ensure_mandatory(self, items: list) -> list:
+        """守住「住得成人」嘅底線：浴室必有馬桶+洗手盆、廚房必有灶台、睡房必有床。
+
+        ★ 呢條唔係 LLM 嘅決定。實測 LLM 試過 set_brief 漏咗成個浴室潔具
+          （出咗一間冇廁所嘅屋），亦試過為咗塞灶台而 drop 咗雪櫃。
+          清單係佢嘅設計空間，但「有廁所沖涼煮飯」係產品底線。
+        """
+        from demo_house import pick_sku
+        have = {p.category for p in items}
+        added = []
+        funcs = infer_room_functions(self.flat)
+        need = []
+        for r in self.flat.rooms:
+            f = funcs.get(r.id, "?")
+            if f == "bath":
+                need += [("toilet", 500, 800), ("basin", 700, 600)]
+            elif f == "kitchen":
+                need += [("stove", 700, 600)]
+            elif f == "bedroom":
+                need += [("bed", 2200, 2200)]
+        for cat, mw, md in need:
+            if cat in have:
+                continue
+            s = pick_sku(self.catalog, cat, mw, md, "light")
+            if s is None:
+                continue
+            items.append(Placement(inst="#%s" % cat, sku=s["id"], category=cat,
+                                   w=s["dims"]["w"], d=s["dims"]["d"], h=s["dims"]["h"],
+                                   visual=dict(s["visual"]),
+                                   price_hkd=s.get("price_hkd", 0)))
+            have.add(cat)
+            added.append(cat)
+        self.st.auto_added = added
+        return items
+
     def t_set_brief(self, items=None, **_):
         from demo_house import pick_sku
         if not items:
@@ -256,39 +291,17 @@ class DesignAgent:
         #   實測 LLM 有一次 set_brief 把馬桶/洗手盆/淋浴全部漏掉，
         #   出咗一個「冇廁所嘅屋」。清單係 LLM 嘅設計決定，
         #   但「住得成人」係產品底線，唔可以談。
-        added = []
-        have_cat = {p.category for p in new}
-        need = []
-        for r in self.flat.rooms:
-            f = infer_room_functions(self.flat).get(r.id, "?")
-            if f == "bath":
-                need += [("toilet", 500, 800), ("basin", 700, 600)]
-            elif f == "kitchen":
-                need += [("stove", 700, 600)]
-            elif f == "bedroom":
-                need += [("bed", 2200, 2200)]
-        for cat, mw, md in need:
-            if cat in have_cat:
-                continue
-            s = pick_sku(self.catalog, cat, mw, md, "light")
-            if s is None:
-                continue
-            new.append(Placement(inst="#%s" % cat, sku=s["id"], category=cat,
-                                 w=s["dims"]["w"], d=s["dims"]["d"], h=s["dims"]["h"],
-                                 visual=dict(s["visual"]),
-                                 price_hkd=s.get("price_hkd", 0)))
-            have_cat.add(cat)
-            added.append(cat)
-        self.st.items = new
+        self.st.items = self._ensure_mandatory(new)
         self.st.assign, self.st.house = {}, None
         return {"ok": True, "brief_size": len(new),
                 "items": [{"inst": p.inst, "cat": p.category,
                            "w": p.w, "d": p.d} for p in new],
                 "skipped": skipped,
-                "added_mandatory": added,
+                "added_mandatory": getattr(self.st, "auto_added", []),
                 "note": ("清單已更新。叫 generate_design 才會擺位。"
                          + ("★ 我幫你補返咗必需嘅 %s —— 一間屋唔可以冇廁所/灶台/床。"
-                            % "、".join(added) if added else ""))}
+                            % "、".join(getattr(self.st, "auto_added", []))
+                            if getattr(self.st, "auto_added", []) else ""))}
 
     def t_generate_design(self, **_):
         if not self.st.items:
@@ -425,10 +438,21 @@ class DesignAgent:
         items, assign, acts, patches, notes = apply_decisions(
             self.st.items, self.st.assign, [dec], self.catalog,
             flat=self.flat, house=None)
+        # drop 之後要補返必需件（LLM 為咗塞灶台 drop 咗雪櫃、又或者
+        # 想 drop 走唯一一張床 —— 底線要每次都重新守住）
+        before = {p.category for p in items}
+        items = self._ensure_mandatory(items)
+        back = [c for c in getattr(self.st, "auto_added", []) if c not in before]
         self.st.items, self.st.assign = items, assign
-        if acts:
+        if acts or back:
             self.t_generate_design()
-        return {"notes": notes, "applied": bool(acts), "brief_size": len(items)}
+        res = {"notes": notes, "applied": bool(acts or back),
+               "brief_size": len(items)}
+        if back:
+            res["auto_added_mandatory"] = back
+            res["note"] = ("★ %s 係底線件，唔可以冇 —— 我幫你補返。"
+                           % "、".join(back))
+        return res
 
     def t_finish(self, summary, tradeoffs=None, **_):
         self.st.finished = True
@@ -496,4 +520,32 @@ class DesignAgent:
                              json.dumps(out, ensure_ascii=False)[:110]))
                 msgs.append({"role": "tool", "tool_call_id": c.get("id", ""),
                              "content": json.dumps(out, ensure_ascii=False)[:14000]})
+        # ★ 強制收尾：無論如何都要有一次「交貨」。
+        #   實測 agent 跑 39 次調用、38 分鐘，最後都冇 finish ——
+        #   客戶攞到嘅係一份冇總結、冇取捨說明嘅圖，等於白做。
+        #   所以時間到就用 tool_choice 逼佢只可以叫 finish。
+        if not self.st.finished and self.st.house is not None:
+            msgs.append({"role": "user", "content":
+                         "（系統）時間到了。請立即呼叫 finish：用粵語書面語寫一段"
+                         "畀客戶睇嘅總結，講清楚（1）做咗咩決定（2）仲有咩取捨／"
+                         "要客戶決定嘅事。唔需要再叫其他工具。"})
+            try:
+                # ★ 唔可以用 tool_choice 逼佢叫 finish：DeepSeek 開住思考模式時
+                #   直接回 400「Thinking mode does not support this tool_choice」。
+                #   改成唔帶工具、用純文字要一段總結 —— 效果一樣，而且穩。
+                txt = self.client.chat(
+                    "你用粵語書面語寫室內設計方案嘅交貨總結。",
+                    "以下係你嘅工作記錄（工具調用）：\n%s\n\n"
+                    "請寫一段畀客戶睇嘅總結，講清楚："
+                    "（1）你做咗咩決定、為咩（2）仲有咩取捨或者要客戶自己決定嘅事。"
+                    "唔要客套話，直接講重點。"
+                    % json.dumps(self.st.calls[-14:], ensure_ascii=False)[:4000],
+                    temperature=0.3, max_tokens=4000)
+                if txt:
+                    self.st.summary = txt.strip()
+                    self.st.finished = True
+            except Exception as e:
+                if self.verbose:
+                    print("   [agent] 強制收尾失敗：%s" % e)
+                self.st.summary = self.st.summary or "（未能產生總結）"
         return self.st

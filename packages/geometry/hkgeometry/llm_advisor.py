@@ -549,7 +549,8 @@ class LLMClient:
             self.effort if self.dialect == "deepseek" else "n/a")
 
     def chat_tools(self, messages: list, tools: list,
-                   temperature: float = 0.2, max_tokens: int = 6000) -> dict:
+                   temperature: float = 0.2, max_tokens: int = 6000,
+                   force_tool: str | None = None) -> dict:
         """帶工具嘅一次調用（原生 function calling）。
 
         ★ DeepSeek 冇「關思考」選項，而 agent 每一輪都要帶住成個對話
@@ -563,7 +564,8 @@ class LLMClient:
                                "本機 llama.cpp 要走文字協議")
         ch = {}
         for attempt in range(3):
-            ch = self._post_tools(messages, tools, temperature, max_tokens)
+            ch = self._post_tools(messages, tools, temperature, max_tokens,
+                                  force_tool=force_tool)
             if (ch.get("message") or {}).get("tool_calls"):
                 break
             if ch.get("finish_reason") == "length" and attempt < 2:
@@ -574,9 +576,12 @@ class LLMClient:
             break
         return ch.get("message") or {}
 
-    def _post_tools(self, messages, tools, temperature, max_tokens) -> dict:
+    def _post_tools(self, messages, tools, temperature, max_tokens,
+                    force_tool: str | None = None) -> dict:
         body = {"model": self.model, "messages": messages, "tools": tools,
-                "tool_choice": "auto", "temperature": temperature,
+                "tool_choice": ({"type": "function", "function": {"name": force_tool}}
+                                if force_tool else "auto"),
+                "temperature": temperature,
                 "max_tokens": max_tokens, "stream": False}
         if self.effort:
             body["reasoning_effort"] = self.effort
