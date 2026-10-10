@@ -129,7 +129,7 @@
           "center_mm": 1395,
           "width_mm": 770,
           "swing": {
-            "dir": "in",
+            "dir": "out",
             "hinge": "left"
           }
         },
@@ -148,7 +148,7 @@
           "center_mm": 3700,
           "width_mm": 820,
           "swing": {
-            "dir": "in",
+            "dir": "out",
             "hinge": "right"
           }
         },
@@ -167,7 +167,7 @@
           "center_mm": 6500,
           "width_mm": 720,
           "swing": {
-            "dir": "in",
+            "dir": "out",
             "hinge": "left"
           }
         },
@@ -178,7 +178,7 @@
           "center_mm": 8025,
           "width_mm": 930,
           "swing": {
-            "dir": "in",
+            "dir": "out",
             "hinge": "left"
           }
         },

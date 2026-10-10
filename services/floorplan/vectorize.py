@@ -1290,18 +1290,33 @@ def build_room_json(walls_mm, openings_mm, rooms_px, scale, origin_px, params,
                     sides.append((s, room))
                     break
         c_mm = int(op.get("center_mm", 0))
+        # ★ 香港住宅默认内开门 —— 唔再靠门弧幾何去猜（实测 plan_hk_b 两扇内开门
+        #   都被判成 out，而 truth 是 in）。
+        #   ★★ 但一扇门只有**一个**开门方向：门扇只会扫进一间房。
+        #   曾经写成「两边都 in」，结果两间房都要求门扇扫掠区 ——
+        #   等于凭空把每扇门的净空需求翻倍（睡房那两扇就是这样变成
+        #   『无论点摆床都踩到门』的）。所以这里要**选边**：
+        #   按房间私密程度排序，门开向更私密的那一间
+        #   （香港惯例：睡房/浴室门向内开，唔好阻住走廊）。
+        # 越细越「应该开门进去」：浴室 > 睡房 > 厨房 > 储物 > 饭厅 > 客厅。
+        # 浴室排第一是因为 HK 浴室通常细小、门要向内开（向外开会撞走廊）；
+        # 睡房第二；客厅几乎永远是被开进来的那一间。
+        PRIVATE = {"bath": 0, "bedroom": 1, "kitchen": 2, "storage": 3,
+                   "dining": 4, "living": 5}
+        swing_room = None
+        if op["kind"] == "door" and len(sides) == 2:
+            def _rank(t):
+                _s, _rm = t
+                # 房間的 func 用 id 推（id 就是由 label 映射過來的 living/bedroom/…）
+                return (PRIVATE.get(_rm.get("id") or "", 9),
+                        _rm.get("area_mm2", 0))
+            swing_room = min(sides, key=_rank)[1]["id"]
         for s, room in sides:
             wid = None
             for k, src in enumerate(room.get("_wall_src", [])):
                 if src == op.get("wall"):
                     wid = "w%d" % k
-            # ★ 香港住宅默认内开门 —— 直接写 "in"，不再靠门弧几何去猜。
-            #   为什么：门弧的像素推断经常反（实测 plan_hk_b 睡房两扇门
-            #   都被判成 out，而 truth 是 in），而开门方向决定了房内要不要
-            #   留整块门扇扫掠区 —— 猜错就等于凭空多要／少要半间房。
-            #   外开门 / 推拉门在图上会有明确画法，未来应该用「门弧在哪一侧」
-            #   做**确认**而不是**默认**。
-            wdir = "in"
+            wdir = "in" if (swing_room is None or room["id"] == swing_room) else "out"
             room["openings"].append(dict(
                 id="%s%d" % ("d" if op["kind"] == "door" else "n", len(room["openings"])),
                 wall=wid, kind=op["kind"], center_mm=c_mm, width_mm=int(op["width_mm"]),

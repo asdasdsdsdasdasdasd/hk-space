@@ -28,6 +28,7 @@ from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
 from .advisory import Advice, front_clearance
+from .house import CATEGORY_ROOMS      # 只讀常數表；house.py 唔 import 本模組，冇循環
 from .types import FRONT_CLEARANCE, Layout, Placement, Room
 
 # 釘死在來去水位 / 煤氣喉上的固定件 —— 不許移、不許刪
@@ -71,6 +72,26 @@ ACTIONS = {
         "params": {"inst": "str"},
         "channel": "accept",
     },
+    "add_item": {
+        "desc": "加一件新家具（由庫存揀，或直接用你自己定嘅尺寸）",
+        "params": {"category": "str", "to_room": "str",
+                   "sku": "庫存 id（可選）",
+                   "w": "int mm（自己定尺寸時必填）",
+                   "d": "int mm", "h": "int mm",
+                   "clearance_front": "int mm（可選，開門/拉出要幾多）",
+                   "price_hkd": "int（可選）",
+                   "label": "str（可選，例如「訂造到頂衣櫃」）"},
+        "channel": "resolve",
+    },
+    "define_custom": {
+        "desc": "訂造一件（庫存冇合尺寸嘅款時用）—— 尺寸要自己算準",
+        "params": {"category": "str", "to_room": "str",
+                   "w": "int mm", "d": "int mm", "h": "int mm",
+                   "clearance_front": "int mm",
+                   "label": "str", "price_hkd": "int（可選）",
+                   "reason_note": "str（可選，要點做）"},
+        "channel": "resolve",
+    },
 }
 
 SYSTEM_PROMPT = """你是香港小型住宅（納米樓 / 上車盤）的室內設計師，專長是「讓小單位看起來大」。
@@ -81,7 +102,7 @@ SYSTEM_PROMPT = """你是香港小型住宅（納米樓 / 上車盤）的室內�
 
 硬規則（違反即為無效回答）：
 1. **絕對不要輸出坐標、角度、尺寸數字以外的幾何描述**。你只能輸出下面的動作。
-2. 你可用的動作只有這五個：
+2. 你可用的動作有這七個：
    - shrink_sku : 換同品類更小的款式。params: {"inst": "#sofa"}
                   max_w / max_d 係**可選**的。你睇唔到庫存，所以除非你對尺寸有
                   硬性要求，否則**唔好填** —— 留空，引擎會揀同品類下一個尺寸檔。
@@ -90,6 +111,11 @@ SYSTEM_PROMPT = """你是香港小型住宅（納米樓 / 上車盤）的室內�
    - drop_item  : 不要這件。           params: {"inst": "#nightstand"}
    - try_nudge  : 只挪一點點，不改清單。params: {"inst": "#desk"}
    - keep       : 接受現狀。            params: {"inst": "#toilet"}
+   - add_item   : 加一件新家具。params: {"category": "shelf", "to_room": "bedroom",
+                  "w": 600, "d": 300, "h": 800}
+                  庫存有合尺寸嘅款就填 "sku"（見 catalog）；冇就先自己算尺寸。
+   - define_custom : 訂造一件（庫存冇合尺寸時）。params: 同 add_item，
+                  但要**自己算準** w/d/h 同 clearance_front，因為冇得換。
 3. 下列品類是**固定潔具/廚具**，釘死在來去水位上，**不准 move_item、不准 drop_item**，
    只能 keep 或 shrink_sku：toilet basin bathtub shower stove range_hood kitchen_counter sink。
 4. 每條顧問意見都要有決定；一條意見如果涉及**多件家具**（例如「廚房有 3 件放不下：
@@ -100,16 +126,22 @@ SYSTEM_PROMPT = """你是香港小型住宅（納米樓 / 上車盤）的室內�
    能挪 200mm 解決的，就不要換款式；能換款式解決的，就不要丟掉。
 6. 香港現實：這間屋的層高只有 2.4-2.6m，主力牆不可拆，窗台是白送的儲物位。
    不要建議任何結構改動。
-7. 如果一間房是「根本塞不下」（例如 1.85m 深的客廳要放 920mm 沙發 + 450mm 電視櫃
-   + 900mm 通道 = 2270mm），**換小一號是唯一誠實的答案**，不要假裝挪一下就好了。
-8. ★ 一間房的容量是有限的：**move_item 把一件家具塞進另一間房，很可能把那間房
+   ★ **每一間房的門都寫在 rooms[].doors 裡面**（寬度、開向、鉸鏈在哪邊）。
+     門嘅位置同開向係硬約束：**唔可以擺任何嘢喺門扇掃掠區裡面**。
+     房間的淨寬/淨深係**扣咗牆身**之後嘅數，家具只能擺喺呢個範圍內。
+7. ★ **庫存唔係極限**：IKEA HK 嘅款放唔落，就應該 add_item 或 define_custom
+   自己定尺寸（香港嘅正解經常係訂造傢俬）。訂造要自己算準，因為引擎唔會幫你揀款。
+8. 如果一間房是「根本塞不下」（例如 1.85m 深的客廳要放 920mm 沙發 + 450mm 電視櫃
+   + 900mm 通道 = 2270mm），**換小一號或者訂造係唯一誠實嘅答案**，
+   唔好假裝挪一下就得。
+9. ★ 一間房的容量是有限的：**move_item 把一件家具塞進另一間房，很可能把那間房
    原有的家具逼走**（實測：把書桌移進客廳，結果客廳放不下梳化，梳化被擠掉）。
    所以順序是 try_nudge -> shrink_sku -> move_item，move_item 是最後手段。
-9. ★ 梳化同床是「一個家」的主體家具，**永遠不要 drop_item**。庫裏沒有更小的款式
+10. ★ 梳化同床是「一個家」的主體家具，**永遠不要 drop_item**。庫裏沒有更小的款式
    不是叫你放棄它，而是要你 keep，並在 reason 裏寫清楚「呢件要定制 / 去第二間舖買」——
    這正是本產品存在的理由（IKEA HK 最細梳化 1680mm，而香港常見梳化位只有 1400mm）。
 
-10. ★ **升級規則**：如果引擎回報你上一輪的動作做唔到（換唔到 / 挪唔到 / 被駁回），
+11. ★ **升級規則**：如果引擎回報你上一輪的動作做唔到（換唔到 / 挪唔到 / 被駁回），
     你必須換一個**更強**的動作（try_nudge -> shrink_sku -> move_item -> drop_item），
     唔可以重複同一個，亦唔可以即刻 keep。
     唯一例外：feasible 顯示其餘動作全部「行唔通 / 唔准」—— 咁就 keep，
@@ -150,6 +182,13 @@ class Decision:
 # --------------------------------------------------------------------------
 
 def _room_facts(flat, house) -> list[dict]:
+    """每間房的**全部已知事實** —— 這是 LLM 的「設計約束」。
+
+    ★ 門一定要寫出來。之前只給了面積同長寬，於是 LLM 同求解器
+      都唔知門喺邊、向邊邊開 —— 出來嘅設計自然「反人類」：
+      衣櫃擺正浴室門口、床封住房門。門嘅位置本身就係最硬嘅約束之一。
+    """
+    funcs = getattr(flat, "functions", lambda: {})() if flat is not None else {}
     out = []
     for r in getattr(flat, "rooms", []):
         lay = None
@@ -157,14 +196,29 @@ def _room_facts(flat, house) -> list[dict]:
             lay = getattr(house, "by_room", {}).get(r.id)
         poly = r.usable_geo()
         minx, miny, maxx, maxy = poly.bounds
+        doors, windows = [], []
+        for op in r.openings:
+            if op.kind == "door":
+                sw = op.swing or {}
+                doors.append({"id": op.id, "width_mm": op.width_mm,
+                              "swing": (sw.get("dir") or "in"),
+                              "hinge": (sw.get("hinge") or "left")})
+            else:
+                windows.append({"id": op.id, "width_mm": op.width_mm,
+                                "sill_h_mm": getattr(op, "sill_h_mm", 0)})
         out.append({
             "room": r.id,
             "label": r.label or r.id,
-            "func": getattr(flat, "functions", lambda: {})().get(r.id, "?"),
+            "func": funcs.get(r.id, "?"),
             "area_m2": round(poly.area / 1e6, 2),
             "usable_w_mm": int(maxx - minx),
             "usable_d_mm": int(maxy - miny),
-            "placed": [p.inst for p in (lay.placements if lay else [])],
+            "height_mm": getattr(r, "height_mm", 0),
+            "doors": doors,
+            "windows": windows,
+            "beams": [{"z_max_mm": p.z_max} for p in getattr(r, "height_field", [])],
+            "placed": [{"inst": p.inst, "cat": p.category,
+                        "w": p.w, "d": p.d, "h": p.h} for p in (lay.placements if lay else [])],
         })
     return out
 
@@ -301,11 +355,25 @@ def build_prompt(advices: list[Advice], flat=None, house=None,
         ],
         "n_advices": len(advices),
     }
+    # ★ 家具庫要**完整**餵給 LLM（唔係只講「有幾多款」）。
+    #   理由：add_item / define_custom 要 LLM 講得出確實尺寸，
+    #   而「邊個尺寸存在」正是它本來睇唔到嘅東西 —— 之前佢只能講
+    #   「換細一號」，因為佢根本唔知庫裏有咩。1M context 食得起。
+    if catalog:
+        payload["catalog"] = [
+            {"sku": s["id"], "cat": s["category"],
+             "w": s["dims"]["w"], "d": s["dims"]["d"], "h": s["dims"]["h"],
+             "price": s.get("price_hkd", 0),
+             "name": s.get("name_zh", "")}
+            for s in catalog
+        ]
     if extra:
         payload.update(extra)
 
     tail = (
         "請為上面 %d 條顧問意見給出決定，輸出 JSON 陣列。"
+        "如果你認為有更好嘅做法（例如加一件庫存有嘅、或者訂造一件），"
+        "可以照樣出 add_item / define_custom，唔一定要順住我俾嘅 feasible 揀。"
         "一條意見涉及幾件家具就出幾條（每件一條），同一件唔好重複。"
         % len(advices)
         if advices else
@@ -890,6 +958,58 @@ def apply_decisions(items: list[Placement], assign: dict[str, str],
                 #   不寫這句，報告就會假裝牆上真的有一部電視。
                 notes.append("    （假設：%s 改為掛牆 —— 2.5D 分層未實現，"
                              "暫以「移除 %s」近似）" % (d.target, d.target))
+            resolve_acts.append(d.action)
+
+        elif d.action in ("add_item", "define_custom"):
+            pr = d.params
+            cat = str(pr.get("category") or "").strip()
+            room_id = str(pr.get("to_room") or "").strip()
+            sku_id = str(pr.get("sku") or "").strip()
+            w = int(pr.get("w") or 0)
+            dd = int(pr.get("d") or 0)
+            hh = int(pr.get("h") or 0)
+            label = str(pr.get("label") or "").strip()
+            if sku_id:
+                s = next((x for x in catalog if x.get("id") == sku_id), None)
+                if s is None:
+                    notes.append("[refuse] add_item 揀嘅 sku %s 唔喺庫存裏" % sku_id)
+                    continue
+                cat = s["category"]
+                w, dd, hh = s["dims"]["w"], s["dims"]["d"], s["dims"]["h"]
+            if cat not in CATEGORY_ROOMS:
+                notes.append("[refuse] add_item 品類 %r 唔認識（可用：%s）"
+                             % (cat, "、".join(sorted(CATEGORY_ROOMS))))
+                continue
+            if not (100 <= w <= 4000 and 100 <= dd <= 4000 and 100 <= hh <= 3000):
+                notes.append("[refuse] add_item 尺寸唔合理：%dx%dx%d —— "
+                             "要俾齊 w/d/h（mm，平面 100-4000、高 100-3000）" % (w, dd, hh))
+                continue
+            if flat is None or not room_id or flat.room(room_id) is None:
+                notes.append("[refuse] add_item 冇指定有效嘅 to_room（可用：%s）"
+                             % "、".join(r.id for r in getattr(flat, "rooms", [])))
+                continue
+            r_t = flat.room(room_id)
+            b = r_t.usable_geo().bounds
+            rw, rd = b[2] - b[0], b[3] - b[1]
+            if not ((w <= rw and dd <= rd) or (w <= rd and dd <= rw)):
+                notes.append("[refuse] %s 加唔落 %s：房淨 %dx%d，件嘢 %dx%d —— 差 %dmm"
+                             % (room_id, cat, rw, rd, w, dd,
+                                abs(w - dd and min(abs(w - rw), abs(dd - rd)) or abs(w - rw))))
+                continue
+            inst = "#%s" % (label or ("%s_new%d" % (cat, len(items) + 1)))
+            if any(q.inst == inst for q in items):
+                inst += "_b"
+            items.append(Placement(
+                inst=inst, sku=sku_id or ("custom-%s" % cat), category=cat,
+                w=w, d=dd, h=hh,
+                visual=dict(lightness_L=75, opacity=0.55, color_family="neutral",
+                            visual_mass_index=0.12),
+                price_hkd=int(pr.get("price_hkd") or 0)))
+            assign[inst] = room_id
+            notes.append("[%s] %s（%s）%dx%dx%d -> %s%s"
+                         % ("add" if d.action == "add_item" else "custom", inst, cat,
+                            w, dd, hh, room_id,
+                            "（訂造）" if d.action == "define_custom" else ""))
             resolve_acts.append(d.action)
 
         elif d.action == "try_nudge":
