@@ -548,6 +548,56 @@ class LLMClient:
             urlparse(self.base_url).hostname, self.model, self.dialect,
             self.effort if self.dialect == "deepseek" else "n/a")
 
+    def chat_tools(self, messages: list, tools: list,
+                   temperature: float = 0.2, max_tokens: int = 6000) -> dict:
+        """帶工具嘅一次調用（原生 function calling）。
+
+        ★ DeepSeek 冇「關思考」選項，而 agent 每一輪都要帶住成個對話
+          （prompt 去到 18k token）去諗。實測 4000 會被思考食晒，
+          最後一輪直接截斷 —— 表現出嚟係「模型冇叫工具，停」，
+          其實佢只係未諗完，於是永遠交唔到貨（冇 finish、冇總結）。
+          所以截斷就加倍重試（最多 3 次）。
+        """
+        if self.dialect != "deepseek":
+            raise RuntimeError("原生 tool calling 只喺 DeepSeek 方言下用過；"
+                               "本機 llama.cpp 要走文字協議")
+        ch = {}
+        for attempt in range(3):
+            ch = self._post_tools(messages, tools, temperature, max_tokens)
+            if (ch.get("message") or {}).get("tool_calls"):
+                break
+            if ch.get("finish_reason") == "length" and attempt < 2:
+                print("    [llm] tool 輪被 max_tokens=%d 截斷（思考食晒額度），"
+                      "加倍重試" % max_tokens)
+                max_tokens *= 2
+                continue
+            break
+        return ch.get("message") or {}
+
+    def _post_tools(self, messages, tools, temperature, max_tokens) -> dict:
+        body = {"model": self.model, "messages": messages, "tools": tools,
+                "tool_choice": "auto", "temperature": temperature,
+                "max_tokens": max_tokens, "stream": False}
+        if self.effort:
+            body["reasoning_effort"] = self.effort
+        req = urllib.request.Request(
+            self.base_url + "/chat/completions",
+            data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json",
+                     "Authorization": "Bearer " + self.api_key},
+            method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                data = json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            raise RuntimeError("LLM HTTP %s: %s" % (e.code, e.read()[:400])) from e
+        ch = data["choices"][0]
+        u = data.get("usage") or {}
+        self.calls.append({"in": u.get("prompt_tokens"), "out": u.get("completion_tokens"),
+                           "finish": ch.get("finish_reason"),
+                           "tools": len(ch.get("message", {}).get("tool_calls") or [])})
+        return ch
+
     def list_models(self) -> list[str]:
         req = urllib.request.Request(self.base_url + "/models",
                                      headers={"Authorization": "Bearer " + self.api_key})
@@ -853,17 +903,22 @@ def apply_decisions(items: list[Placement], assign: dict[str, str],
                              % (d.action, d.target))
                 continue
             done.add(key)
+        # ★ add_item / define_custom 係**加新嘢**，佢哋嘅 target 本來就唔喺清單裏，
+        #   所以一定要喺「唔喺清單就 skip」之前處理。
+        #   （踩過：LLM 叫 change_item(op=custom) 訂造一張 4.5 呎床，
+        #     每次都回「[skip] #訂造4.5呎小雙人床 不在清單裏」——
+        #     佢試咗 6 次同一件事，白燒預算。）
         p = by_inst.get(d.target)
         if d.action == "keep":
             notes.append("[keep] %s —— 接受現狀" % d.target)
             continue
-        if p is None:
+        if p is None and d.action not in ("add_item", "define_custom"):
             notes.append("[skip] %s 不在清單裏" % d.target)
             continue
-        if d.action in ("move_item", "drop_item") and p.category in FIXED_CATEGORIES:
+        if p is not None and d.action in ("move_item", "drop_item")                 and p.category in FIXED_CATEGORIES:
             notes.append("[skip] %s 是固定潔具/廚具，不能移也不能丟" % d.target)
             continue
-        if d.action == "drop_item" and p.category in PROTECTED_CATEGORIES:
+        if p is not None and d.action == "drop_item" and p.category in PROTECTED_CATEGORIES:
             notes.append("[refuse] %s 唔可以 drop —— 冇梳化/冇床嘅方案唔可以交貨。"
                          "庫內冇更細嘅款式係**市場缺口**，正確做法係 keep，"
                          "再向客戶講『呢件要定制或者去第二間買』" % d.target)
