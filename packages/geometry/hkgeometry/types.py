@@ -116,9 +116,16 @@ class Room:
     openings: list[Opening] = field(default_factory=list)
     height_field: list[HeightPatch] = field(default_factory=list)
     services: list[Service] = field(default_factory=list)
+    # 房間裡「本來就存在、拆不走」的實體 —— 服務核心 / 結構柱 / 不能動的內膽。
+    # Mies 的 Farnsworth House 是第一個逼出這個欄位的案例：服務核心浮在玻璃盒
+    # 中央，四周全部相通，用「切成幾個房間」建模會把連通性同曝光度一齊切死。
+    # 所以這裡用 shell + holes 表示，Shapely 原生支援，其餘幾何運算零改動。
+    holes: list[list[tuple[int, int]]] = field(default_factory=list)
 
     def geo(self) -> Polygon:
-        return Polygon([(int(x), int(y)) for x, y in self.polygon])
+        shell = [(int(x), int(y)) for x, y in self.polygon]
+        rinds = [[(int(x), int(y)) for x, y in h] for h in self.holes]
+        return Polygon(shell, rinds)
 
     def usable_geo(self) -> Polygon:
         """扣掉现场误差余量的可用区域（§8.5）。"""

@@ -60,6 +60,17 @@ CATEGORY_ROOMS = {
     "stove": {"kitchen"}, "range_hood": {"kitchen"}, "kitchen_counter": {"kitchen"},
 }
 
+# ★ 開放式單位（studio）。香港的納米樓／唐樓套間，同 Mies 的 Farnsworth House
+#   一樣：全屋就係一個大空間 + 一個拆唔走嘅服務核心，睡房／廚房／客廳只係
+#   區域（zone），唔係房間。用「切成幾間房」去建模會把連通性同曝光度一齊
+#   切死（見 Room.holes 的說明），所以這裡讓所有品類都准入 "open"。
+LABEL_TO_FUNC.update({
+    "開放式": "open", "開放式單位": "open", "開放式空間": "open",
+    "studio": "open", "open": "open", "開放起居空間": "open",
+})
+for _v in CATEGORY_ROOMS.values():
+    _v.add("open")
+
 # ★ 可以「借住」其他房間的品類。
 #   為什麼：plan_hk_b 的廚房只有 2.4m²、浴室 1.7m²，而客廳 26.7m² ——
 #   洗衣機／微波爐／層架／儲物箱這類東西，硬要留在「功能上正確」的房間，
@@ -104,6 +115,9 @@ DEFAULT_PREF = {
     "bunk_bed": {"bedroom": 8}, "loft_bed": {"bedroom": 8},
     "storage_bed": {"bedroom": 8},
 }
+# 開放式單位裡沒有房間可以「偏好」—— 全部品類對 open 一視同仁。
+for _v in DEFAULT_PREF.values():
+    _v.setdefault("open", 4)
 
 
 @dataclass
@@ -194,9 +208,11 @@ def load_flat(path: str) -> Flat:
                        int(o.get("sill_h_mm", 0) or 0),
                        int(o.get("sill_depth_mm", 0) or 0))
                for o in r.get("openings", [])]
+        holes = [[T(p) for p in h] for h in r.get("holes", [])]
+        holes = [[(x, y - ymin) for x, y in h] for h in holes]
         rooms.append(Room(id=r["id"], label=r.get("label", ""), polygon=poly,
                           height_mm=int(r.get("height_mm", 2450) or 2450),
-                          walls=walls, openings=ops))
+                          walls=walls, openings=ops, holes=holes))
     conns = [Connection(c["a"], c["b"], int(c.get("width_mm", 800) or 800),
                         c.get("type", "doorway")) for c in d.get("connections", [])]
     ent = d.get("entry", {}) or {}

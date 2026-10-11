@@ -98,6 +98,23 @@ FRONT_DEPTH_MIN = dict(FRONT_CLEARANCE)
 SEQUENTIAL_REQUIRED = {k for k, v in FRONT_DEPTH_MIN.items() if v and v > 0}
 
 GRID = 50
+
+# ★ 網格要隨房間大小自適應。
+#   50mm 一格對香港的房（≤30m²）剛好，但 Farnsworth House 那種
+#   17m x 8.7m 的單一開放空間 = 148m²，50mm 網格會產生 346x182 = 63k 格，
+#   乘 4 個朝向再乘 22 件家具 —— 候選表直接爆掉（實測跑 10 分鐘都出唔到）。
+#   這裡用「總格數上限」反推格距：小房間原封不動（仍然 50mm），
+#   大空間自動放粗。代價係位置精度，換嚟嘅係跑得完。
+MAX_GRID_CELLS = 6000
+
+
+def _grid_for(poly) -> int:
+    minx, miny, maxx, maxy = poly.bounds
+    g = 50
+    while g < 1000 and ((int((maxx - minx) // g) + 1) *
+                        (int((maxy - miny) // g) + 1)) > MAX_GRID_CELLS:
+        g += 50
+    return g
 SCALE = 1000
 BIG = 10 ** 7
 SPINE_W = 700          # 主通道宽度（从门沿法线直进，硬约束）
@@ -379,6 +396,8 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
     boundary = poly.boundary
     shapely.prepare(boundary)
     minx, miny, maxx, maxy = poly.bounds
+    global GRID
+    GRID = _grid_for(poly)          # 同一個房間由頭到尾用同一個格距
     nx = int((maxx - minx) // GRID) + 1
     ny = int((maxy - miny) // GRID) + 1
     ncells = nx * ny

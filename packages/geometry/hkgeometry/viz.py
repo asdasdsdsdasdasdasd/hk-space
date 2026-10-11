@@ -63,6 +63,9 @@ def _draw_plan(ax, room, layout, corridors, report=None, show_labels=True):
     poly = room.geo()
     ax.add_patch(MplPolygon(np.asarray(poly.exterior.coords), closed=True,
                             facecolor="#f5f3ee", edgecolor="#333333", lw=2.0, zorder=1))
+    for ring in poly.interiors:                      # 拆不走的實體（核心 / 柱）
+        ax.add_patch(MplPolygon(np.asarray(ring.coords), closed=True,
+                                facecolor="#ffffff", edgecolor="#333333", lw=2.0, zorder=2))
     # 门窗
     for op in room.openings:
         wall = next((w for w in room.walls if w.id == op.wall), None)

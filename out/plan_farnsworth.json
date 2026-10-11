@@ -1,0 +1,203 @@
+{
+  "flat_id": "plan_farnsworth",
+  "units": "mm",
+  "rooms": [
+    {
+      "id": "living",
+      "label": "開放起居空間",
+      "label_source": "habs",
+      "label_score": 1.0,
+      "polygon": [
+        [
+          -100.0,
+          -100.0
+        ],
+        [
+          16940.0,
+          -100.0
+        ],
+        [
+          16940.0,
+          8756.0
+        ],
+        [
+          -100.0,
+          8756.0
+        ]
+      ],
+      "holes": [
+        [
+          [
+            5440,
+            1200
+          ],
+          [
+            12946,
+            1200
+          ],
+          [
+            12946,
+            5016
+          ],
+          [
+            5440,
+            5016
+          ]
+        ]
+      ],
+      "area_mm2": 122263344.0,
+      "height_mm": 2870,
+      "height_field": [],
+      "walls": [
+        {
+          "id": "wW",
+          "a": [
+            -100.0,
+            -100.0
+          ],
+          "b": [
+            -100.0,
+            8756.0
+          ],
+          "type": "glazing",
+          "thickness_mm": 100
+        },
+        {
+          "id": "wE",
+          "a": [
+            16940.0,
+            -100.0
+          ],
+          "b": [
+            16940.0,
+            8756.0
+          ],
+          "type": "glazing",
+          "thickness_mm": 100
+        },
+        {
+          "id": "wN",
+          "a": [
+            -100.0,
+            -100.0
+          ],
+          "b": [
+            16940.0,
+            -100.0
+          ],
+          "type": "glazing",
+          "thickness_mm": 100
+        },
+        {
+          "id": "wS",
+          "a": [
+            -100.0,
+            8756.0
+          ],
+          "b": [
+            16940.0,
+            8756.0
+          ],
+          "type": "glazing",
+          "thickness_mm": 100
+        }
+      ],
+      "openings": [
+        {
+          "id": "d0",
+          "wall": "wW",
+          "kind": "door",
+          "center_mm": 4520,
+          "width_mm": 2080,
+          "swing": {
+            "dir": "out",
+            "hinge": "left"
+          }
+        },
+        {
+          "id": "nN",
+          "wall": "wN",
+          "kind": "window",
+          "center_mm": 8420,
+          "width_mm": 16240,
+          "swing": null
+        },
+        {
+          "id": "nS",
+          "wall": "wS",
+          "kind": "window",
+          "center_mm": 8420,
+          "width_mm": 16240,
+          "swing": null
+        },
+        {
+          "id": "nE1",
+          "wall": "wE",
+          "kind": "window",
+          "center_mm": 2596,
+          "width_mm": 1448,
+          "swing": null
+        },
+        {
+          "id": "nE2",
+          "wall": "wE",
+          "kind": "window",
+          "center_mm": 6059,
+          "width_mm": 1448,
+          "swing": null
+        }
+      ]
+    }
+  ],
+  "connections": [],
+  "fixed_services": [],
+  "entry": {
+    "room": "living",
+    "point": [
+      400,
+      4520
+    ]
+  },
+  "meta": {
+    "source": "habs_measured_drawing",
+    "confidence": 0.95,
+    "mm_per_px": 6.096,
+    "scale_source": "dimension-chain",
+    "scale_method": "two independent chains: 28ft-8in over 1434 px, and the 2ft-9in travertine floor grid over 137.5 px",
+    "scale_votes": [
+      [
+        50.02,
+        8738,
+        1434,
+        "28'-8\""
+      ],
+      [
+        50.0,
+        838,
+        137.5,
+        "2'-9\""
+      ]
+    ],
+    "reference": [
+      "HABS No. IL-1105 written data [A]",
+      "HABS IL-1105 sheet 3 of 8 PLAN [B]",
+      "HABS IL-1105 sheet 6 of 8 PLAN OF CORE [C]",
+      "National Trust 'Edith Farnsworth Reconsidered' Exhibition Plan [D]"
+    ],
+    "interior_mm": [
+      16840,
+      8656
+    ],
+    "core_rect_mm": [
+      5440,
+      1200,
+      12946,
+      5016
+    ],
+    "porch_mm": [
+      6790,
+      8656
+    ],
+    "known_conflict": "core depth: printed on [C] as 7506x3816, but measured off [B] as 7406x3371 (my [B] reading took the south cabinet face). Using the printed [C] value."
+  }
+}

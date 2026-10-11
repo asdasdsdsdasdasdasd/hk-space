@@ -546,4 +546,74 @@ hk-space/
 
 已完成：**除户型图矢量化之外的全部 Demo 关键路径**。
 
-剩下：**户型图矢量化**（用户看到的第一屏，子代理进行中）→ SKU 扩到 500。
+剩下：SKU 扩到 500 → 视觉目标 M1 的人类感知校准。
+
+---
+
+# 换掉自造户型图：用 Mies 的 Farnsworth House 同真人比
+
+用户 2026-10 的判断：**「你自己生成嘅户型图太奇怪，我连家具都唔知点摆」**。
+于是全部自造户型图停用，改用一栋真实建筑 + 一份真人做嘅设计方案做对照。
+
+## 为什麽是 Farnsworth House
+
+| 条件 | Farnsworth 提供嘅嘢 |
+|---|---|
+| 几何够难 | **单一开放空间 + 浮喺中央嘅服务核心**，四周全部相通 —— 等视域指标唯一有意义嘅形状（凸矩形房里会退化成纯距离） |
+| 尺寸有据 | HABS No. IL-1105 实测图 8 张（2009）+ written data（1974），所有数字可逐条核对 |
+| 有真人对照 | National Trust 展览 *Edith Farnsworth Reconsidered*（2019-20）复原嘅 c.1955 实际陈设，画成一张有比例、有 A-Z 字母嘅平面图 |
+
+## 尺度（用户要求：开工前先确认）
+
+- 图上量得室内进深 1434 px，标注 **28'-8"** → 50.02 px/ft
+- 地面水磨石格 137.5 px，大样图 [C] 标 **2'-9"** → 50.0 px/ft
+- 两条独立证据都指向 **50.0 px/ft = 6.096 mm/px**，室内 **16840 x 8656 mm**
+- 服务核心：[C] 直接印住 **24'-7 1/2" x 12'-6 1/4" = 7506 x 3816 mm**
+  ⚠️ 我自己喺 [B] 上量到嘅进深只有 3371mm（量到嘅系核心南侧柜身，唔系核心最外缘）。
+  两个读数差 445mm，`out/plan_farnsworth.json` 嘅 meta 有记录，最后采用印刷尺寸。
+
+## 新增能力：房间可以有「洞」
+
+`Room.holes` —— 房间裡「本来就存在、拆唔走」嘅实体（服务核心 / 结构柱）。
+
+为什么唔可以「切成几间房」去建模：一栋开放式单位嘅连通性同曝光度系**整个空间**
+嘅性质，切开就一齐切死。Shapely 原生支持 shell + holes，其余几何运算零改动。
+
+## 结果（`scripts/compare_farnsworth.py`）
+
+同一个空间、同一份 22 件家具清单，一边系展览复原嘅 c.1955 摆法，一边系本引擎。
+
+| | 1949-55 原设计 | 本引擎 |
+|---|---|---|
+| 放低 | 22/22 | 22/22 |
+| 绝对视觉负荷 Σ(mass×exposure)/面积 | 0.01964 | **0.01733（−11.7%）** |
+| 宜居分 / 硬伤 | 0 / **4** | **86** / 0 |
+
+图：`out/farnsworth_compare.png`；对照组逐件叠返原图核对：`out/farnsworth_target_verify.png`
+
+## ★ 真正嘅结论：唔系「引擎赢咗」
+
+原设计挨嘅 4 条硬伤，**3 条系我哋自己嘅规则错**：
+
+- `bed_head_not_against_wall` / `not_backed_to_wall`（床、衣柜唔贴墙）——
+  喺一座四面都系玻璃、家具故意浮喺空间中间嘅房子里，「贴实墙」根本唔系一条
+  可用嘅规则。呢条规则系为香港嘅实心墙细房写嘅。
+- `coffee_not_in_front` —— 真实方案里茶几系配躺椅（slipper chairs），
+  唔系配daybed。
+
+所以正确嘅讲法系：**喺一栋真实嘅 Mies 建筑上，我哋手上嘅尺系错嘅尺。**
+引擎用「把傢俬推向边界、彼此拉开」换到低 11.7% 嘅视觉负荷，
+但呢个数字嘅下降有一半系来自满足一堆唔适用嘅假设。
+这也正是 M1（视觉目标的人类感知校准）要排在 M3（训 Transformer）之前嘅原因。
+
+## 点跑
+
+```bash
+python3 services/floorplan/make_farnsworth_plan.py       # 生成 out/plan_farnsworth.json
+python3 scripts/verify_target_overlay.py                 # 对照组叠返原图核对
+python3 scripts/compare_farnsworth.py --time-limit 90    # 求解 + 出对比图（约 5 分钟）
+python3 scripts/compare_farnsworth.py --reuse            # 唔重新求解，只重画
+```
+
+对照组数据：`data/targets/farnsworth_1955.json`（每件都标咗 evidence: drawn / label / inferred）
+研究笔记：`docs/farnsworth-furnishing-research.md`

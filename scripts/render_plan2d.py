@@ -160,6 +160,16 @@ def main() -> None:
         ax.add_patch(MplPolygon(list(poly.exterior.coords), closed=True,
                                 facecolor=FLOOR.get(lay.get(r.id, {}).get("func", ""), "#f7f7f4"),
                                 edgecolor="none", zorder=1))
+        # 房間內「拆不走」的實體（服務核心 / 柱）—— 畫成被挖空的洞
+        for ring in poly.interiors:
+            ax.add_patch(MplPolygon(list(ring.coords), closed=True,
+                                    facecolor="#ffffff", edgecolor="#22252b",
+                                    lw=2.0, zorder=2))
+            hb = ring.bounds
+            ax.text((hb[0] + hb[2]) / 2.0, (hb[1] + hb[3]) / 2.0,
+                    "服務核心（固定）\n%d x %d mm" % (hb[2] - hb[0], hb[3] - hb[1]),
+                    ha="center", va="center", fontsize=9, color="#666",
+                    style="italic", zorder=8)
     # ★ 一面牆只畫一次。相鄰兩間房會各自列出同一面牆，
     #   逐間畫會畫兩次（線變粗、門弧畫兩條）。用幾何 key 去重。
     seen_walls = set()

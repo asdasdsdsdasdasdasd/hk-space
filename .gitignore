@@ -18,6 +18,9 @@ out/*
 !out/diag_paths.png
 !out/templates_contact_sheet.png
 !out/plan_hk_*.json
+!out/plan_farnsworth.json
+!out/farnsworth_compare.png
+!out/farnsworth_target_verify.png
 !out/templates/
 
 # ---- 大型快取 ----
