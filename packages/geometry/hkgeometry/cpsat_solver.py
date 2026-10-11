@@ -349,6 +349,101 @@ def repair_door_blocks(room, lay, max_pass: int = 3, step: int = 200) -> "Layout
     return Layout(room_id=room.id, placements=out)
 
 
+def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
+    """唔用 check_livability 嘅快速「有幾差」指標：
+    (踩門件數, 踩門總面積 cm2, 前方淨空唔過件數)。"""
+    n_door = 0
+    a_door = 0.0
+    n_front = 0
+    fps = [p.footprint() for p in placements]
+    for i, p in enumerate(placements):
+        a = sum(fps[i].intersection(z).area for z in zones)
+        if a > tol_mm2:
+            n_door += 1
+            a_door += a
+        need = FRONT_DEPTH_MIN.get(p.category, 0)
+        if need:
+            w, d = (p.w, p.d) if p.rot in (0, 180) else (p.d, p.w)
+            fx, fy = p.front_dir()
+            others = [o for j, o in enumerate(fps) if j != i]
+            if not _front_ok(p.x, p.y, w, d, fx, fy, need, poly, others):
+                n_front += 1
+    return (n_door, int(a_door / 100.0), n_front)
+
+
+def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
+    """★ 同一批件、全局重排（坐標下降）。
+
+    為什麼需要：錨定係**逐件貪心** —— 一件家具嘅位置係「放佢嗰一刻最靚嘅格」，
+    之後就算發現咁擺會擋住門口／擋住別人，都冇任何一步會再郁佢。
+    24 個錨定順序只係換次序，唔係換位置。
+    實測安柏苑 05 室廚房：同一組 (檯面/雪櫃/灶台) 明明有一個「唔踩門」嘅排法
+    （key 14），引擎交返嚟嘅係 key 119。
+
+    做法：只針對「有事」嘅件（踩門 / 前方淨空唔過），
+    喺全房網格上窮舉佢嘅 (x, y, rot)，用 _cheap_bad 排序，
+    接受令指標**嚴格變好**嘅移動。其他件凍結。
+    """
+    zones = [z for _i, z in door_approach_zones(room)]
+    if not zones or not lay.placements or len(lay.placements) > 12:
+        return lay
+    poly = room.usable_geo()
+    blockers = zones + circulation_zones(room)
+    cur = list(lay.placements)
+    cur_bad = _cheap_bad(room, cur, zones, poly)
+    if cur_bad == (0, 0, 0):
+        return lay
+    b = poly.bounds
+    if (b[2] - b[0]) * (b[3] - b[1]) > 25e6:        # 大廳唔做，太慢
+        return lay
+    for _p in range(max_passes):
+        improved = False
+        for idx in range(len(cur)):
+            p = cur[idx]
+            others = cur[:idx] + cur[idx + 1:]
+            obst = [q.footprint() for q in others]
+            need = FRONT_DEPTH_MIN.get(p.category, 0)
+            best = None
+            for rot in (0, 90, 180, 270):
+                w, d = (p.w, p.d) if rot in (0, 180) else (p.d, p.w)
+                fx, fy = front_dir(rot)
+                x = b[0]
+                while x + w <= b[2]:
+                    y = b[1]
+                    while y + d <= b[3]:
+                        bx = shapely.box(x, y, x + w, y + d)
+                        if (poly.covers(bx)
+                                and not any(bx.intersects(z) for z in blockers)
+                                and not any(bx.intersects(o) for o in obst)
+                                and _front_ok(x, y, w, d, fx, fy, need, poly, obst)):
+                            cand = Placement(
+                                inst=p.inst, sku=p.sku, category=p.category,
+                                x=int(x), y=int(y), rot=rot, w=p.w, d=p.d, h=p.h,
+                                visual=dict(p.visual), price_hkd=p.price_hkd)
+                            bad = _cheap_bad(room, others + [cand], zones, poly)
+                            if best is None or bad < best[0]:
+                                best = (bad, cand)
+                        y += step
+                    x += step
+            # ★ 守衛：_cheap_bad 只係**代理指標**（踩門 + 沿邊 600mm 淨空），
+            #   同 livability 真正嘅檢查唔完全一致 —— 實測淨係睇代理指標會
+            #   把「雪櫃踩門」換成「雪櫃擋住檯面」，總分反而跌。
+            #   所以最終要過一次真檢查：硬傷數目唔准上升。
+            if best is not None and best[0] < cur_bad:
+                from .livability import check_livability
+                cand = others + [best[1]]
+                if len(check_livability(room, Layout(room_id=room.id,
+                                                     placements=cand)).hard) \
+                        <= len(check_livability(room, Layout(
+                            room_id=room.id, placements=cur)).hard):
+                    cur[idx] = best[1]
+                    cur_bad = best[0]
+                    improved = True
+        if not improved or cur_bad == (0, 0, 0):
+            break
+    return Layout(room_id=room.id, placements=cur)
+
+
 def _grid_for(poly) -> int:
     minx, miny, maxx, maxy = poly.bounds
     g = 50
@@ -1195,6 +1290,7 @@ def _solve_with_order(room, items, anchors_order, emap, W, corridors, doors, spi
     lay = Layout(room_id=room.id, placements=placed)
     lay = repair_rotations(room, lay)
     lay = repair_door_blocks(room, lay)      # ★ 門口修復（見該函式說明）
+    lay = relayout_search(room, lay)         # ★ 同一批件、全局重排
     return lay, info
 
 
