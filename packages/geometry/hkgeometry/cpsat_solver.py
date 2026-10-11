@@ -115,6 +115,33 @@ def _door_block_count(room, lay, tol_mm2: float = 30000.0) -> int:
     return n
 
 
+# ★★ 2026-10：門扇區被侵占，要當成**同漏放一件家具同一量級**嘅代價。
+#   为什麽：舊寫法把「侵占門扇區嘅件數」放喺 key 嘅**第二個**元素，
+#   只做和局分勝負。實測安柏苑 05 室廚房：
+#     方案 A：掉雪櫃（罰 36）+ 門扇區乾淨        -> key 38
+#     方案 B：掉洗衣機（罰 12）+ 侵占門扇區 36%  -> key 14  <-- 贏咗
+#   即係引擎會為咗留返雪櫃而**交出一扇開唔到嘅廚房門**。
+#   但用戶點名嘅第一條要求就係「家具唔可以擋門」。
+#   修法：把侵占程度（按佔門扇區比例）換算成分數，直接加落 key 嘅第一項，
+#   令「門完全開唔到」= 100 分，貴過掉一件最重要嘅家具（廚櫃檯面 = 72）。
+DOOR_BLOCK_SCALE = 300.0
+
+
+def _door_penalty(room, lay, tol_mm2: float = 30000.0) -> float:
+    """門扇區被家具侵占嘅嚴重程度（0..N，按佔扇區比例加總）。"""
+    zones = [z for _i, z in door_approach_zones(room)]
+    if not zones:
+        return 0.0
+    tot = 0.0
+    for p in lay.placements:
+        fp = p.footprint()
+        for z in zones:
+            a = fp.intersection(z).area
+            if a > tol_mm2:
+                tot += DOOR_BLOCK_SCALE * min(1.0, a / z.area)
+    return tot
+
+
 def _missing_penalty(items, lay) -> int:
     """漏放罰分 —— 按「呢件有幾定義間房」分級，唔再係一刀切。"""
     got = {p.inst for p in lay.placements}
@@ -943,8 +970,8 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
         # 曾经只比 len(lv.hard)，结果「少放一件家具」反而硬伤更少、分数更高 ——
         # 电视柜放不下就直接不放，求解器还觉得自己很对。
         missing = max(0, len(items) - len(lay.placements))
-        key = (len(lv.hard) + _missing_penalty(items, lay),
-               _door_block_count(room, lay), -round(sp.score, 1))
+        key = (len(lv.hard) + _missing_penalty(items, lay)
+               + int(round(_door_penalty(room, lay))), -round(sp.score, 1))
         if verbose:
             print("   [order %d] %s  宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                   % (oi, " ".join(p.inst.strip("#") for p in anchors_order[:3]),
@@ -966,6 +993,11 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
     # ★ 階梯唔可以走到 0.0 —— 「門完全開唔到」永遠唔係一個可接受嘅方案。
     #   由 0.0 放走之後，求解器就會為咗降低其他代價而把床擺正喺門後面
     #   （實測安柏苑 05 室主人房：床頭貼住大門那面牆，侵占門扇區 0.40 m²）。
+    # ★ 2026-10 試過把 0.25 檔移除（想逼走雪櫃），結果：門扇區乾淨咗，
+    #   但洗衣機改為卡死喺檯面同灶台嘅正前方（clearance_blocked ×2），
+    #   而且雪櫃被漏放 —— 總分由 8/10 跌到 7/10。
+    #   換句話講：**問題唔係「容許唔容許踩門」，而係 3.8m² 廚房塞 4 件本來就爆**。
+    #   所以 0.25 檔保留，等「前方淨空改成『沿邊某一段夠 600mm 闊』」做好先再收緊。
     for _frac in ((0.6, 0.4, 0.25) if best is not None and doors
                   and (len(items) - len(best[1].placements)) > 0 else ()):
         if len(items) - len(best[1].placements) == 0:
@@ -1016,8 +1048,8 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
             lv = check_livability(room, lay)
             sp = spaciousness_report(room, lay, emap, corridors)
             missing = max(0, len(items) - len(lay.placements))
-            key = (len(lv.hard) + _missing_penalty(items, lay),
-                   _door_block_count(room, lay), -round(sp.score, 1))
+            key = (len(lv.hard) + _missing_penalty(items, lay)
+                   + int(round(_door_penalty(room, lay))), -round(sp.score, 1))
             if verbose:
                 print("   [restart %d] 宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                       % (k, len(lv.hard), missing, sp.score))
