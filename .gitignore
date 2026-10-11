@@ -32,3 +32,9 @@ out/*
 .DS_Store
 .idea/
 .vscode/
+!out/pipeline.png
+!out/plan2d_onpak05_engine.png
+!out/plan2d_stress_tiny_engine.png
+!out/plan2d_stress_narrow_engine.png
+!out/ref/
+!out/ref/**
