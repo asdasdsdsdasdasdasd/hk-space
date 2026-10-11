@@ -23,7 +23,36 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "packages", "geometry"))
 
 import shapely                                                    # noqa: E402
-from shapely.geometry import Point, box                           # noqa: E402
+from shapely.geometry import Point, box, LineString               # noqa: E402
+
+
+def min_corridor_width(room, lay, step=100):
+    """沿房间长轴走一遍，量自由空间在垂直方向上的**最窄**宽度。
+
+    ★ 照 Design-MLLM §5.3 对 2m x 5m 狭窄场景给的判断：
+      「distributes equipment linearly along the walls to maintain a clear
+       central pathway」——所以「中央通路还有多宽」是一个该单独量的东西。
+    """
+    poly = room.geo()
+    b = poly.bounds
+    horiz = (b[2] - b[0]) >= (b[3] - b[1])
+    lo, hi = (b[0], b[2]) if horiz else (b[1], b[3])
+    n = max(2, int((hi - lo) // step))
+    worst = 1e9
+    for k in range(n + 1):
+        t = lo + (hi - lo) * k / n
+        line = (LineString([(t, b[1] - 20), (t, b[3] + 20)]) if horiz
+                else LineString([(b[0] - 20, t), (b[2] + 20, t)]))
+        free = poly.intersection(line)
+        for p in lay.placements:
+            if not free.is_empty:
+                free = free.difference(p.footprint())
+        if free.is_empty:
+            return 0.0
+        parts = [free] if free.geom_type == "LineString" else list(getattr(free, "geoms", []))
+        best = max((g.length for g in parts if g.geom_type == "LineString"), default=0.0)
+        worst = min(worst, best)
+    return worst
 
 from hkgeometry.house import load_flat, solve_house, HouseLayout   # noqa: E402
 from hkgeometry.types import Layout, Placement, FRONT_CLEARANCE    # noqa: E402
@@ -58,7 +87,31 @@ ONPAK05 = dict(
         ("#washer", "washing_machine", 600, 600, 850, "kitchen"),
     ],
 )
-CASES = {"onpak05": ONPAK05}
+# ★ 照 Design-MLLM §5.3 的 Stress Test 做的两个极端户型（见 make_stress_flats.py）
+STRESS_TINY = dict(
+    plan="out/plan_stress_tiny.json",
+    label="壓力測試 2.5x3m 極小房（7.5 m2）",
+    items=[
+        ("#bed", "bed", 1200, 1900, 500, "studio"),
+        ("#wardrobe", "wardrobe", 800, 600, 1800, "studio"),
+        ("#desk", "desk", 1000, 500, 750, "studio"),
+        ("#chair", "chair", 450, 450, 780, "studio"),
+        ("#shelf", "shelf", 600, 300, 1800, "studio"),
+    ],
+)
+STRESS_NARROW = dict(
+    plan="out/plan_stress_narrow.json",
+    label="壓力測試 2x5m 極窄房（10 m2）",
+    items=[
+        ("#sofa", "sofa", 1400, 700, 750, "living"),
+        ("#coffee", "coffee_table", 600, 600, 400, "living"),
+        ("#tv", "tv_bench", 1200, 400, 500, "living"),
+        ("#dining", "dining_table", 1200, 700, 750, "living"),
+        ("#chair1", "chair", 450, 450, 780, "living"),
+        ("#chair2", "chair", 450, 450, 780, "living"),
+    ],
+)
+CASES = {"onpak05": ONPAK05, "stress_tiny": STRESS_TINY, "stress_narrow": STRESS_NARROW}
 
 
 def build_items(case):
@@ -102,7 +155,11 @@ def check(flat, case, house):
     add("3 完整落在房间内", not out, str(out[:5]))
 
     # 4 必需品在位（马桶！）
-    need = {"toilet", "basin", "shower", "stove", "fridge", "bed"}
+    #   ★ 必需品要**按案例**判断：压力测试的开放式单位本身没有厕所，
+    #     用一个全局清单去查会报假警。
+    want_cats = {c for _i, c, _w, _d, _h, _r in case["items"]}
+    need = want_cats & {"toilet", "basin", "shower", "stove", "fridge",
+                        "bed", "kitchen_counter"}
     got = {p.category for p in ps}
     add("4 必需品在位（含马桶）", need <= got, "缺 " + str(sorted(need - got)))
 
@@ -195,8 +252,60 @@ def check(flat, case, house):
             s10 = "餐椅到餐桌 " + " ".join("%.0f" % d for d in ds) + ("  (超 1200mm %d 张)" % len(far) if far else "")
     add("10 餐椅靠近餐桌", ok10, s10)
 
-    # 11 门的扫掠区没被任何家具压（软硬都算）
-    return rows
+    # ── 11 朝向错误（Agentic Designer 的四类违规之一，我们原本完全没有）
+    #    定义：正面法线射出去，第一个撞到的如果是墙、而且很近 —— 就是面壁。
+    facing_bad = []
+    for rid, r in rooms.items():
+        lay = house.by_room.get(rid)
+        if not lay:
+            continue
+        poly = r.geo()
+        for p in lay.placements:
+            if p.category in ("coffee_table", "side_table", "dining_table"):
+                continue
+            cx, cy = p.center()
+            fx, fy = p.front_dir()
+            half = p.d / 2.0
+            ray = shapely.LineString([(cx + fx * half, cy + fy * half),
+                                      (cx + fx * (half + 400), cy + fy * (half + 400))])
+            hit = ray.intersection(poly.boundary)
+            blocked_by_item = any(ray.intersects(q.footprint())
+                                  for q in lay.placements if q.inst != p.inst)
+            if not hit.is_empty and hit.distance(Point(cx + fx * half,
+                                                        cy + fy * half)) < 250 \
+                    and not blocked_by_item:
+                facing_bad.append("%s@%s" % (p.inst, rid))
+    add("11 朝向没错（没面壁）", not facing_bad, str(facing_bad[:4]))
+
+    # ── 12 中央通路：沿房间长轴走，自由宽度的最小值（照 Design-MLLM 的
+    #    「linear along the walls to maintain a clear central pathway」）
+    worst_w = 1e9
+    for rid, r in rooms.items():
+        lay = house.by_room.get(rid)
+        if not lay or not lay.placements:
+            continue
+        worst_w = min(worst_w, min_corridor_width(r, lay))
+    ok12 = worst_w >= 900
+    add("12 中央通路 >=900mm", ok12,
+        "最窄处 %.0f mm" % worst_w if worst_w < 1e8 else "无家具")
+
+    # ── 场景级指标（Agentic Designer 的 SVR / BVC / CS）
+    n_bad = sum(1 for p in ps
+                if not rooms[house.assignment.get(p.inst, "")].geo().covers(p.footprint())) \
+        if house.assignment else 0
+    idx = 0.0
+    npair = 0
+    for i, a in enumerate(ps):
+        for b in ps[i + 1:]:
+            inter = a.footprint().intersection(b.footprint()).area
+            if inter > 0:
+                idx += inter / max(1.0, a.footprint().union(b.footprint()).area)
+                npair += 1
+    metrics = dict(SVR=100.0 if n_bad else 0.0, BVC=n_bad,
+                   CS=round(10000.0 * idx / max(1, len(ps)), 2),
+                   min_corridor=round(worst_w, 0) if worst_w < 1e8 else None,
+                   dropped=len(missing))
+    return rows, metrics
 
 
 def main() -> None:
@@ -226,7 +335,7 @@ def main() -> None:
         house = solve_house(flat, items, time_limit_s=args.time_limit, parallel=True,
                             assignment=assign)
         dt = time.time() - t0
-        rows = check(flat, case, house)
+        rows, metrics = check(flat, case, house)
         all_rows[name] = [dict(tag=t, ok=o, detail=d) for t, o, d in rows]
         npass = sum(1 for _t, o, _d in rows if o)
         print("  求解 %.1fs" % dt)
@@ -240,7 +349,9 @@ def main() -> None:
                 print("   %s: (空)" % rid)
         for t, o, d in rows:
             print("   [%s] %-22s %s" % ("PASS" if o else "FAIL", t, d[:90]))
-        print("  --> %d/%d 通过" % (npass, len(rows)))
+        print("  --> %d/%d 通过   |  SVR %.0f%%  BVC %d  CS %.2f  最窄通路 %s mm"
+              % (npass, len(rows), metrics["SVR"], metrics["BVC"], metrics["CS"],
+                 metrics["min_corridor"]))
 
     outp = os.path.join(ROOT, args.out)
     with open(outp, "w", encoding="utf-8") as f:

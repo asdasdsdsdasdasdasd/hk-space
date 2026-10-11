@@ -127,6 +127,79 @@ def _door_block_count(room, lay, tol_mm2: float = 30000.0) -> int:
 DOOR_BLOCK_SCALE = 300.0
 
 
+# ★ 2026-10：主通路最窄寬度（Design-MLLM 的 τ_path = 0.9m/main artery）。
+#   為什麼要量：我們原本只有「由大門走唔走到每一件家具」（人寬 600mm 洪水填充），
+#   冇量過「條走廊有幾闊」。實測安柏苑 05 室：走得，但最窄處只有 335mm ——
+#   即係要側身。呢個係用戶口中「家具挡着走廊」嘅真正量化版本。
+ARTERY_MIN_MM = 900.0
+
+
+def min_corridor_width(room, lay, step: int = 150) -> float:
+    """沿房间长轴走一遍，量自由空间在垂直方向上的**最窄**宽度。"""
+    poly = room.geo()
+    b = poly.bounds
+    horiz = (b[2] - b[0]) >= (b[3] - b[1])
+    lo, hi = (b[0], b[2]) if horiz else (b[1], b[3])
+    n = max(2, int((hi - lo) // step))
+    worst = 1e9
+    for k in range(n + 1):
+        t = lo + (hi - lo) * k / n
+        line = (shapely.LineString([(t, b[1] - 20), (t, b[3] + 20)]) if horiz
+                else shapely.LineString([(b[0] - 20, t), (b[2] + 20, t)]))
+        free = poly.intersection(line)
+        for p in lay.placements:
+            if not free.is_empty:
+                free = free.difference(p.footprint())
+        if free.is_empty:
+            return 0.0
+        parts = [free] if free.geom_type == "LineString" else list(getattr(free, "geoms", []))
+        best = max((g.length for g in parts if g.geom_type == "LineString"), default=0.0)
+        worst = min(worst, best)
+    return worst
+
+
+def _narrow_artery_penalty(room, lay, step: int = 150) -> int:
+    """主通路窄過 ARTERY_MIN_MM 幾多（每 10cm 一分）。0 = 完全夠闊。"""
+    ps = lay.placements
+    if not ps:
+        return 0
+    w = min_corridor_width(room, lay, step=step)
+    return int(max(0.0, ARTERY_MIN_MM - w) / 100.0)
+
+
+def _composition_penalty(room, lay, sigma: float = 0.5) -> float:
+    """構圖均衡：視覺質心偏離房間中心幾多（0 = 完全居中，1 = 極度偏一邊）。
+
+    ★ 照 Design-MLLM 的 S_comp = exp(-|c_mass - c_room|^2 / 2 sigma^2)，
+      其中 c_mass = Σ a_i w_i p_i / Σ a_i w_i（面積 x 語義顯著度加權）。
+      他們的用意：「ensures the layout is not lopsided or cluttered」。
+      我們之前完全冇呢一項 —— 曝光項同貼牆項兩條都係把家具往外推。
+
+    ⚠️ 一定要做成**佈局層**評估。試過做成逐格代價，喺 U 形房間度
+      centroid 會落喺洞入面，結果把全部重家具吸去一個冇位嘅地方。
+    """
+    ps = lay.placements
+    if not ps:
+        return 0.0
+    sx = sy = sw = 0.0
+    for p in ps:
+        a = p.w * p.d / 1e6
+        w = max(1e-6, p.visual_mass())
+        k = a * w
+        cx, cy = p.center()
+        sx += k * cx
+        sy += k * cy
+        sw += k
+    if sw <= 0:
+        return 0.0
+    poly = room.usable_geo()
+    rp = poly.representative_point()
+    b = poly.bounds
+    half = max(1.0, 0.5 * math.hypot(b[2] - b[0], b[3] - b[1]))
+    d = math.hypot(sx / sw - rp.x, sy / sw - rp.y) / half
+    return 1.0 - math.exp(-(d ** 2) / (2.0 * sigma ** 2))
+
+
 def _door_penalty(room, lay, tol_mm2: float = 30000.0) -> float:
     """門扇區被家具侵占嘅嚴重程度（0..N，按佔扇區比例加總）。"""
     zones = [z for _i, z in door_approach_zones(room)]
@@ -352,6 +425,19 @@ def repair_door_blocks(room, lay, max_pass: int = 3, step: int = 200) -> "Layout
 def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
     """唔用 check_livability 嘅快速「有幾差」指標：
     (踩門件數, 踩門總面積 cm2, 前方淨空唔過件數)。"""
+    # ★ 第一格：違反功能關係嘅件數。
+    #   為什麼要放**第一**：坐標下降嘅驗收標準如果唔包含關係，
+    #   佢就會為咗「走廊闊啲 / 門口乾淨啲」而把餐椅由餐桌旁邊搬走 ——
+    #   實測 onpak05 客廳正係咁（餐椅飛到 1391 / 1784 mm）。
+    n_rel = 0
+    for p in placements:
+        others = [q for q in placements if q.inst != p.inst]
+        if not others:
+            continue
+        cx, cy = p.center()
+        fx, fy = p.front_dir()
+        if _rel_violation(p, cx, cy, others, None) > 0.0:
+            n_rel += 1
     n_door = 0
     a_door = 0.0
     n_front = 0
@@ -368,7 +454,7 @@ def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
             others = [o for j, o in enumerate(fps) if j != i]
             if not _front_ok(p.x, p.y, w, d, fx, fy, need, poly, others):
                 n_front += 1
-    return (n_door, int(a_door / 100.0), n_front)
+    return (n_rel, n_door, int(a_door / 100.0), n_front)
 
 
 def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
@@ -387,15 +473,18 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
     zones = [z for _i, z in door_approach_zones(room)]
     if not zones or not lay.placements or len(lay.placements) > 12:
         return lay
+    # ★ 大房都要做（主通路問題通常就喺大廳），但用粗啲嘅網格換速度。
+    _bb = room.usable_geo().bounds
+    if (_bb[2] - _bb[0]) * (_bb[3] - _bb[1]) > 25e6:
+        step = max(step, 300)
     poly = room.usable_geo()
     blockers = zones + circulation_zones(room)
     cur = list(lay.placements)
     cur_bad = _cheap_bad(room, cur, zones, poly)
-    if cur_bad == (0, 0, 0):
+    cur_art = _narrow_artery_penalty(room, lay)
+    if cur_bad == (0, 0, 0, 0) and cur_art == 0:
         return lay
     b = poly.bounds
-    if (b[2] - b[0]) * (b[3] - b[1]) > 25e6:        # 大廳唔做，太慢
-        return lay
     for _p in range(max_passes):
         improved = False
         for idx in range(len(cur)):
@@ -429,17 +518,22 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
             #   同 livability 真正嘅檢查唔完全一致 —— 實測淨係睇代理指標會
             #   把「雪櫃踩門」換成「雪櫃擋住檯面」，總分反而跌。
             #   所以最終要過一次真檢查：硬傷數目唔准上升。
-            if best is not None and best[0] < cur_bad:
+            if best is not None and best[0] <= cur_bad:
                 from .livability import check_livability
                 cand = others + [best[1]]
-                if len(check_livability(room, Layout(room_id=room.id,
-                                                     placements=cand)).hard) \
+                cand_art = _narrow_artery_penalty(
+                    room, Layout(room_id=room.id, placements=cand))
+                # ★ 驗收標準：(代理指標, 主通路窄度) 兩者都唔准變差，至少一項要變好。
+                if (best[0], cand_art) < (cur_bad, cur_art) \
+                        and len(check_livability(room, Layout(
+                            room_id=room.id, placements=cand)).hard) \
                         <= len(check_livability(room, Layout(
                             room_id=room.id, placements=cur)).hard):
                     cur[idx] = best[1]
                     cur_bad = best[0]
+                    cur_art = cand_art
                     improved = True
-        if not improved or cur_bad == (0, 0, 0):
+        if not improved or (cur_bad == (0, 0, 0, 0) and cur_art == 0):
             break
     return Layout(room_id=room.id, placements=cur)
 
@@ -793,6 +887,9 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
     boundary = poly.boundary
     shapely.prepare(boundary)
     minx, miny, maxx, maxy = poly.bounds
+    _cen = poly.centroid
+    _cxy = (float(_cen.x), float(_cen.y))
+    _halfdiag = max(1.0, 0.5 * math.hypot(maxx - minx, maxy - miny))
     global GRID
     GRID = _grid_for(poly)          # 同一個房間由頭到尾用同一個格距
     nx = int((maxx - minx) // GRID) + 1
@@ -877,6 +974,11 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                     c = 0.0
                     if emap is not None and W.exposure > 0:
                         c += W.exposure * mass * emap.value_at(ccx, ccy)
+                    # ⚠️ 2026-10：呢度試過加「逐格」嘅構圖均衡項（重嘅家具離中心罰多啲）——
+                    #   實測災難：onpak05 由 9/12 跌到 6/12，4 張餐椅全部飛到 6.4-7.1 米外。
+                    #   原因：U 形房間嘅 centroid 可能落喺洞入面／牆外，
+                    #   於是所有重嘅家具被吸去一個冇位嘅地方，連 Hub 重排嘅 top-40 都污染埋。
+                    #   → 改成**佈局層**評估（見 _composition_penalty），唔再郁逐格代價。
                     if W.wall_contact > 0:
                         c -= W.wall_contact * max(0.0, 300 - box.distance(boundary)) / 300.0
                     if W.facing > 0:
@@ -1150,8 +1252,13 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
         # 曾经只比 len(lv.hard)，结果「少放一件家具」反而硬伤更少、分数更高 ——
         # 电视柜放不下就直接不放，求解器还觉得自己很对。
         missing = max(0, len(items) - len(lay.placements))
+        # ⚠️ 2026-10：構圖均衡項（_composition_penalty）試過放喺呢個 key 嘅第二格，
+        #   實測係 wash：stress_tiny 10->11，但 onpak05 9->8（一張餐椅飛到 6.96 米）。
+        #   而且佢嘅語義喺 U 形房裡本來就唔清楚（「房間中心」對一個繞住核心嘅
+        #   U 形空間冇乜意思）。所以**唔採用**，函式保留作量度用。
         key = (len(lv.hard) + _missing_penalty(items, lay)
-               + int(round(_door_penalty(room, lay))), -round(sp.score, 1))
+               + int(round(_door_penalty(room, lay))),
+               _narrow_artery_penalty(room, lay), -round(sp.score, 1))
         if verbose:
             print("   [order %d] %s  宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                   % (oi, " ".join(p.inst.strip("#") for p in anchors_order[:3]),
@@ -1229,7 +1336,8 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
             sp = spaciousness_report(room, lay, emap, corridors)
             missing = max(0, len(items) - len(lay.placements))
             key = (len(lv.hard) + _missing_penalty(items, lay)
-                   + int(round(_door_penalty(room, lay))), -round(sp.score, 1))
+                   + int(round(_door_penalty(room, lay))),
+                   _narrow_artery_penalty(room, lay), -round(sp.score, 1))
             if verbose:
                 print("   [restart %d] 宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                       % (k, len(lv.hard), missing, sp.score))
