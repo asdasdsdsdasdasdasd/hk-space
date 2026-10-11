@@ -171,6 +171,13 @@ GRID = 50
 #   大空間自動放粗。代價係位置精度，換嚟嘅係跑得完。
 MAX_GRID_CELLS = 6000
 
+# ★★ 2026-10：每件家具、每個朝向只保留代價最低嘅前 N 個候選格。
+#   為什麼：CP-SAT 喺「4 件相同椅子、每件 4416 個候選格」上 20 秒都出唔到可行解
+#   （UNKNOWN，回傳 0 件），而**拿掉目標函數只要 0.2 秒** ——
+#   即係慢嘅係搜索，唔係可行性。實測同一個問題縮到每朝向 150 格之後即刻解得完。
+#   代價最低嘅前 N 格已經包含最優解；被剪走嘅都係明顯差嘅位置。
+MAX_CAND_PER_ROT = 150
+
 
 def _grid_for(poly) -> int:
     minx, miny, maxx, maxy = poly.bounds
@@ -179,15 +186,17 @@ def _grid_for(poly) -> int:
                         (int((maxy - miny) // g) + 1)) > MAX_GRID_CELLS:
         g += 50
     return g
-SCALE = 1000
-# ★★ 2026-10 修：夾頂值 = BIG // SCALE = 10^4。即係話**任何代價 >= 10,000
-#   嘅格全部變成同一個數**，求解器分唔出邊個好啲。
-#   實測安柏苑 05 室嘅客廳：梳化 31.5% 嘅可用格、餐桌 35.6% 被夾頂，
-#   而梳化未夾頂嘅範圍只有 6917..7124（3% 落差）——
-#   三分一嘅解空間對求解器嚟講係完全一樣嘅。
-#   而 exposure 一項就可以去到 20,000（solve_house 預設）。
-#   呢個夾頂令「加強關係權重」之類嘅改動全部失效（一齊撞頂）。
-SCALE = 1000
+
+
+# ★★ 2026-10：SCALE 由 1000 改成 1。
+#   ① 夾頂：舊寫法夾頂值 = BIG//SCALE = 10^4，而真實代價可達 10^7 ——
+#      即係「唔准擺」嘅格反而比「擺得好」嘅格更便宜（BIG//SCALE 哨兵 < 真實代價）。
+#      實測：客廳梳化 31.5%、餐桌 35.6% 嘅可用格被夾成同一個數，
+#      三分一解空間對求解器嚟講完全一樣。
+#   ② 數值：代價表原封不動餵入 CP-SAT 的 AddElement。SCALE=1000 令值放大一千倍
+#      （10^8 量級），CP-SAT 喺「4 件相同椅子、4416 個候選格」上 20-60 秒都出唔到
+#      可行解（status=UNKNOWN，回傳 0 件）。細過 1 分嘅分別對佈局毫無意義。
+SCALE = 1
 BIG = 10 ** 10
 SPINE_W = 700          # 主通道宽度（从门沿法线直进，硬约束）
 
@@ -663,8 +672,26 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                         continue
                     if W.relation > 0:
                         c += W.relation * viol * RELATION_SCALE
-                    grid[base] = int(round(c * SCALE)) if c < BIG / SCALE else BIG // SCALE
-                    allowed.append([int(xx), int(yy), r])
+                    v = int(round(c * SCALE)) if c < BIG / SCALE else BIG // SCALE
+                    grid[base] = v
+                    # ★ 候選 tuple 直接把代價帶埋一份（第 4 個欄位）。
+                    #   為什麼：CP-SAT 用「索引 -> AddElement 查表」做目標函數係
+                    #   災難級慢 —— 實測 4 件相同椅子 20 秒都出唔到可行解（UNKNOWN），
+                    #   而**拿掉目標函數之後 0.2 秒就 OPTIMAL**。
+                    #   改成把代價寫入 table 的第 4 欄，目標就變成一條普通線性式，
+                    #   由 table 直接傳播。
+                    allowed.append([int(xx), int(yy), r, v])
+        # ★ 每個朝向只留代價最低嘅前 MAX_CAND_PER_ROT 個候選格（見上面的說明）
+        if len(allowed) > 4 * MAX_CAND_PER_ROT:
+            by_rot = {}
+            for t in allowed:
+                by_rot.setdefault(t[2], []).append(t)
+            keep = []
+            for r in range(4):
+                lst = by_rot.get(r, [])
+                lst.sort(key=lambda t: t[3])
+                keep.extend(lst[:MAX_CAND_PER_ROT])
+            allowed = keep
         out[item.inst] = (grid, allowed, w_by_r, d_by_r)
     return out, nx, ny, ncells
 
@@ -675,10 +702,11 @@ def _place_anchor(room, item, grids, nx, ny, ncells):
     if not allowed:
         return None
     best, bc = None, None
-    for (xx, yy, r) in allowed:
-        kx = int(round((xx - _gmin(room)[0]) / GRID))
-        ky = int(round((yy - _gmin(room)[1]) / GRID))
-        v = grid[r * ncells + ky * nx + kx]
+    for t in allowed:
+        xx, yy, r = t[0], t[1], t[2]
+        v = t[3] if len(t) > 3 else grid[r * ncells +
+                                        int(round((yy - _gmin(room)[1]) / GRID)) * nx +
+                                        int(round((xx - _gmin(room)[0]) / GRID))]
         if v < 0:                      # 不可行格，跳过（-1 会被误当最小代价）
             continue
         if bc is None or v < bc:
@@ -714,24 +742,27 @@ def _solve_batch(room, items, grids, nx, ny, ncells, time_limit_s, seed, verbose
         x = model.NewIntVar(int(minx), int(minx + (nx - 1) * GRID), "x" + item.inst)
         y = model.NewIntVar(int(miny), int(miny + (ny - 1) * GRID), "y" + item.inst)
         rv = model.NewIntVar(0, 3, "r" + item.inst)
-        model.AddAllowedAssignments([x, y, rv], allowed)
-        wv = model.NewIntVar(min(w_by_r), max(w_by_r), "w" + item.inst)
-        dv = model.NewIntVar(min(d_by_r), max(d_by_r), "d" + item.inst)
-        model.AddElement(rv, w_by_r, wv)
-        model.AddElement(rv, d_by_r, dv)
-        xe = model.NewIntVar(0, int(maxx + max(w_by_r) + 1), "xe" + item.inst)
-        ye = model.NewIntVar(0, int(maxy + max(d_by_r) + 1), "ye" + item.inst)
-        xivs.append(model.NewIntervalVar(x, wv, xe, "xi" + item.inst))
-        yivs.append(model.NewIntervalVar(y, dv, ye, "yi" + item.inst))
-        kx = model.NewIntVar(0, nx - 1, "kx" + item.inst)
-        ky = model.NewIntVar(0, ny - 1, "ky" + item.inst)
-        model.AddDivisionEquality(kx, x - int(minx), GRID)
-        model.AddDivisionEquality(ky, y - int(miny), GRID)
-        idx = model.NewIntVar(0, 4 * ncells - 1, "ix" + item.inst)
-        model.Add(idx == rv * ncells + ky * nx + kx)
-        cval = model.NewIntVar(0, BIG, "c" + item.inst)
-        flat = np.where(grid < 0, BIG // 10, grid).astype(np.int64).tolist()
-        model.AddElement(idx, flat, cval)
+        # ★★ 2026-10：代價寫入 table 嘅第 4 欄，目標函數就變成一條普通線性式。
+        #   舊寫法用 AddElement(idx, flat, cval) 查表做目標 —— 實測係災難級慢：
+        #   4 件相同椅子、4416 個候選格，20 秒都出唔到可行解（status=UNKNOWN，
+        #   回傳 0 件），而**拿掉目標函數之後 0.2 秒就 OPTIMAL**。
+        #   批量階段靜靜雞交白卷，就係「擺出嚟似隨機」嘅其中一個大源頭。
+        cval = model.NewIntVar(0, max(int(t[3]) for t in allowed), "c" + item.inst)
+        model.AddAllowedAssignments([x, y, rv, cval], allowed)
+        # ★★ 2026-10：每個朝向一條**固定尺寸的 optional interval**，用 ExactlyOne 選一條。
+        #   舊寫法用 AddElement 砌「變長 interval」餵 AddNoOverlap2D ——
+        #   實測 4 件相同椅子 20 秒出唔到解。固定尺寸 optional interval 係
+        #   CP-SAT 嘅標準寫法，傳播強好多。
+        pres = []
+        for rr in range(4):
+            b = model.NewBoolVar("b%s_%d" % (item.inst, rr))
+            pres.append(b)
+            xivs.append(model.NewOptionalFixedSizeIntervalVar(
+                x, int(w_by_r[rr]), b, "xi%s_%d" % (item.inst, rr)))
+            yivs.append(model.NewOptionalFixedSizeIntervalVar(
+                y, int(d_by_r[rr]), b, "yi%s_%d" % (item.inst, rr)))
+        model.AddExactlyOne(pres)
+        model.Add(rv == sum(rr * pres[rr] for rr in range(4)))
         terms.append(cval)
         refs[item.inst] = (x, y, rv, item)
     if xivs:
