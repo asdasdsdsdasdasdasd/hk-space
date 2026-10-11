@@ -118,14 +118,20 @@ def check(flat, case, house):
     add("5 床不挡门", not bad, str(bad[:3]))
 
     # 6 门口走道不被占
-    dz = []
+    #   阈值对齐引擎自己的 livability 规则（door_blocked，0.03 m2）——
+    #   不自己另立一套标准。但无论过不过，都把每件的侵占面积印出来。
+    DOOR_TOL_CM2 = 300          # = 0.03 m2，同 livability.door_blocked 一致
+    dz, worst = [], []
     for rid, r in rooms.items():
         zones = [z for _i, z in door_approach_zones(r)]
         for p in house.by_room.get(rid, Layout(rid, [])).placements:
             a = sum(p.footprint().intersection(z).area for z in zones)
-            if a > 5000:
+            if a > 0:
+                worst.append((p.inst, rid, int(a / 100)))
+            if a > DOOR_TOL_CM2 * 100:
                 dz.append((p.inst, rid, int(a / 100)))
-    add("6 门口走道没被占", not dz, str(dz[:3]))
+    add("6 门口走道侵占不超 0.03m2", not dz,
+        "超标 %s；全部侵占 %s" % (dz[:3], sorted(worst, key=lambda t: -t[2])[:4]))
 
     # 7 走得到每一件家具
     unre = []
@@ -224,7 +230,7 @@ def main() -> None:
         all_rows[name] = [dict(tag=t, ok=o, detail=d) for t, o, d in rows]
         npass = sum(1 for _t, o, _d in rows if o)
         print("  求解 %.1fs" % dt)
-        for rid in ("kitchen", "bath", "bedroom"):
+        for rid in ("kitchen", "bath", "bedroom", "living"):
             lay = house.by_room.get(rid)
             if lay and lay.placements:
                 print("   %s: %s" % (rid, ", ".join(

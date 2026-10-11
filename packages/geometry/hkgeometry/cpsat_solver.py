@@ -40,6 +40,13 @@ from .types import FRONT_CLEARANCE, Layout, Placement, Room, front_dir
 #   否則求解器會用「唔擺佢」來消滅硬傷：實測把書桌移入客廳後，
 #   客廳 8 件會產生 ≥5 條硬傷，而漏放梳化只要 5 分 ——
 #   求解器於是「解決問題」的方法係唔擺張梳化。客戶的梳化唔係可以咁消失嘅。
+# ★★ 2026-10 修：關係項要**壓得住環境項**，否則等於冇。
+#   舊值 5,000，而 solve_house 預設 exposure=20,000 x mass（椅子 -> ~4,000，
+#   大件家具 -> 20,000），再加 facing 4,000 / occlusion 4,000 / front_block 6,000。
+#   實測：4 張餐椅裡有 1 張擺到離餐桌 **5.5 米**（客廳另一端）。
+#   關係唔係可以攞嚟換分嘅嘢 —— 呢條係審計裡嘅缺陷 E。
+RELATION_SCALE = 40000.0
+
 MISSING_WEIGHT = 12
 
 # ★ 但唔係每一件都一樣重要。
@@ -87,6 +94,25 @@ MISSING_IMPORTANCE = {
     "microwave": 1, "aircon": 1, "wall_shelf": 1, "pegboard": 1,
 }
 MISSING_IMPORTANCE_DEFAULT = 1
+
+
+def _door_block_count(room, lay, tol_mm2: float = 30000.0) -> int:
+    """有幾件家具侵占了門口走道（門扇掃掠區）。
+
+    ★ 為什麼要進入「揀邊個方案」的判準：門開唔到係硬傷，但 livability 把
+      door_blocked 記成 **soft**（細房裡真係避唔開），於是 len(lv.hard)
+      完全睇唔到佢 —— 兩個方案打和之後由顯大分決定，而顯大分永遠偏好
+      「侵占門口」那個（擠開門位可以擺得更鬆）。
+    """
+    zones = [z for _i, z in door_approach_zones(room)]
+    if not zones:
+        return 0
+    n = 0
+    for p in lay.placements:
+        fp = p.footprint()
+        if sum(fp.intersection(z).area for z in zones) > tol_mm2:
+            n += 1
+    return n
 
 
 def _missing_penalty(items, lay) -> int:
@@ -154,7 +180,15 @@ def _grid_for(poly) -> int:
         g += 50
     return g
 SCALE = 1000
-BIG = 10 ** 7
+# ★★ 2026-10 修：夾頂值 = BIG // SCALE = 10^4。即係話**任何代價 >= 10,000
+#   嘅格全部變成同一個數**，求解器分唔出邊個好啲。
+#   實測安柏苑 05 室嘅客廳：梳化 31.5% 嘅可用格、餐桌 35.6% 被夾頂，
+#   而梳化未夾頂嘅範圍只有 6917..7124（3% 落差）——
+#   三分一嘅解空間對求解器嚟講係完全一樣嘅。
+#   而 exposure 一項就可以去到 20,000（solve_house 預設）。
+#   呢個夾頂令「加強關係權重」之類嘅改動全部失效（一齊撞頂）。
+SCALE = 1000
+BIG = 10 ** 10
 SPINE_W = 700          # 主通道宽度（从门沿法线直进，硬约束）
 
 # 锚定顺序（越靠前越先定）
@@ -187,6 +221,15 @@ RELATIONS = {
     #   實測 slack=1.35 時求解器把椅擺到 1.51m 都只罰 113 分，睇落「合規」但唔係人坐嘅位。
     ("chair", "dining_table"): dict(dmin=0, dmax=1100, w_dist=6.0, in_front=False,
                                     w_front=0.0, slack=1.05),
+    # ★ 2026-10 補：**廚房排成一列**。真實香港 3.8m² 廚房嘅正解係
+    #   台面 / 灶台 / 雪櫃 / 洗衣機沿同一面牆排隊，共用一條 900mm 通道。
+    #   冇呢組關係，佢哋會各自搵「最貼牆」嘅位，互相搶牆、又互相封住對方嘅淨空。
+    ("stove", "kitchen_counter"): dict(dmin=0, dmax=900, w_dist=5.0, in_front=False,
+                                       w_front=0.0, slack=1.15),
+    ("fridge", "kitchen_counter"): dict(dmin=0, dmax=1400, w_dist=4.0, in_front=False,
+                                        w_front=0.0, slack=1.15),
+    ("washing_machine", "kitchen_counter"): dict(dmin=0, dmax=1400, w_dist=3.0,
+                                                 in_front=False, w_front=0.0, slack=1.15),
 }
 
 
@@ -531,7 +574,19 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                     if any(o.intersects(box) for o in obst):
                         grid[base] = -1
                         continue
-                    if any(z.intersects(box) for _n, z in anchor_fronts):
+                    # ★ 唔可以「一碰到就淘汰」：一條 900mm 通道係服務整排設備嘅。
+                    #   只有當新件**佔咗別人前方使用區嘅大部份**（>35%）才算真係封死；
+                    #   壓一角（例如雪櫃擺喺長檯面嘅另一頭）只罰分。
+                    fb = 0.0
+                    hard_front = False
+                    for _n, z in anchor_fronts:
+                        if z.intersects(box):
+                            fr = box.intersection(z).area / max(1.0, z.area)
+                            if fr > 0.35:
+                                hard_front = True
+                                break
+                            fb = max(fb, fr)
+                    if hard_front:
                         grid[base] = -1
                         continue
                     # ★ 常识硬约束：柜子/床/电视柜必须靠墙
@@ -590,6 +645,8 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                         c += W.occlusion * tall * max(0.0, 1.0 - d_ent / 3000.0)
                     if W.circulation > 0 and path_hit > 0:
                         c += W.circulation * path_hit
+                    if getattr(W, "front_block", 0) > 0 and fb > 0:
+                        c += W.front_block * fb
                     # ★ 功能关系：严格模式下直接当硬约束（违背就淘汰该格）
                     fdot = None
                     if kind != "away":
@@ -605,7 +662,7 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                         grid[base] = -1
                         continue
                     if W.relation > 0:
-                        c += W.relation * viol * 5000.0
+                        c += W.relation * viol * RELATION_SCALE
                     grid[base] = int(round(c * SCALE)) if c < BIG / SCALE else BIG // SCALE
                     allowed.append([int(xx), int(yy), r])
         out[item.inst] = (grid, allowed, w_by_r, d_by_r)
@@ -783,7 +840,8 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
         # 曾经只比 len(lv.hard)，结果「少放一件家具」反而硬伤更少、分数更高 ——
         # 电视柜放不下就直接不放，求解器还觉得自己很对。
         missing = max(0, len(items) - len(lay.placements))
-        key = (len(lv.hard) + _missing_penalty(items, lay), -round(sp.score, 1))
+        key = (len(lv.hard) + _missing_penalty(items, lay),
+               _door_block_count(room, lay), -round(sp.score, 1))
         if verbose:
             print("   [order %d] %s  宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                   % (oi, " ".join(p.inst.strip("#") for p in anchors_order[:3]),
@@ -802,7 +860,10 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
     #   收到 40% 都仲係放唔落 —— 因為房間淨深只夠 990，而兩條走道加起來
     #   無論幾淺都會切斷整個深度。收到 25%（≈300mm）就變成「只係唔准壓住門扇」，
     #   床先擺得入。冇這一步，輸出就係一間冇床嘅睡房。
-    for _frac in ((0.6, 0.4, 0.25, 0.0) if best is not None and doors
+    # ★ 階梯唔可以走到 0.0 —— 「門完全開唔到」永遠唔係一個可接受嘅方案。
+    #   由 0.0 放走之後，求解器就會為咗降低其他代價而把床擺正喺門後面
+    #   （實測安柏苑 05 室主人房：床頭貼住大門那面牆，侵占門扇區 0.40 m²）。
+    for _frac in ((0.6, 0.4, 0.25) if best is not None and doors
                   and (len(items) - len(best[1].placements)) > 0 else ()):
         if len(items) - len(best[1].placements) == 0:
             break
@@ -852,7 +913,8 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
             lv = check_livability(room, lay)
             sp = spaciousness_report(room, lay, emap, corridors)
             missing = max(0, len(items) - len(lay.placements))
-            key = (len(lv.hard) + _missing_penalty(items, lay), -round(sp.score, 1))
+            key = (len(lv.hard) + _missing_penalty(items, lay),
+                   _door_block_count(room, lay), -round(sp.score, 1))
             if verbose:
                 print("   [restart %d] 宜居 %d 硬傷  漏放 %d  顯大 %.0f"
                       % (k, len(lv.hard), missing, sp.score))
