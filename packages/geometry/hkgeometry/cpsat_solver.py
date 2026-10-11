@@ -179,6 +179,50 @@ MAX_GRID_CELLS = 6000
 MAX_CAND_PER_ROT = 150
 
 
+# ★ 主從關係：Hub 要為 Satellite 預留空間。
+#   (hub_category) -> [(satellite_category, 理想距離下限, 理想距離上限)]
+SATELLITES = {
+    "dining_table": [("chair", 650, 1150)],
+    "desk": [("chair", 300, 850)],
+    "sofa": [("coffee_table", 350, 950)],
+    "bed": [("side_table", 250, 750)],
+    "kitchen_counter": [("stove", 0, 900), ("fridge", 0, 1400),
+                        ("washing_machine", 0, 1400)],
+    "tv_bench": [("sofa", 1600, 3600)],
+}
+
+
+def _satellite_room(item, cx, cy, poly, blockers, obst, sat_items):
+    """Hub 周圍仲有幾多空間擺得落佢嘅衛星家具（0..1，1 = 八個方位都夠位）。
+
+    ★ 點解要做呢件事：錨定階段（_place_anchor）係「自己嗰格最靚就揀」，
+      完全唔知後面仲有嘢要跟住佢。實測安柏苑 05 室嘅餐桌被擺入西側窄臂，
+      4 張餐椅有 2 張被逼到 1444 / 1971 mm 外。加咗呢一項之後，
+      Hub 會自動避開「自己靚但擺唔落同伴」嘅位。
+    """
+    specs = SATELLITES.get(item.category)
+    if not specs:
+        return 1.0
+    tot = free = 0
+    for cat, dmin, dmax in specs:
+        sats = [s for s in sat_items if s.category == cat and s.inst != item.inst]
+        if not sats:
+            continue
+        w = max(s.w for s in sats)
+        d = max(s.d for s in sats)
+        r = (dmin + dmax) / 2.0
+        for k in range(8):
+            ang = 2.0 * math.pi * k / 8.0
+            bx = shapely.box(cx + r * math.cos(ang) - w / 2.0,
+                             cy + r * math.sin(ang) - d / 2.0,
+                             cx + r * math.cos(ang) + w / 2.0,
+                             cy + r * math.sin(ang) + d / 2.0)
+            tot += 1
+            if poly.covers(bx) and not any(bx.intersects(z) for z in blockers)                     and not any(bx.intersects(o) for o in obst):
+                free += 1
+    return (free / float(tot)) if tot else 1.0
+
+
 def _grid_for(poly) -> int:
     minx, miny, maxx, maxy = poly.bounds
     g = 50
@@ -521,7 +565,7 @@ def _rel_violation(item, cx, cy, anchors, facing_dot=None, slack=1.35):
 
 
 def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
-                strict_relations: bool = False, soft_paths=()):
+                strict_relations: bool = False, soft_paths=(), sat_items=()):
     """给每件家具算「每格每朝向」的代价表 + 可行候选表。"""
     poly = room.usable_geo()
     shapely.prepare(poly)
@@ -656,6 +700,9 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                         c += W.circulation * path_hit
                     if getattr(W, "front_block", 0) > 0 and fb > 0:
                         c += W.front_block * fb
+                    # （「Hub 要留位畀衛星」原本寫喺呢度做代價項，但實測會擾動全屋、
+                    #   餐椅反而更遠。改成喺 _place_anchor 做**top-K 重排**，
+                    #   只影響 Hub 自己揀邊一格，唔會污染其他家具嘅代價表。）
                     # ★ 功能关系：严格模式下直接当硬约束（违背就淘汰该格）
                     fdot = None
                     if kind != "away":
@@ -696,23 +743,48 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
     return out, nx, ny, ncells
 
 
-def _place_anchor(room, item, grids, nx, ny, ncells):
-    """单件锚定：直接取代价最低的可行格（单件问题，argmin 就是最优）。"""
+def _place_anchor(room, item, grids, nx, ny, ncells, sat_items=(), anchors=(), topk=40):
+    """单件锚定。
+
+    普通家具：取代价最低的可行格（单件问题，argmin 就是最优）。
+    ★ Hub（餐桌/书桌/沙发/床/厨柜台面）：先取代价最低的 topk 格，再用
+      「周围还剩多少空间放卫星家具」重排。因为 Hub 一旦选错位，
+      后面的椅子/茶几/床头柜就算代价函数再正确也塞不进去。
+      实测安柏苑 05 室：餐桌选在西侧窄臂之后，1155mm 内只剩 19 个可行格，
+      4 张 450x450 椅互相重叠放唔晒，第 4 张只能去 3.3 米外。
+    """
     grid, allowed, w_by_r, d_by_r = grids[item.inst]
     if not allowed:
         return None
     best, bc = None, None
+    ranked = []
     for t in allowed:
-        xx, yy, r = t[0], t[1], t[2]
-        v = t[3] if len(t) > 3 else grid[r * ncells +
-                                        int(round((yy - _gmin(room)[1]) / GRID)) * nx +
-                                        int(round((xx - _gmin(room)[0]) / GRID))]
+        v = t[3] if len(t) > 3 else grid[t[2] * ncells +
+                                        int(round((t[1] - _gmin(room)[1]) / GRID)) * nx +
+                                        int(round((t[0] - _gmin(room)[0]) / GRID))]
         if v < 0:                      # 不可行格，跳过（-1 会被误当最小代价）
             continue
-        if bc is None or v < bc:
-            bc, best = v, (xx, yy, r)
-    if best is None:
+        ranked.append((v, t))
+    if not ranked:
         return None
+    ranked.sort(key=lambda z: z[0])
+    bc = ranked[0][0]
+    if item.category in SATELLITES and sat_items and topk > 1:
+        poly = room.usable_geo()
+        blockers = [z for _d, z in door_approach_zones(room)] + circulation_zones(room)
+        obst = [a.footprint() for a in anchors]
+        scored = []
+        for v, t in ranked[:topk]:
+            xx, yy, r = t[0], t[1], t[2]
+            fw, fd = w_by_r[r], d_by_r[r]
+            fit = _satellite_room(item, xx + fw / 2.0, yy + fd / 2.0, poly, blockers,
+                                  obst + [shapely.box(xx, yy, xx + fw, yy + fd)],
+                                  sat_items)
+            scored.append((-fit, v, t))
+        scored.sort(key=lambda z: (z[0], z[1]))
+        best = (scored[0][2][0], scored[0][2][1], scored[0][2][2])
+    else:
+        best = (ranked[0][1][0], ranked[0][1][1], ranked[0][1][2])
     xx, yy, r = best
     return Placement(inst=item.inst, sku=item.sku, category=item.category,
                      x=int(xx), y=int(yy), rot=int(r) * 90,
@@ -973,8 +1045,10 @@ def _solve_with_order(room, items, anchors_order, emap, W, corridors, doors, spi
             grids, nx, ny, ncells = _cost_grids(room, [it], emap, W, corridors, doors,
                                                 spines, placed, [],
                                                 strict_relations=strict,
-                                                soft_paths=soft_paths)
-            p = _place_anchor(room, it, grids, nx, ny, ncells)
+                                                soft_paths=soft_paths,
+                                                sat_items=items)
+            p = _place_anchor(room, it, grids, nx, ny, ncells,
+                              sat_items=items, anchors=placed)
             if p is not None:
                 if verbose and strict:
                     print("   [anchor] %-14s 關係嚴格滿足" % it.inst)
