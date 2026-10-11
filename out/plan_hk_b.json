@@ -6,30 +6,22 @@
       "polygon": [
         [
           0,
-          10
+          0
         ],
         [
           0,
-          2350
+          2340
         ],
         [
-          7410,
-          2350
+          7400,
+          2340
         ],
         [
-          7410,
+          7400,
           0
-        ],
-        [
-          445,
-          0
-        ],
-        [
-          441,
-          10
         ]
       ],
-      "area_mm2": 17409070,
+      "area_mm2": 17316000,
       "label": "客廳",
       "label_source": "image",
       "label_score": 0.813,
@@ -40,12 +32,12 @@
         {
           "id": "w0",
           "a": [
-            -195,
-            -50
+            -197,
+            -52
           ],
           "b": [
-            441,
-            -50
+            448,
+            -52
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -53,12 +45,12 @@
         {
           "id": "w1",
           "a": [
-            1368,
-            -98
+            1374,
+            -99
           ],
           "b": [
-            7605,
-            -98
+            7596,
+            -99
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -66,12 +58,12 @@
         {
           "id": "w2",
           "a": [
-            -191,
-            2403
+            -192,
+            2399
           ],
           "b": [
-            7600,
-            2403
+            7591,
+            2399
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -79,12 +71,12 @@
         {
           "id": "w3",
           "a": [
-            -98,
-            -114
+            -99,
+            -115
           ],
           "b": [
-            -98,
-            5014
+            -99,
+            5007
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -92,12 +84,12 @@
         {
           "id": "w4",
           "a": [
-            3506,
-            2409
+            3501,
+            2405
           ],
           "b": [
-            3506,
-            5009
+            3501,
+            5003
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -105,12 +97,12 @@
         {
           "id": "w5",
           "a": [
-            5405,
-            2405
+            5398,
+            2401
           ],
           "b": [
-            5405,
-            4795
+            5398,
+            4789
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -118,12 +110,12 @@
         {
           "id": "w6",
           "a": [
-            7507,
-            -82
+            7498,
+            -83
           ],
           "b": [
-            7507,
-            4909
+            7498,
+            4903
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -134,8 +126,8 @@
           "id": "d0",
           "wall": "w0",
           "kind": "door",
-          "center_mm": 1095,
-          "width_mm": 864,
+          "center_mm": 1099,
+          "width_mm": 872,
           "swing": {
             "dir": "in",
             "hinge": "left"
@@ -145,8 +137,8 @@
           "id": "d1",
           "wall": "w2",
           "kind": "door",
-          "center_mm": 1900,
-          "width_mm": 818,
+          "center_mm": 1898,
+          "width_mm": 817,
           "swing": {
             "dir": "out",
             "hinge": "left"
@@ -156,7 +148,7 @@
           "id": "d2",
           "wall": "w2",
           "kind": "door",
-          "center_mm": 4596,
+          "center_mm": 4591,
           "width_mm": 718,
           "swing": {
             "dir": "out",
@@ -167,8 +159,8 @@
           "id": "d3",
           "wall": "w2",
           "kind": "door",
-          "center_mm": 6500,
-          "width_mm": 673,
+          "center_mm": 6493,
+          "width_mm": 672,
           "swing": {
             "dir": "out",
             "hinge": "right"
@@ -178,8 +170,8 @@
           "id": "n4",
           "wall": "w6",
           "kind": "window",
-          "center_mm": 1291,
-          "width_mm": 1491,
+          "center_mm": 1289,
+          "width_mm": 1489,
           "swing": null
         }
       ]
@@ -188,7 +180,7 @@
       "polygon": [
         [
           0,
-          2460
+          2450
         ],
         [
           0,
@@ -200,10 +192,10 @@
         ],
         [
           3450,
-          2460
+          2450
         ]
       ],
-      "area_mm2": 8073000,
+      "area_mm2": 8107500,
       "label": "睡房",
       "label_source": "image",
       "label_score": 0.822,
@@ -214,12 +206,12 @@
         {
           "id": "w0",
           "a": [
-            -191,
-            2403
+            -192,
+            2399
           ],
           "b": [
-            7600,
-            2403
+            7591,
+            2399
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -227,12 +219,12 @@
         {
           "id": "w1",
           "a": [
-            -186,
-            4902
+            -188,
+            4896
           ],
           "b": [
-            7505,
-            4902
+            7496,
+            4896
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -240,12 +232,12 @@
         {
           "id": "w2",
           "a": [
-            -98,
-            -114
+            -99,
+            -115
           ],
           "b": [
-            -98,
-            5014
+            -99,
+            5007
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -253,12 +245,12 @@
         {
           "id": "w3",
           "a": [
-            3506,
-            2409
+            3501,
+            2405
           ],
           "b": [
-            3506,
-            5009
+            3501,
+            5003
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -269,16 +261,16 @@
           "id": "n0",
           "wall": "w1",
           "kind": "window",
-          "center_mm": 1209,
-          "width_mm": 564,
+          "center_mm": 1208,
+          "width_mm": 563,
           "swing": null
         },
         {
           "id": "d1",
           "wall": "w0",
           "kind": "door",
-          "center_mm": 1900,
-          "width_mm": 818,
+          "center_mm": 1898,
+          "width_mm": 817,
           "swing": {
             "dir": "in",
             "hinge": "left"
@@ -288,16 +280,16 @@
           "id": "n2",
           "wall": "w1",
           "kind": "window",
-          "center_mm": 3100,
-          "width_mm": 782,
+          "center_mm": 3097,
+          "width_mm": 781,
           "swing": null
         },
         {
           "id": "n3",
           "wall": "w2",
           "kind": "window",
-          "center_mm": 3732,
-          "width_mm": 1791,
+          "center_mm": 3728,
+          "width_mm": 1789,
           "swing": null
         }
       ]
@@ -305,23 +297,23 @@
     {
       "polygon": [
         [
-          5460,
-          2460
+          5450,
+          2450
         ],
         [
-          5460,
+          5450,
           4800
         ],
         [
-          7410,
+          7400,
           4800
         ],
         [
-          7410,
-          2460
+          7400,
+          2450
         ]
       ],
-      "area_mm2": 4563000,
+      "area_mm2": 4582500,
       "label": "浴室",
       "label_source": "image",
       "label_score": 0.716,
@@ -332,12 +324,12 @@
         {
           "id": "w0",
           "a": [
-            -191,
-            2403
+            -192,
+            2399
           ],
           "b": [
-            7600,
-            2403
+            7591,
+            2399
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -345,12 +337,12 @@
         {
           "id": "w1",
           "a": [
-            -186,
-            4902
+            -188,
+            4896
           ],
           "b": [
-            7505,
-            4902
+            7496,
+            4896
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -358,12 +350,12 @@
         {
           "id": "w2",
           "a": [
-            5405,
-            2405
+            5398,
+            2401
           ],
           "b": [
-            5405,
-            4795
+            5398,
+            4789
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -371,12 +363,12 @@
         {
           "id": "w3",
           "a": [
-            7507,
-            -82
+            7498,
+            -83
           ],
           "b": [
-            7507,
-            4909
+            7498,
+            4903
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -387,16 +379,16 @@
           "id": "n0",
           "wall": "w1",
           "kind": "window",
-          "center_mm": 5918,
-          "width_mm": 1200,
+          "center_mm": 5913,
+          "width_mm": 1199,
           "swing": null
         },
         {
           "id": "d1",
           "wall": "w0",
           "kind": "door",
-          "center_mm": 6500,
-          "width_mm": 673,
+          "center_mm": 6493,
+          "width_mm": 672,
           "swing": {
             "dir": "in",
             "hinge": "right"
@@ -408,22 +400,22 @@
       "polygon": [
         [
           3560,
-          2460
+          2450
         ],
         [
           3560,
           4800
         ],
         [
-          5350,
+          5340,
           4800
         ],
         [
-          5350,
-          2460
+          5340,
+          2450
         ]
       ],
-      "area_mm2": 4188600,
+      "area_mm2": 4183000,
       "label": "廚房",
       "label_source": "image",
       "label_score": 0.812,
@@ -434,12 +426,12 @@
         {
           "id": "w0",
           "a": [
-            -191,
-            2403
+            -192,
+            2399
           ],
           "b": [
-            7600,
-            2403
+            7591,
+            2399
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -447,12 +439,12 @@
         {
           "id": "w1",
           "a": [
-            -186,
-            4902
+            -188,
+            4896
           ],
           "b": [
-            7505,
-            4902
+            7496,
+            4896
           ],
           "type": "load_bearing",
           "thickness_mm": 200
@@ -460,12 +452,12 @@
         {
           "id": "w2",
           "a": [
-            3506,
-            2409
+            3501,
+            2405
           ],
           "b": [
-            3506,
-            5009
+            3501,
+            5003
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -473,12 +465,12 @@
         {
           "id": "w3",
           "a": [
-            5405,
-            2405
+            5398,
+            2401
           ],
           "b": [
-            5405,
-            4795
+            5398,
+            4789
           ],
           "type": "partition",
           "thickness_mm": 110
@@ -489,7 +481,7 @@
           "id": "d0",
           "wall": "w0",
           "kind": "door",
-          "center_mm": 4596,
+          "center_mm": 4591,
           "width_mm": 718,
           "swing": {
             "dir": "in",
@@ -504,7 +496,7 @@
       "a": "bedroom",
       "b": "living",
       "type": "doorway",
-      "width_mm": 818
+      "width_mm": 817
     },
     {
       "a": "kitchen",
@@ -516,26 +508,26 @@
       "a": "bath",
       "b": "living",
       "type": "doorway",
-      "width_mm": 673
+      "width_mm": 672
     }
   ],
   "fixed_services": [],
   "entry": {
     "room": "living",
     "point": [
-      900,
-      -355
+      902,
+      -357
     ]
   },
   "meta": {
     "source": "floorplan_upload",
-    "confidence": 0.766,
-    "mm_per_px": 4.5455,
+    "confidence": 0.944,
+    "mm_per_px": 4.5412,
     "origin_px": [
-      407.0,
-      396.0
+      407.39,
+      396.38
     ],
-    "scale_source": "wall-thickness",
+    "scale_source": "ocr",
     "scale_method": "wall-span",
     "ocr_engine": "template",
     "ocr_tokens": [
@@ -547,26 +539,43 @@
       "2100",
       "00"
     ],
-    "scale_votes": [],
+    "scale_votes": [
+      [
+        4.541,
+        2100,
+        462.5,
+        "2100"
+      ],
+      [
+        4.541,
+        3600,
+        792.8,
+        "3600"
+      ],
+      [
+        4.548,
+        1900,
+        417.8,
+        "1900"
+      ]
+    ],
     "image_size_px": [
       2266,
       1804
     ],
     "deskew_deg": -1.31,
-    "residual_skew_deg": 0.071,
+    "residual_skew_deg": 0.072,
     "walls_detected": 8,
     "openings_detected": 9,
     "confidence_terms": {
-      "scale": 0.03,
+      "scale": 0.16,
       "rooms": 0.12,
-      "wall_coverage": 0.157,
+      "wall_coverage": 0.156,
       "openings": 0.08,
-      "skew": 0.078
+      "skew": 0.078,
+      "clean": 0.05
     },
-    "warnings": [
-      "OCR 反推的比例尺 0.459 mm/px 与墙厚不一致 (墙体推断 4.545), 已弃用",
-      "按承重墙≈200mm 反推比例尺 4.545 mm/px (未经尺寸标注校验)"
-    ],
+    "warnings": [],
     "rectified_image": "out/plan_hk_b_rectified.png",
     "overlay": "/mnt/d/openclaw/hk-space/out/floorplan_overlay.png"
   }

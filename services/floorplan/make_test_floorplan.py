@@ -647,7 +647,9 @@ def _flats() -> List[FlatSpec]:
         WallSpec((5500, 2500), (5500, H), 100, "partition"),  # 廚房 | 浴室
     ]
     ob = [
-        OpeningSpec(0, 1000, 900, "door", hinge="left", side=1, entry=True),  # 大門 -> 客廳
+        # 大門 -> 客廳。★ side=-1 = 開向房內（香港入戶門都係內開，
+        # 開向走廊會撞到人、亦唔符合消防）。
+        OpeningSpec(0, 1000, 900, "door", hinge="left", side=-1, entry=True),
         OpeningSpec(3, 1300, 1800, "window", side=1),      # 客廳落地窗（左）
         OpeningSpec(1, 1300, 1500, "window", side=1),      # 客廳窗（右）
         OpeningSpec(2, 1800, 1200, "window", side=1),      # 睡房窗
