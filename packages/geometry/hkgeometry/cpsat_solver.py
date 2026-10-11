@@ -56,12 +56,50 @@ ESSENTIAL_FACTOR = 4
 RESTARTS = 10
 
 
+# ★ 有淨空要求嘅品類，落位次序（越前越先落）。
+#   「定義房間功能」的件先落，純電器後落 —— 否則電器會霸晒牆，
+#   最重要那件反而放唔落（實測：廚房冇廚櫃檯面）。
+_SEQ_PRIORITY = ["kitchen_counter", "toilet", "basin", "shower", "bathtub",
+                 "stove", "range_hood", "fridge", "washing_machine",
+                 "wardrobe", "cabinet", "shelf", "drawer_chest", "shoe_cabinet"]
+
+
+# ★★ 2026-10 修（真實案例量出嚟嘅瓶頸）：
+#   「唔夠位時應該掉邊件？」舊寫法把**所有**必需家具都罰 48 分，
+#   於是「掉廚櫃檯面」同「掉雪櫃」**同分** —— 打和之後由顯大分決定，
+#   而顯大分永遠偏好掉最大那件。實測安柏苑 05 室 3.8m² 廚房：
+#   廚櫃檯面（1,700x600，可用格只有 22/1470）被靜靜咁掉，
+#   剩下一個冇檯面嘅廚房，而報告一句都冇提。
+#
+#   正確語義：掉邊件要**視乎佢有幾定義間房**。
+#   馬桶、廚櫃檯面冇咗，間房就唔再係廁所／廚房 —— 罰最重；
+#   洗衣機、儲物箱呢類可以搬去第二度嘅，罰最輕。
+#   同一品類之間再用面積做微調（掉大件比掉細件貴）。
+MISSING_IMPORTANCE = {
+    "toilet": 6, "kitchen_counter": 6,          # 冇咗就唔係廁所／廚房
+    "bed": 5, "bunk_bed": 5, "loft_bed": 5, "storage_bed": 5,
+    "basin": 4, "stove": 4, "sofa": 4, "sink": 4,
+    "shower": 3, "bathtub": 3, "fridge": 3,
+    "wardrobe": 2, "dining_table": 3, "desk": 2, "tv_bench": 2,
+    "coffee_table": 1, "chair": 1, "side_table": 1, "cabinet": 2,
+    "shelf": 1, "storage_box": 1, "washing_machine": 1, "drying_rack": 1,
+    "mirror": 1, "screen": 1, "shoe_cabinet": 2, "drawer_chest": 2,
+    "microwave": 1, "aircon": 1, "wall_shelf": 1, "pegboard": 1,
+}
+MISSING_IMPORTANCE_DEFAULT = 1
+
+
 def _missing_penalty(items, lay) -> int:
-    """漏放罰分 —— 定義房間功能嘅家具（床/馬桶/灶台/梳化）罰重 4 倍。"""
+    """漏放罰分 —— 按「呢件有幾定義間房」分級，唔再係一刀切。"""
     got = {p.inst for p in lay.placements}
-    return sum(MISSING_WEIGHT * (ESSENTIAL_FACTOR if it.category in ESSENTIAL_CATEGORIES
-                                 else 1)
-               for it in items if it.inst not in got)
+    tot = 0.0
+    for it in items:
+        if it.inst in got:
+            continue
+        imp = MISSING_IMPORTANCE.get(it.category, MISSING_IMPORTANCE_DEFAULT)
+        # 同級之間：大件少少貴過細件（面積 m² 當小數用）
+        tot += MISSING_WEIGHT * imp + (it.w * it.d) / 1e6
+    return int(round(tot))
 
 
 def _scale_zone(z, f: float):
@@ -120,8 +158,14 @@ BIG = 10 ** 7
 SPINE_W = 700          # 主通道宽度（从门沿法线直进，硬约束）
 
 # 锚定顺序（越靠前越先定）
-ANCHOR_ORDER = ["tv_bench", "sofa", "chaise_longue", "coffee_table",
-                "bed", "storage_bed", "bunk_bed", "loft_bed", "wardrobe"]
+# ★ 锚定顺序 = 「别人要跟着它走」的家具先放。
+#   2026-10 补 dining_table / desk / side_table：**批量阶段查不了关系**
+#   （_cost_grids 的 anchors 只含锚定阶段已放好的件），所以餐桌和书桌
+#   如果留在批量里，跟它们有关系的椅子就永远看不到它们 —— 实测餐椅被扔到
+#   8.3 米外。把它们提到锚定阶段，批量里的椅子才有「可依附的对象」。
+ANCHOR_ORDER = ["tv_bench", "sofa", "chaise_longue", "coffee_table", "dining_table",
+                "bed", "storage_bed", "bunk_bed", "loft_bed", "desk",
+                "wardrobe", "cabinet"]
 
 # 功能关系：对已锚定的家具，新家具要满足的空间关系
 # (self_cat, other_cat) -> dict(dmin, dmax, w_dist, in_front, w_front)
@@ -135,6 +179,14 @@ RELATIONS = {
     ("coffee_table", "sofa"): dict(dmin=300, dmax=900, w_dist=4.0, in_front=True, w_front=6.0),
     ("chair", "desk"): dict(dmin=300, dmax=900, w_dist=3.0, in_front=False, w_front=0.0),
     ("side_table", "bed"): dict(dmin=0, dmax=500, w_dist=4.0, in_front=False, w_front=0.0),
+    # ★ 2026-10 補：**餐椅要跟著餐桌**。缺這一條係「擺出嚟似隨機」最大嘅單一原因 ——
+    #   實測 Farnsworth 22 件裡有 2 張餐椅離自己張餐桌 15.3 米。
+    #   1,100mm 係「椅前沿貼住檯邊」到「檯中心」嘅合理上限
+    #   （檯 1,600x800：長邊座位離中心 ~625，短邊 ~1,025）。
+    #   slack 特別收緊到 1.05：椅唔係「附近」就算，要真係坐到檯邊。
+    #   實測 slack=1.35 時求解器把椅擺到 1.51m 都只罰 113 分，睇落「合規」但唔係人坐嘅位。
+    ("chair", "dining_table"): dict(dmin=0, dmax=1100, w_dist=6.0, in_front=False,
+                                    w_front=0.0, slack=1.05),
 }
 
 
@@ -345,6 +397,15 @@ def _rot_dims(item: Placement, r: int):
     return w, d
 
 
+# ★ 朝向「找不到目標」時的退化鏈。**唔准**退化到房間幾何代表點。
+#   實測 Farnsworth House：全屋冇電視櫃，而 FACE_RULES 把 chair 歸到 tv 規則，
+#   於是 11 張椅（包括 6 張餐椅）嘅正面全部朝向同一個任意點 ——
+#   呢一條單獨就足以令人覺得「擺得好隨機」。
+#   正確退化順序：最近的功能夥伴 -> 房間長軸。
+_FACING_PARTNERS = ("tv_bench", "dining_table", "desk", "coffee_table", "sofa",
+                    "bed", "chaise_longue")
+
+
 def _facing_target(item, room, anchors):
     rule = FACE_RULES.get(item.category, "away_from_wall")
     if rule == "tv":
@@ -355,8 +416,19 @@ def _facing_target(item, room, anchors):
         return ("point", room.window_centers()[0])
     if rule == "away_from_wall":
         return ("away", None)
-    c = room.usable_geo().representative_point()
-    return ("point", (c.x, c.y))
+    ref = room.usable_geo().representative_point()
+    # 依「夥伴品類」優先次序，取離房間代表點最近嘅一個做朝向目標
+    for cat in _FACING_PARTNERS:
+        cands = [a for a in anchors if a.category == cat]
+        if cands:
+            best = min(cands, key=lambda a: (a.center()[0] - ref.x) ** 2 +
+                       (a.center()[1] - ref.y) ** 2)
+            return ("point", best.center())
+    # 連夥伴都冇：沿房間長軸，至少唔係一個「任意點」
+    b = room.usable_geo().bounds
+    if (b[2] - b[0]) >= (b[3] - b[1]):
+        return ("point", (b[0] if ref.x > (b[0] + b[2]) / 2 else b[2], ref.y))
+    return ("point", (ref.x, b[1] if ref.y > (b[1] + b[3]) / 2 else b[3]))
 
 
 def _rel_violation(item, cx, cy, anchors, facing_dot=None, slack=1.35):
@@ -366,23 +438,31 @@ def _rel_violation(item, cx, cy, anchors, facing_dot=None, slack=1.35):
       「体量曝光度」小，求解器就会为了显大分把沙发拧过去背对电视 ——
       分高了，但根本不是人住的。**功能关系不许拿来换分数。**
     """
-    v = 0.0
+    # ★ 多條關係之間要取 **min**，唔係 max。
+    #   一間房可以有兩張餐桌、兩張書桌，而一張椅只屬於其中一張。
+    #   取 max 的話，一張坐得好地地嘅餐椅會因為「離書桌好遠」而被判違規 ——
+    #   反過來亦一樣。正確語義係「至少滿足一條適用嘅關係」。
+    vs = []
     for a in anchors:
         r = RELATIONS.get((item.category, a.category))
         if not r:
             continue
         ax, ay = a.center()
         d = math.hypot(cx - ax, cy - ay)
+        vv = 0.0
+        sl = r.get("slack", slack)      # 每條關係可以有自己的鬆緊度
         if d < r["dmin"]:
-            v = max(v, (r["dmin"] - d) / max(1.0, r["dmin"]))
-        if d > r["dmax"] * slack:
-            v = max(v, (d - r["dmax"] * slack) / r["dmax"])
+            vv = max(vv, (r["dmin"] - d) / max(1.0, r["dmin"]))
+        if d > r["dmax"] * sl:
+            vv = max(vv, (d - r["dmax"] * sl) / r["dmax"])
         if r["in_front"] and d > 1:
             fx, fy = front_dir(a.rot)
             dot = ((cx - ax) * fx + (cy - ay) * fy) / d
             thr = r.get("dot", 0.6)
             if dot < thr:
-                v = max(v, (thr - dot) / (thr + 1.0))
+                vv = max(vv, (thr - dot) / (thr + 1.0))
+        vs.append(vv)
+    v = min(vs) if vs else 0.0
     if facing_dot is not None and facing_dot < 0.55:
         v = max(v, (0.55 - facing_dot) / 1.55)
     return min(1.0, v)
@@ -653,6 +733,16 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
         """
         out = []
         for cat in seq:
+            for it in items:
+                if it.category == cat and it not in out:
+                    out.append(it)
+        # ★ 順序要**決定性**而且要按重要性排。
+        #   舊寫法是在 items 上掃 SEQUENTIAL_REQUIRED，次序取決於 items 的排列；
+        #   而 SEQUENTIAL_REQUIRED 本身係 set。
+        #   實測後果：廚房 3.8m² 裡雪櫃/洗衣機/灶台先落，佔滿北牆，
+        #   **廚櫃檯面（1,700x600）最後冇位，被靜靜咁漏放** ——
+        #   一間冇檯面嘅廚房。定義功能嘅件一定要先落。
+        for cat in _SEQ_PRIORITY:
             for it in items:
                 if it.category == cat and it not in out:
                     out.append(it)
