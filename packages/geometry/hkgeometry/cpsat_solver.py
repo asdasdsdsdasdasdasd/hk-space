@@ -219,6 +219,40 @@ SATELLITES = {
 }
 
 
+# ★★ 2026-10：前方淨空由「整幅矩形全空」改成「沿邊某一段夠闊」。
+#   為什麼：舊寫法要求 (家具闊) x need 整幅都空。實測 3.8m² 廚房：
+#   厨櫃檯面 1700x600 要 1700x900 = 2.55m² 全空（廚房 69%），剩 235mm 深條帶；
+#   而「檯面 + 灶台 + 雪櫃排成一列、共用一條 900mm 通道」呢個現實做法
+#   幾何上唔可能（1700 + 600 = 2300 > 廚房濶 2120）。
+#   現實：人係企埋去**沿邊某一段**用佢，唔係要成幅地都空。
+FRONT_STAND_W = 600.0       # 人站得入去嘅闊度（肩寬 + 少少餘裕）
+
+
+def _front_ok(xx, yy, w, d, fx, fy, need, poly, obst, stand_w=FRONT_STAND_W):
+    """正前方是否**有一段**夠闊（>= stand_w）嘅淨空，深 = need。"""
+    if need <= 0:
+        return True
+    span = w if fy != 0 else d
+    sw = min(stand_w, span)
+    if span <= sw:
+        offs = [0.0]
+    else:
+        n = max(2, int(span // 200) + 1)
+        offs = [min(span - sw, k * (span - sw) / n) for k in range(n + 1)]
+    for off in offs:
+        if fy > 0:
+            bx = shapely.box(xx + off, yy + d, xx + off + sw, yy + d + need)
+        elif fy < 0:
+            bx = shapely.box(xx + off, yy - need, xx + off + sw, yy)
+        elif fx > 0:
+            bx = shapely.box(xx + w, yy + off, xx + w + need, yy + off + sw)
+        else:
+            bx = shapely.box(xx - need, yy + off, xx, yy + off + sw)
+        if poly.covers(bx) and not any(bx.intersects(o) for o in obst):
+            return True
+    return False
+
+
 def _satellite_room(item, cx, cy, poly, blockers, obst, sat_items):
     """Hub 周圍仲有幾多空間擺得落佢嘅衛星家具（0..1，1 = 八個方位都夠位）。
 
@@ -248,6 +282,71 @@ def _satellite_room(item, cx, cy, poly, blockers, obst, sat_items):
             if poly.covers(bx) and not any(bx.intersects(z) for z in blockers)                     and not any(bx.intersects(o) for o in obst):
                 free += 1
     return (free / float(tot)) if tot else 1.0
+
+
+def repair_door_blocks(room, lay, max_pass: int = 3, step: int = 200) -> "Layout":
+    """收尾修復：把踩住門扇區嘅家具移到唔踩嘅位（其餘件唔郁）。
+
+    ★ 為什麼需要呢一步：錨定係**逐件貪心**，而 24 個順序只係換次序 ——
+      冇任何一步會「同一批件、唔同位置」再試一次。
+      實測安柏苑 05 室廚房：同一組 (檯面/雪櫃/灶台) 明明有一個
+      **唔踩門扇區**嘅排法（key 14），但求解器交返嚟嘅係 key 119
+      （雪櫃踩住 36% 門扇區）。評分冇錯，係**根本冇試過嗰個排法**。
+    """
+    zones = [z for _i, z in door_approach_zones(room)]
+    if not zones or not lay.placements:
+        return lay
+    poly = room.usable_geo()
+    blockers = zones + circulation_zones(room)
+    out = list(lay.placements)
+    for _pass in range(max_pass):
+        worst, wa = None, 30000.0
+        for p in out:
+            a = sum(p.footprint().intersection(z).area for z in zones)
+            if a > wa:
+                worst, wa = p, a
+        if worst is None:
+            break
+        obst = [q.footprint() for q in out if q.inst != worst.inst]
+        need = FRONT_DEPTH_MIN.get(worst.category, 0)
+        home = worst.center()
+        best = None
+        b = poly.bounds
+        for rot in (0, 90, 180, 270):
+            w, d = (worst.w, worst.d) if rot in (0, 180) else (worst.d, worst.w)
+            fx, fy = front_dir(rot)
+            x = b[0]
+            while x + w <= b[2]:
+                y = b[1]
+                while y + d <= b[3]:
+                    bx = shapely.box(x, y, x + w, y + d)
+                    if (poly.covers(bx)
+                            and not any(bx.intersects(z) for z in blockers)
+                            and not any(bx.intersects(o) for o in obst)
+                            and _front_ok(x, y, w, d, fx, fy, need, poly, obst)):
+                        dc = math.hypot(x + w / 2.0 - home[0], y + d / 2.0 - home[1])
+                        if best is None or dc < best[0]:
+                            best = (dc, Placement(
+                                inst=worst.inst, sku=worst.sku, category=worst.category,
+                                x=int(x), y=int(y), rot=rot, w=worst.w, d=worst.d,
+                                h=worst.h, visual=dict(worst.visual),
+                                price_hkd=worst.price_hkd))
+                    y += step
+                x += step
+        if best is None:
+            break
+        # ★ 守衛：搬位唔可以令**硬傷數目上升**。
+        #   實測廚房：把雪櫃搬離門扇區之後，佢改為座正喺檯面前面 ——
+        #   門乾淨咗但多咗 2 條 clearance_blocked，總分反而跌。
+        #   所以只有在「唔會整差」嘅時候才接受。
+        from .livability import check_livability
+        cand = [q for q in out if q.inst != worst.inst] + [best[1]]
+        if len(check_livability(room, Layout(room_id=room.id, placements=cand)).hard) \
+                > len(check_livability(room, Layout(room_id=room.id,
+                                                    placements=out)).hard):
+            break
+        out = cand
+    return Layout(room_id=room.id, placements=out)
 
 
 def _grid_for(poly) -> int:
@@ -674,25 +773,11 @@ def _cost_grids(room, items, emap, W, corridors, doors, spines, anchors, tvs,
                         grid[base] = -1
                         continue
                     # ★ 常识硬约束：正前方要留够纵深
+                    #   （由 2026-10 起：只要**沿边有一段落**夠闊就算過，見 _front_ok）
                     need = FRONT_DEPTH_MIN.get(item.category)
-                    if need:
-                        # 正前方的「使用区」矩形：宽 = 家具宽度，深 = need
-                        if fy > 0:
-                            zone = shapely.box(xx, yy + d, xx + w, yy + d + need)
-                        elif fy < 0:
-                            zone = shapely.box(xx, yy - need, xx + w, yy)
-                        elif fx > 0:
-                            zone = shapely.box(xx + w, yy, xx + w + need, yy + d)
-                        else:
-                            zone = shapely.box(xx - need, yy, xx, yy + d)
-                        # ① 不能出房间
-                        if not poly.covers(zone):
-                            grid[base] = -1
-                            continue
-                        # ② 不能压别的家具（不然门/抽屜照样打不开）
-                        if any(o.intersects(zone) for o in obst):
-                            grid[base] = -1
-                            continue
+                    if need and not _front_ok(xx, yy, w, d, fx, fy, need, poly, obst):
+                        grid[base] = -1
+                        continue
                     ccx, ccy = xx + w / 2.0, yy + d / 2.0
                     c = 0.0
                     if emap is not None and W.exposure > 0:
@@ -1109,6 +1194,7 @@ def _solve_with_order(room, items, anchors_order, emap, W, corridors, doors, spi
         print("   [cpsat] %s" % info)
     lay = Layout(room_id=room.id, placements=placed)
     lay = repair_rotations(room, lay)
+    lay = repair_door_blocks(room, lay)      # ★ 門口修復（見該函式說明）
     return lay, info
 
 
