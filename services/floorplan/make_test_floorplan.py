@@ -629,37 +629,43 @@ def _flats() -> List[FlatSpec]:
                       px_per_mm=0.2, rotation_deg=0.6, noise=0.010,
                       perspective=0.0, seed=11)
 
-    # ---------------- Flat B: 6000 x 4800 (约 310 呎), L 形客廳 ----------------
-    W, H = 6000, 4800
+    # ---------------- Flat B: 7600 x 5000 (约 410 呎), 一房一廳 ----------------
+    # ★ 2026-10 改：原本係 6000x4800（310 呎）L 形客廳，但**尺寸唔真實** ——
+    #   睡房淨深只有 1490mm（4 呎 11 吋，係儲物房/劏房尺度）、廚房淨 1.57m²。
+    #   結果成個 demo 一直喺「1490 深放唔落床」「1.57m² 放唔落灶台」呢啲
+    #   **假問題**上面打轉，連 LLM 都浪費輪次去處理佢哋。
+    #   改成真實上車盤尺度：客廳淨深 2350（放得落梳化 920 + 通道 900 + 電視櫃 360）、
+    #   睡房淨 8.2m²（2350 深，放得落標準雙人床）、廚房淨 4.2m²、浴室淨 4.6m²。
+    W, H = 7600, 5000
     wb = [
         WallSpec((0, 0), (W, 0), 200, "load_bearing"),
         WallSpec((W, 0), (W, H), 200, "load_bearing"),
         WallSpec((W, H), (0, H), 200, "load_bearing"),
         WallSpec((0, H), (0, 0), 200, "load_bearing"),
-        WallSpec((2400, 1800), (W, 1800), 100, "partition"),
-        WallSpec((2400, 1800), (2400, H), 100, "partition"),
-        WallSpec((2400, 3400), (W, 3400), 100, "partition"),
-        WallSpec((3900, 3400), (3900, H), 100, "partition"),
+        WallSpec((0, 2500), (W, 2500), 100, "partition"),     # 客廳 | 睡房/廚房/浴室
+        WallSpec((3600, 2500), (3600, H), 100, "partition"),  # 睡房 | 廚房
+        WallSpec((5500, 2500), (5500, H), 100, "partition"),  # 廚房 | 浴室
     ]
     ob = [
-        OpeningSpec(0, 3000, 1500, "window", side=1),
-        OpeningSpec(1, 2600, 1400, "window", side=1),
-        OpeningSpec(2, 4800, 1200, "window", side=1),
-        OpeningSpec(3, 1000, 1000, "window", side=1),
-        OpeningSpec(3, 3200, 900, "door", hinge="right", side=1, entry=True),
+        OpeningSpec(0, 1000, 900, "door", hinge="left", side=1, entry=True),  # 大門 -> 客廳
+        OpeningSpec(3, 1300, 1800, "window", side=1),      # 客廳落地窗（左）
+        OpeningSpec(1, 1300, 1500, "window", side=1),      # 客廳窗（右）
+        OpeningSpec(2, 1800, 1200, "window", side=1),      # 睡房窗
+        OpeningSpec(2, 4600, 800, "window", side=-1),      # 廚房窗
+        OpeningSpec(2, 6500, 600, "window", side=-1),      # 浴室窗
         OpeningSpec(4, 1800, 850, "door", hinge="left", side=1),   # 客廳 -> 睡房
-        OpeningSpec(5, 2300, 750, "door", hinge="left", side=1),   # 客廳 -> 廚房
-        OpeningSpec(6, 2400, 700, "door", hinge="right", side=-1), # 睡房 -> 浴室 (套房)  
+        OpeningSpec(4, 4500, 750, "door", hinge="left", side=1),   # 客廳 -> 廚房
+        OpeningSpec(4, 6400, 700, "door", hinge="right", side=1),  # 客廳 -> 浴室
     ]
-    cb = [("living", "客廳", (0, 0, W, 1800)),
-          ("bedroom", "睡房", (2400, 1800, W, 3400)),
-          ("kitchen", "廚房", (2400, 3400, 3900, H)),
-          ("bath", "浴室", (3900, 3400, W, H))]
+    cb = [("living", "客廳", (0, 0, W, 2500)),
+          ("bedroom", "睡房", (0, 2500, 3600, H)),
+          ("kitchen", "廚房", (3600, 2500, 5500, H)),
+          ("bath", "浴室", (5500, 2500, W, H))]
     spec_b = FlatSpec("f_hk_b", "plan_hk_b", W, H, wb, ob, cb,
-                      beams=[dict(region=[[2400, 1700], [W, 1700], [W, 1900], [2400, 1900]],
-                                  z_max=2050, kind="beam")],
-                      services=[("kitchen", "floor_drain", (350, -350)),
-                                ("bath", "floor_drain", (300, -300))],
+                      beams=[dict(region=[[0, 2400], [W, 2400], [W, 2600], [0, 2600]],
+                                  z_max=2100, kind="beam")],
+                      services=[("kitchen", "floor_drain", (400, -400)),
+                                ("bath", "floor_drain", (350, -350))],
                       px_per_mm=0.22, rotation_deg=1.4, noise=0.016,
                       perspective=0.0, seed=23)
 

@@ -1091,16 +1091,23 @@ def rasterize(walls_px, opens_px, shape, scale, origin_px):
         else:
             cv2.rectangle(m, (int(p["center"] - t), int(p["s"])),
                           (int(p["center"] + t), int(p["e"])), 255, -1)
-    for op in opens_px:                        # 封住开口, 房间才会分开
-        # 往两侧多伸 4px, 保证封条一定和相邻墙段搭上 (差 1px 就会漏, 房间就填不出来)
-        p_t = max(2.0, op["thick"] / 2.0 + 3.0)
-        lo, hi = int(op["lo"]) - 4, int(op["hi"]) + 4
+    # 封住開口，房間才會分開。
+    # ★ 封條一定要用**宿主牆**嘅中心線同厚度，唔可以用開口自己嘅值 ——
+    #   踩過的坑：門口開口嘅 center 係由門弧推返嚟嘅，同牆嘅中心線
+    #   差咗 13px（≈60mm）。封條照開口中心畫，就留低一條 10px 高嘅罅
+    #   喺牆嘅一邊 —— 客廳（17m²，最大嘅房）就由嗰條罅漏出圖外，
+    #   被當成「貼住圖邊嘅背景」丟掉，輸出少一間房。
+    wall_by_id = {w["id"]: w for w in walls_px if w.get("id") is not None}
+    for op in opens_px:
+        host = wall_by_id.get(op.get("wall"))
+        wc = host["center"] if host is not None else op["center"]
+        wt = host["thick"] if host is not None else op["thick"]
+        p_t = max(3.0, max(wt, op["thick"]) / 2.0 + 6.0)
+        lo, hi = int(op["lo"]) - 6, int(op["hi"]) + 6
         if op["axis"] == "h":
-            cv2.rectangle(m, (lo, int(op["center"] - p_t)), (hi, int(op["center"] + p_t)),
-                          255, -1)
+            cv2.rectangle(m, (lo, int(wc - p_t)), (hi, int(wc + p_t)), 255, -1)
         else:
-            cv2.rectangle(m, (int(op["center"] - p_t), lo), (int(op["center"] + p_t), hi),
-                          255, -1)
+            cv2.rectangle(m, (int(wc - p_t), lo), (int(wc + p_t), hi), 255, -1)
     m = cv2.morphologyEx(m, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
     return m
 
