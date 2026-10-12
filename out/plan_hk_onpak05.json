@@ -3,613 +3,82 @@
   "units": "mm",
   "rooms": [
     {
-      "id": "bedroom",
-      "label": "睡房（主）",
-      "label_source": "plan",
-      "label_score": 1.0,
-      "polygon": [
-        [
-          1390,
-          0
-        ],
-        [
-          3730,
-          0
-        ],
-        [
-          3730,
-          2770
-        ],
-        [
-          1390,
-          2770
-        ]
-      ],
-      "holes": [],
-      "area_mm2": 0,
-      "height_mm": 2750,
-      "height_field": [],
-      "walls": [
-        {
-          "id": "wB_W",
-          "a": [
-            1390,
-            0
-          ],
-          "b": [
-            1390,
-            2770
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wB_N",
-          "a": [
-            1390,
-            0
-          ],
-          "b": [
-            3730,
-            0
-          ],
-          "type": "load_bearing",
-          "thickness_mm": 250,
-          "openings": [
-            {
-              "id": "n_bed",
-              "kind": "window",
-              "center_mm": 1170,
-              "width_mm": 1600,
-              "height_mm": 1350,
-              "sill_h_mm": 900,
-              "swing": null
-            }
-          ]
-        },
-        {
-          "id": "wB_E",
-          "a": [
-            3730,
-            0
-          ],
-          "b": [
-            3730,
-            2770
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wB_S",
-          "a": [
-            3730,
-            2770
-          ],
-          "b": [
-            1390,
-            2770
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": [
-            {
-              "id": "d_bed",
-              "kind": "door",
-              "center_mm": 1700,
-              "width_mm": 800,
-              "height_mm": 2100,
-              "swing": {
-                "dir": "in",
-                "hinge": "left"
-              }
-            }
-          ]
-        }
-      ],
-      "openings": [
-        {
-          "id": "n_bed",
-          "kind": "window",
-          "center_mm": 1170,
-          "width_mm": 1600,
-          "height_mm": 1350,
-          "sill_h_mm": 900,
-          "swing": null,
-          "wall": "wB_N"
-        },
-        {
-          "id": "d_bed",
-          "kind": "door",
-          "center_mm": 1700,
-          "width_mm": 800,
-          "height_mm": 2100,
-          "swing": {
-            "dir": "in",
-            "hinge": "left"
-          },
-          "wall": "wB_S"
-        }
-      ]
-    },
-    {
-      "id": "bath",
-      "label": "浴室",
-      "label_source": "plan",
-      "label_score": 1.0,
-      "polygon": [
-        [
-          1390,
-          3660
-        ],
-        [
-          3730,
-          3660
-        ],
-        [
-          3730,
-          5350
-        ],
-        [
-          1390,
-          5350
-        ]
-      ],
-      "holes": [],
-      "area_mm2": 0,
-      "height_mm": 2750,
-      "height_field": [],
-      "walls": [
-        {
-          "id": "wBa_W",
-          "a": [
-            1390,
-            3660
-          ],
-          "b": [
-            1390,
-            5350
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wBa_N",
-          "a": [
-            1390,
-            3660
-          ],
-          "b": [
-            3730,
-            3660
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wBa_E",
-          "a": [
-            3730,
-            3660
-          ],
-          "b": [
-            3730,
-            5350
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": [
-            {
-              "id": "d_bath",
-              "kind": "door",
-              "center_mm": 700,
-              "width_mm": 700,
-              "height_mm": 2100,
-              "swing": {
-                "dir": "in",
-                "hinge": "left"
-              }
-            }
-          ]
-        },
-        {
-          "id": "wBa_S",
-          "a": [
-            3730,
-            5350
-          ],
-          "b": [
-            1390,
-            5350
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        }
-      ],
-      "openings": [
-        {
-          "id": "d_bath",
-          "kind": "door",
-          "center_mm": 700,
-          "width_mm": 700,
-          "height_mm": 2100,
-          "swing": {
-            "dir": "in",
-            "hinge": "left"
-          },
-          "wall": "wBa_E"
-        }
-      ]
-    },
-    {
-      "id": "kitchen",
-      "label": "廚房",
-      "label_source": "plan",
-      "label_score": 1.0,
-      "polygon": [
-        [
-          0,
-          5410
-        ],
-        [
-          2150,
-          5410
-        ],
-        [
-          2150,
-          7175
-        ],
-        [
-          0,
-          7175
-        ]
-      ],
-      "holes": [],
-      "area_mm2": 0,
-      "height_mm": 2750,
-      "height_field": [],
-      "walls": [
-        {
-          "id": "wK_W",
-          "a": [
-            0,
-            5410
-          ],
-          "b": [
-            0,
-            7175
-          ],
-          "type": "load_bearing",
-          "thickness_mm": 250,
-          "openings": [
-            {
-              "id": "n_kit",
-              "kind": "window",
-              "center_mm": 880,
-              "width_mm": 1000,
-              "height_mm": 1350,
-              "sill_h_mm": 900,
-              "swing": null
-            }
-          ]
-        },
-        {
-          "id": "wK_N",
-          "a": [
-            0,
-            5410
-          ],
-          "b": [
-            2150,
-            5410
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wK_E",
-          "a": [
-            2150,
-            5410
-          ],
-          "b": [
-            2150,
-            7175
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": [
-            {
-              "id": "d_kit",
-              "kind": "door",
-              "center_mm": 800,
-              "width_mm": 800,
-              "height_mm": 2100,
-              "swing": {
-                "dir": "in",
-                "hinge": "left"
-              }
-            }
-          ]
-        },
-        {
-          "id": "wK_S",
-          "a": [
-            2150,
-            7175
-          ],
-          "b": [
-            0,
-            7175
-          ],
-          "type": "load_bearing",
-          "thickness_mm": 250,
-          "openings": []
-        }
-      ],
-      "openings": [
-        {
-          "id": "n_kit",
-          "kind": "window",
-          "center_mm": 880,
-          "width_mm": 1000,
-          "height_mm": 1350,
-          "sill_h_mm": 900,
-          "swing": null,
-          "wall": "wK_W"
-        },
-        {
-          "id": "d_kit",
-          "kind": "door",
-          "center_mm": 800,
-          "width_mm": 800,
-          "height_mm": 2100,
-          "swing": {
-            "dir": "in",
-            "hinge": "left"
-          },
-          "wall": "wK_E"
-        }
-      ]
-    },
-    {
-      "id": "bedroom2",
-      "label": "睡房（細）",
-      "label_source": "plan",
-      "label_score": 1.0,
-      "polygon": [
-        [
-          6403,
-          1900
-        ],
-        [
-          8745,
-          1900
-        ],
-        [
-          8745,
-          5410
-        ],
-        [
-          6403,
-          5410
-        ]
-      ],
-      "holes": [],
-      "area_mm2": 0,
-      "height_mm": 2750,
-      "height_field": [],
-      "walls": [
-        {
-          "id": "wB2_W",
-          "a": [
-            6403,
-            1900
-          ],
-          "b": [
-            6403,
-            5410
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": [
-            {
-              "id": "d_bed2",
-              "kind": "door",
-              "center_mm": 1750,
-              "width_mm": 800,
-              "height_mm": 2100,
-              "swing": {
-                "dir": "in",
-                "hinge": "left"
-              }
-            }
-          ]
-        },
-        {
-          "id": "wB2_N",
-          "a": [
-            6403,
-            1900
-          ],
-          "b": [
-            8745,
-            1900
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wB2_E",
-          "a": [
-            8745,
-            1900
-          ],
-          "b": [
-            8745,
-            5410
-          ],
-          "type": "load_bearing",
-          "thickness_mm": 250,
-          "openings": [
-            {
-              "id": "n_bed2",
-              "kind": "window",
-              "center_mm": 1750,
-              "width_mm": 1500,
-              "height_mm": 1350,
-              "sill_h_mm": 900,
-              "swing": null
-            }
-          ]
-        },
-        {
-          "id": "wB2_S",
-          "a": [
-            8745,
-            5410
-          ],
-          "b": [
-            6403,
-            5410
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        }
-      ],
-      "openings": [
-        {
-          "id": "d_bed2",
-          "kind": "door",
-          "center_mm": 1750,
-          "width_mm": 800,
-          "height_mm": 2100,
-          "swing": {
-            "dir": "in",
-            "hinge": "left"
-          },
-          "wall": "wB2_W"
-        },
-        {
-          "id": "n_bed2",
-          "kind": "window",
-          "center_mm": 1750,
-          "width_mm": 1500,
-          "height_mm": 1350,
-          "sill_h_mm": 900,
-          "swing": null,
-          "wall": "wB2_E"
-        }
-      ]
-    },
-    {
       "id": "living",
-      "label": "客/飯廳",
-      "label_source": "plan",
+      "label": "客／飯廳",
+      "label_source": "brochure_legend",
       "label_score": 1.0,
       "polygon": [
         [
-          0,
-          0
+          1560,
+          200
         ],
         [
-          8745,
-          0
+          6180,
+          200
         ],
         [
-          8745,
-          7175
+          6180,
+          2099
         ],
         [
-          2150,
-          7175
+          6520,
+          2099
         ],
         [
-          2150,
-          5410
+          6520,
+          1662
         ],
         [
-          0,
-          5410
+          8280,
+          1662
+        ],
+        [
+          8280,
+          4666
+        ],
+        [
+          6180,
+          4666
+        ],
+        [
+          6180,
+          6615
+        ],
+        [
+          2530,
+          6615
+        ],
+        [
+          2530,
+          4754
+        ],
+        [
+          3710,
+          4754
+        ],
+        [
+          3710,
+          3074
+        ],
+        [
+          1560,
+          3074
         ]
       ],
-      "holes": [
-        [
-          [
-            1391,
-            1
-          ],
-          [
-            3729,
-            1
-          ],
-          [
-            3729,
-            2769
-          ],
-          [
-            1391,
-            2769
-          ]
-        ],
-        [
-          [
-            1391,
-            3661
-          ],
-          [
-            3729,
-            3661
-          ],
-          [
-            3729,
-            5349
-          ],
-          [
-            1391,
-            5349
-          ]
-        ],
-        [
-          [
-            6404,
-            1901
-          ],
-          [
-            8744,
-            1901
-          ],
-          [
-            8744,
-            5409
-          ],
-          [
-            6404,
-            5409
-          ]
-        ]
-      ],
-      "area_mm2": 0,
+      "holes": [],
+      "area_mm2": 30379950,
       "height_mm": 2750,
       "height_field": [],
       "walls": [
         {
           "id": "wL_N",
           "a": [
-            0,
-            0
+            1560,
+            200
           ],
           "b": [
-            8745,
-            0
+            6180,
+            200
           ],
           "type": "load_bearing",
           "thickness_mm": 250,
@@ -617,8 +86,8 @@
             {
               "id": "n_liv1",
               "kind": "window",
-              "center_mm": 5200,
-              "width_mm": 1500,
+              "center_mm": 900,
+              "width_mm": 1400,
               "height_mm": 1350,
               "sill_h_mm": 900,
               "swing": null
@@ -626,8 +95,32 @@
             {
               "id": "n_liv2",
               "kind": "window",
-              "center_mm": 7500,
-              "width_mm": 1200,
+              "center_mm": 3200,
+              "width_mm": 1500,
+              "height_mm": 1350,
+              "sill_h_mm": 900,
+              "swing": null
+            }
+          ]
+        },
+        {
+          "id": "wL_W",
+          "a": [
+            1560,
+            200
+          ],
+          "b": [
+            1560,
+            4754
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": [
+            {
+              "id": "n_liv3",
+              "kind": "window",
+              "center_mm": 1900,
+              "width_mm": 1100,
               "height_mm": 1350,
               "sill_h_mm": 900,
               "swing": null
@@ -637,26 +130,224 @@
         {
           "id": "wL_E",
           "a": [
-            8745,
-            0
+            6180,
+            200
           ],
           "b": [
-            8745,
-            7175
+            6180,
+            2099
           ],
           "type": "load_bearing",
           "thickness_mm": 250,
           "openings": []
         },
         {
-          "id": "wL_S",
+          "id": "wL_E2",
           "a": [
-            8745,
-            7175
+            6180,
+            3629
           ],
           "b": [
-            2150,
-            7175
+            6180,
+            6615
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": []
+        },
+        {
+          "id": "wL_NOOK_N",
+          "a": [
+            6520,
+            1662
+          ],
+          "b": [
+            8280,
+            1662
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": [
+            {
+              "id": "n_din",
+              "kind": "window",
+              "center_mm": 900,
+              "width_mm": 1100,
+              "height_mm": 1350,
+              "sill_h_mm": 900,
+              "swing": null
+            }
+          ]
+        },
+        {
+          "id": "wL_NOOK_W",
+          "a": [
+            6520,
+            1662
+          ],
+          "b": [
+            6520,
+            2099
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": []
+        },
+        {
+          "id": "wL_NOOK_E",
+          "a": [
+            8280,
+            1662
+          ],
+          "b": [
+            8280,
+            4666
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": [
+            {
+              "id": "n_din2",
+              "kind": "window",
+              "center_mm": 1600,
+              "width_mm": 1400,
+              "height_mm": 1350,
+              "sill_h_mm": 900,
+              "swing": null
+            }
+          ]
+        },
+        {
+          "id": "wL_NOOK_S",
+          "a": [
+            6180,
+            4666
+          ],
+          "b": [
+            8280,
+            4666
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": []
+        },
+        {
+          "id": "wL_SPINE",
+          "a": [
+            3660,
+            200
+          ],
+          "b": [
+            3660,
+            1230
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 320,
+          "openings": []
+        },
+        {
+          "id": "wL_BATH_N",
+          "a": [
+            1560,
+            3074
+          ],
+          "b": [
+            3590,
+            3074
+          ],
+          "type": "partition",
+          "thickness_mm": 120,
+          "openings": []
+        },
+        {
+          "id": "wL_BATH_S",
+          "a": [
+            1560,
+            4724
+          ],
+          "b": [
+            3590,
+            4724
+          ],
+          "type": "partition",
+          "thickness_mm": 120,
+          "openings": [
+            {
+              "id": "d_bath_liv",
+              "kind": "door",
+              "center_mm": 400,
+              "width_mm": 700,
+              "height_mm": 2100,
+              "swing": {
+                "dir": "in",
+                "hinge": "a"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wL_BATH_E",
+          "a": [
+            3650,
+            3074
+          ],
+          "b": [
+            3650,
+            4724
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 390,
+          "openings": []
+        },
+        {
+          "id": "wL_KIT_N",
+          "a": [
+            100,
+            4754
+          ],
+          "b": [
+            2140,
+            4754
+          ],
+          "type": "partition",
+          "thickness_mm": 120,
+          "openings": [
+            {
+              "id": "d_kit",
+              "kind": "door",
+              "center_mm": 1500,
+              "width_mm": 900,
+              "height_mm": 2100,
+              "swing": {
+                "dir": "in",
+                "hinge": "a"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wL_KIT_E",
+          "a": [
+            2140,
+            4754
+          ],
+          "b": [
+            2140,
+            6615
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 390,
+          "openings": []
+        },
+        {
+          "id": "wL_S",
+          "a": [
+            100,
+            6615
+          ],
+          "b": [
+            6180,
+            6615
           ],
           "type": "load_bearing",
           "thickness_mm": 250,
@@ -664,117 +355,75 @@
             {
               "id": "d_entry",
               "kind": "door",
-              "center_mm": 3400,
-              "width_mm": 900,
+              "center_mm": 3130,
+              "width_mm": 860,
               "height_mm": 2100,
               "swing": {
                 "dir": "in",
-                "hinge": "left"
+                "hinge": "a"
               }
             }
           ]
-        },
-        {
-          "id": "wL_Ke",
-          "a": [
-            2150,
-            7175
-          ],
-          "b": [
-            2150,
-            5410
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": [
-            {
-              "id": "d_kit",
-              "kind": "door",
-              "center_mm": 800,
-              "width_mm": 800,
-              "height_mm": 2100,
-              "swing": {
-                "dir": "in",
-                "hinge": "left"
-              }
-            }
-          ]
-        },
-        {
-          "id": "wL_S2",
-          "a": [
-            2150,
-            5410
-          ],
-          "b": [
-            0,
-            5410
-          ],
-          "type": "partition",
-          "thickness_mm": 150,
-          "openings": []
-        },
-        {
-          "id": "wL_W",
-          "a": [
-            0,
-            5410
-          ],
-          "b": [
-            0,
-            0
-          ],
-          "type": "load_bearing",
-          "thickness_mm": 250,
-          "openings": []
-        }
-      ],
-      "openings": [
-        {
-          "id": "n_liv1",
-          "kind": "window",
-          "center_mm": 5200,
-          "width_mm": 1500,
-          "height_mm": 1350,
-          "sill_h_mm": 900,
-          "swing": null,
-          "wall": "wL_N"
-        },
-        {
-          "id": "n_liv2",
-          "kind": "window",
-          "center_mm": 7500,
-          "width_mm": 1200,
-          "height_mm": 1350,
-          "sill_h_mm": 900,
-          "swing": null,
-          "wall": "wL_N"
-        },
-        {
-          "id": "d_entry",
-          "kind": "door",
-          "center_mm": 3400,
-          "width_mm": 900,
-          "height_mm": 2100,
-          "swing": {
-            "dir": "in",
-            "hinge": "left"
-          },
-          "wall": "wL_S"
-        },
-        {
-          "id": "d_kit",
-          "kind": "door",
-          "center_mm": 800,
-          "width_mm": 800,
-          "height_mm": 2100,
-          "swing": {
-            "dir": "in",
-            "hinge": "left"
-          },
-          "wall": "wL_Ke"
         }
       ]
+    },
+    {
+      "id": "bath",
+      "label": "浴室",
+      "label_source": "brochure_legend",
+      "label_score": 1.0,
+      "polygon": [
+        [
+          1560,
+          3194
+        ],
+        [
+          3590,
+          3194
+        ],
+        [
+          3590,
+          4664
+        ],
+        [
+          1560,
+          4664
+        ]
+      ],
+      "holes": [],
+      "area_mm2": 2984100,
+      "height_mm": 2750,
+      "height_field": [],
+      "walls": []
+    },
+    {
+      "id": "kitchen",
+      "label": "廚房",
+      "label_source": "brochure_legend",
+      "label_score": 1.0,
+      "polygon": [
+        [
+          100,
+          4754
+        ],
+        [
+          2140,
+          4754
+        ],
+        [
+          2140,
+          6615
+        ],
+        [
+          100,
+          6615
+        ]
+      ],
+      "holes": [],
+      "area_mm2": 3796440,
+      "height_mm": 2750,
+      "height_field": [],
+      "walls": []
     }
   ],
   "connections": [],
@@ -782,23 +431,67 @@
   "entry": {
     "room": "living",
     "point": [
-      3700,
-      6800
+      4700,
+      6315
     ]
   },
   "meta": {
-    "source": "housingscheme_layout_plan",
-    "confidence": 0.75,
-    "mm_per_px": [
-      11.6,
-      12.88
+    "source": "hkha_on_pak_court_sales_brochure_p26_vector",
+    "confidence": 0.95,
+    "outline": [
+      [
+        100,
+        6865
+      ],
+      [
+        100,
+        4754
+      ],
+      [
+        1310,
+        4754
+      ],
+      [
+        1310,
+        0
+      ],
+      [
+        6430,
+        0
+      ],
+      [
+        6430,
+        1533
+      ],
+      [
+        8530,
+        1533
+      ],
+      [
+        8530,
+        4914
+      ],
+      [
+        6430,
+        4914
+      ],
+      [
+        6430,
+        6865
+      ]
     ],
-    "scale_source": "printed dimension chains",
-    "scale_method": "x: 8745mm over 754px; y: 7175mm over 557px",
+    "mm_per_px": null,
+    "scale_note": "由图上印刷比例尺条标定：5 m = 70.86 pt，1 pt = 70.5617 mm（1:200）",
     "reference": [
-      "居屋寶 安柏苑05室 擺位設計圖",
-      "房委會 安柏苑售樓說明書 2/F-9/F 平面圖"
+      "房委會 安柏苑售樓說明書 2/F-9/F 平面圖（第26頁，向量 PDF）"
     ],
-    "area_check": "room sum ~491 sq ft vs stated 493 sq ft"
+    "chains": {
+      "north": "250|2100|320|2200|250 = 5120",
+      "south": "100|2040|390|3655|250 = 6435",
+      "east": "200|730|1135|1560|2990|250 = 6865",
+      "bath": "1235 x 1470",
+      "kitchen": "2040 wide, 1700 counter",
+      "dining_nook": "2010 x 3000"
+    }
   }
 }

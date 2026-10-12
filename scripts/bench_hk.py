@@ -65,22 +65,26 @@ from hkgeometry.exposure import exposure_map, layout_visual_load   # noqa: E402
 ONPAK05 = dict(
     plan="out/plan_hk_onpak05.json",
     label="安柏苑 05 室（真實香港居屋 493 呎）",
+    # ★ v3 转录之后，房间只有 客／飯廳 / 浴室 / 廚房 —— 图上没有任何「睡房」房名，
+    #   493 呎的 05 室是开放式单位，睡床只能放客厅。旧清单里的 bedroom/bedroom2
+    #   是 v2 那张错误轮廓臆想出来的，已经删掉。
     items=[
-        ("#bed_main", "bed", 1370, 1900, 500, "bedroom"),
-        ("#wardrobe_main", "wardrobe", 1900, 600, 1800, "bedroom"),
-        ("#bed_small", "bed", 1200, 1900, 500, "bedroom2"),
-        ("#wardrobe_small", "wardrobe", 900, 600, 1800, "bedroom2"),
+        # 客／飯廳 30.4 m2（含 2010x3000 的饭厅凹位）
+        ("#bed_main", "bed", 1370, 1900, 500, "living"),
+        ("#wardrobe_main", "wardrobe", 1900, 600, 1800, "living"),
         ("#sofa", "sofa", 1400, 700, 750, "living"),
         ("#coffee", "coffee_table", 700, 700, 400, "living"),
         ("#tv", "tv_bench", 1200, 400, 500, "living"),
-        ("#dining", "dining_table", 1600, 800, 750, "living"),
+        ("#dining", "dining_table", 1400, 800, 750, "living"),
         ("#chair1", "chair", 450, 450, 780, "living"),
         ("#chair2", "chair", 450, 450, 780, "living"),
         ("#chair3", "chair", 450, 450, 780, "living"),
         ("#chair4", "chair", 450, 450, 780, "living"),
+        # 浴室 3.0 m2
         ("#toilet", "toilet", 700, 400, 750, "bath"),
         ("#basin", "basin", 600, 450, 850, "bath"),
         ("#shower", "shower", 900, 900, 2000, "bath"),
+        # 廚房 3.8 m2
         ("#counter", "kitchen_counter", 1700, 600, 850, "kitchen"),
         ("#fridge", "fridge", 600, 650, 1700, "kitchen"),
         ("#stove", "stove", 600, 500, 850, "kitchen"),
