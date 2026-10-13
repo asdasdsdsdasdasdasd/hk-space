@@ -429,9 +429,53 @@ def repair_door_blocks(room, lay, max_pass: int = 3, step: int = 200) -> "Layout
     return Layout(room_id=room.id, placements=out)
 
 
+# ★ 2026-10：家具正面到墙的**质量**余量。
+#   为什么必须有这一项：基准第 11 条（朝向没错 / 没面壁）会检查**所有**
+#   非桌类家具「正面 600mm（判据用 250mm）内是不是墙」。但 FRONT_CLEARANCE
+#   里 sofa / chair / bed / tv_bench 这些 B 类家具的 front 值是 **0** ——
+#   也就是说求解器**从来不知道有这条规则**，只能事后被判死。
+#   实测 onpak05：沙发摆在客厅下段，正面 231mm 就是那道台阶墙，8 项里挂 1 项。
+#   这里把它做成代价表的一项，让坐标下降能找到不面壁的位。
+#   取 600 而非判据的 250，是留余量：刚好 251mm 的方案下一次扰动又会掉回去。
+FRONT_WALL_MIN = 600.0
+
+
+def _front_wall_bad(room, placements, poly, min_clear: float = FRONT_WALL_MIN) -> int:
+    """正面撞墙的件数 —— 基准第 11 条判据的代价表版本。
+
+    跳过茶几 / 边几 / 餐桌（它们的「正面」没有意义，和判据第 11 条一致）。
+    """
+    n = 0
+    fps = [p.footprint() for p in placements]
+    for i, p in enumerate(placements):
+        if p.category in ("coffee_table", "side_table", "dining_table"):
+            continue
+        cx, cy = p.center()
+        fx, fy = p.front_dir()
+        half = p.d / 2.0
+        start = Point(cx + fx * half, cy + fy * half)
+        # 便宜的预筛：最近的一段墙都比 min_clear 远，就一定不会面壁。
+        if poly.boundary.distance(start) >= min_clear:
+            continue
+        ray = shapely.LineString([(start.x, start.y),
+                                  (cx + fx * (half + min_clear),
+                                   cy + fy * (half + min_clear))])
+        hit = ray.intersection(poly.boundary)
+        if hit.is_empty or hit.distance(start) >= min_clear:
+            continue
+        if any(ray.intersects(fps[j]) for j in range(len(fps)) if j != i):
+            continue
+        n += 1
+    return n
+
+
 def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
     """唔用 check_livability 嘅快速「有幾差」指標：
-    (踩門件數, 踩門總面積 cm2, 前方淨空唔過件數)。"""
+    (踩門件數, 踩門總面積 cm2, 前方淨空唔過件數, 正面撞牆件數)。
+
+    ★ 元组顺序就是优先级：关系 -> 踩门 -> 前方净空 -> 正面撞墙。
+      正面撞墙放最后，所以它**永远不会**为了不面壁而牺牲关系或门口。
+    """
     shapely.prepare(poly)
     # ★ 第一格：違反功能關係嘅件數。
     #   為什麼要放**第一**：坐標下降嘅驗收標準如果唔包含關係，
@@ -470,7 +514,8 @@ def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
             others = [o for j, o in enumerate(fps) if j != i]
             if not _front_ok(p.x, p.y, w, d, fx, fy, need, poly, others):
                 n_front += 1
-    return (n_rel, n_door, int(a_door / 100.0), n_front)
+    n_wall = _front_wall_bad(room, placements, poly)
+    return (n_rel, n_door, int(a_door / 100.0), n_front, n_wall)
 
 
 def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
@@ -498,7 +543,7 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
     cur = list(lay.placements)
     cur_bad = _cheap_bad(room, cur, zones, poly)
     cur_art = _narrow_artery_penalty(room, lay)
-    if cur_bad == (0, 0, 0, 0) and cur_art == 0:
+    if cur_bad == (0, 0, 0, 0, 0) and cur_art == 0:
         return lay
     b = poly.bounds
     _prog = os.environ.get("HK_STAGE_PROGRESS")
@@ -517,6 +562,17 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
             others = cur[:idx] + cur[idx + 1:]
             obst = [q.footprint() for q in others]
             need = FRONT_DEPTH_MIN.get(p.category, 0)
+            # ★★ 2026-10：**关系被违反的件要用更细的网格再扫一次**。
+            #   大房用粗网格（300mm）换速度，但家具的「正确位置」往往是一小块
+            #   很窄的合法区 —— 实测 onpak05 茶几：1400 宽的沙发正前方只有
+            #   780mm 可用，边距 40mm，150mm 网格上只剩 **3 个**合法格，
+            #   300mm 网格**一个都不剩**。
+            #   后果：relayout_search 跑了 1.1s、一个件都没动，
+            #   茶几留在 3.36m 外（判据第 9/10 条都不管这条，所以 12/12 也看不出来）。
+            #   现在只对「有关系不满足」的件加密，代价很小（通常 0-2 件）。
+            st = step
+            if _rel_violation(p, *p.center(), others) > 0.0:
+                st = max(100, step // 2)
             shortlist = []
             _ncand = 0
             _t_bad = 0.0
@@ -557,8 +613,8 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
                                 elif bad < shortlist[-1][0]:
                                     shortlist[-1] = (bad, cand)
                                     shortlist.sort(key=lambda t: t[0])
-                        y += step
-                    x += step
+                        y += st
+                    x += st
             # ★★ 2026-10 修：主通路窄度必須**參與搜尋**，唔可以只做否決。
             #   舊寫法先用 _cheap_bad 揀出唯一一個候選，再問佢主通路得唔得 ——
             #   即係「狹窄」只可以否決，永遠唔可以令人去搵一個闊啲嘅位。
@@ -595,7 +651,7 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
         _tlog("%-8s relayout pass%d done improved=%s cur=%s  %.1fs"
               % (room.id, _p, improved, (cur_bad, cur_art),
                  time.perf_counter() - _t0))
-        if not improved or (cur_bad == (0, 0, 0, 0) and cur_art == 0):
+        if not improved or (cur_bad == (0, 0, 0, 0, 0) and cur_art == 0):
             break
     return Layout(room_id=room.id, placements=cur)
 

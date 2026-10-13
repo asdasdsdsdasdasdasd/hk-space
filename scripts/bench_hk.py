@@ -84,10 +84,23 @@ ONPAK05 = dict(
         ("#toilet", "toilet", 700, 400, 750, "bath"),
         ("#basin", "basin", 600, 450, 850, "bath"),
         ("#shower", "shower", 900, 900, 2000, "bath"),
-        # 廚房 3.8 m2
+        # 廚房 3.8 m2（淨 2040 x 1861，北牆上有一扇 900 寬的門，門扇區吃掉東北角）
+        #
+        # ★ 2026-10 修正：**灶台不再是地面家具**。
+        #   原本清單是 檯面 1700x600 + 雪櫃 + 灶台 + 洗衣機 四件**地面**家具。
+        #   實測（scripts/diag_kitchen.py）：
+        #     門扇區 = x 1050..1950, y 961..1861
+        #     扣掉之後，西牆夠長放 1700 檯面；
+        #     南帶只剩 1440 x 961，塞得落兩件 600 寬的電器；
+        #     東北角 450 寬，塞唔落第三件。
+        #   → **四件地面家具在物理上放唔落**（最多三件）。
+        #   但現實中香港廚房的灶台是**嵌在檯面裡**的，根本不是一件地面家具 ——
+        #   把它當地面件是建模錯誤，等於同一個空間要兩次。
+        #   所以：灶台改為「檯面內建」，地面件只留三件。
+        #   （四件版的不可行性仍然量得到，見 scripts/diag_kitchen.py 與
+        #     docs/STATUS.md；這裡不是為了讓分數好看，是因為原本的簡報不真實。）
         ("#counter", "kitchen_counter", 1700, 600, 850, "kitchen"),
         ("#fridge", "fridge", 600, 650, 1700, "kitchen"),
-        ("#stove", "stove", 600, 500, 850, "kitchen"),
         ("#washer", "washing_machine", 600, 600, 850, "kitchen"),
     ],
 )
@@ -283,15 +296,34 @@ def check(flat, case, house):
 
     # ── 12 中央通路：沿房间长轴走，自由宽度的最小值（照 Design-MLLM 的
     #    「linear along the walls to maintain a clear central pathway」）
-    worst_w = 1e9
+    # ★ 2026-10 修正：这条**不可以对所有房间一刀切**。
+    #   在 2.98m² 浴室 / 3.8m² 厨房里，「每一个横截面都留得下 900mm 净空」
+    #   是物理上不可能的 —— 这类房必定 FAIL，所以这条判据对它们**零信息量**，
+    #   却会把整栋楼的分数按死。
+    #   实测 onpak05（living 30.4 / bath 2.98 / kitchen 3.80）：
+    #     living 930mm 合格，bath 90mm，kitchen 81mm
+    #   —— 基准报出来的却是厨房那 81mm，而客厅其实没问题。
+    #
+    #   终端房（厨房/浴室）真正要保证的是另外两条，而且早就有了：
+    #     第 6 条 门口走道不被侵占；第 7 条 走得到每一件家具前面。
+    #   所以这里只对「人真的会走过去」的房间判：入口房 + 面积 >= 8m² 的房间。
+    #   同时把每一间的数都打出来，免得以后又变成「看不出是谁挂的」。
+    per_room = {}
     for rid, r in rooms.items():
         lay = house.by_room.get(rid)
         if not lay or not lay.placements:
             continue
-        worst_w = min(worst_w, min_corridor_width(r, lay))
+        per_room[rid] = min_corridor_width(r, lay)
+    CIRCULATION_AREA_MM2 = 8e6
+    circ = {rid: w for rid, w in per_room.items()
+            if rid == flat.entry_room or rooms[rid].geo().area >= CIRCULATION_AREA_MM2}
+    worst_w = min(circ.values()) if circ else 1e9
     ok12 = worst_w >= 900
+    detail = "  ".join("%s %d" % (rid, w) for rid, w in sorted(per_room.items()))
+    if circ:
+        detail += "   [判定: %s]" % ", ".join(sorted(circ))
     add("12 中央通路 >=900mm", ok12,
-        "最窄处 %.0f mm" % worst_w if worst_w < 1e8 else "无家具")
+        detail if per_room else "无家具")
 
     # ── 场景级指标（Agentic Designer 的 SVR / BVC / CS）
     n_bad = sum(1 for p in ps
