@@ -111,7 +111,7 @@
           ],
           "b": [
             1560,
-            4754
+            3074
           ],
           "type": "load_bearing",
           "thickness_mm": 250,
@@ -246,7 +246,7 @@
           "openings": []
         },
         {
-          "id": "wL_BATH_N",
+          "id": "wBATH_N",
           "a": [
             1560,
             3074
@@ -260,7 +260,7 @@
           "openings": []
         },
         {
-          "id": "wL_BATH_S",
+          "id": "wBATH_S",
           "a": [
             1560,
             4724
@@ -286,7 +286,7 @@
           ]
         },
         {
-          "id": "wL_BATH_E",
+          "id": "wBATH_E",
           "a": [
             3650,
             3074
@@ -300,7 +300,21 @@
           "openings": []
         },
         {
-          "id": "wL_KIT_N",
+          "id": "wBATH_W",
+          "a": [
+            1560,
+            3074
+          ],
+          "b": [
+            1560,
+            4724
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": []
+        },
+        {
+          "id": "wKIT_N",
           "a": [
             100,
             4754
@@ -326,7 +340,7 @@
           ]
         },
         {
-          "id": "wL_KIT_E",
+          "id": "wKIT_E",
           "a": [
             2140,
             4754
@@ -337,6 +351,20 @@
           ],
           "type": "load_bearing",
           "thickness_mm": 390,
+          "openings": []
+        },
+        {
+          "id": "wKIT_W",
+          "a": [
+            100,
+            4754
+          ],
+          "b": [
+            100,
+            6615
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 100,
           "openings": []
         },
         {
@@ -364,6 +392,94 @@
               }
             }
           ]
+        }
+      ],
+      "openings": [
+        {
+          "id": "n_liv1",
+          "kind": "window",
+          "center_mm": 900,
+          "width_mm": 1400,
+          "height_mm": 1350,
+          "sill_h_mm": 900,
+          "swing": null,
+          "wall": "wL_N"
+        },
+        {
+          "id": "n_liv2",
+          "kind": "window",
+          "center_mm": 3200,
+          "width_mm": 1500,
+          "height_mm": 1350,
+          "sill_h_mm": 900,
+          "swing": null,
+          "wall": "wL_N"
+        },
+        {
+          "id": "n_liv3",
+          "kind": "window",
+          "center_mm": 1900,
+          "width_mm": 1100,
+          "height_mm": 1350,
+          "sill_h_mm": 900,
+          "swing": null,
+          "wall": "wL_W"
+        },
+        {
+          "id": "n_din",
+          "kind": "window",
+          "center_mm": 900,
+          "width_mm": 1100,
+          "height_mm": 1350,
+          "sill_h_mm": 900,
+          "swing": null,
+          "wall": "wL_NOOK_N"
+        },
+        {
+          "id": "n_din2",
+          "kind": "window",
+          "center_mm": 1600,
+          "width_mm": 1400,
+          "height_mm": 1350,
+          "sill_h_mm": 900,
+          "swing": null,
+          "wall": "wL_NOOK_E"
+        },
+        {
+          "id": "d_bath_liv",
+          "kind": "door",
+          "center_mm": 400,
+          "width_mm": 700,
+          "height_mm": 2100,
+          "swing": {
+            "dir": "in",
+            "hinge": "a"
+          },
+          "wall": "wBATH_S"
+        },
+        {
+          "id": "d_kit",
+          "kind": "door",
+          "center_mm": 1500,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "swing": {
+            "dir": "in",
+            "hinge": "a"
+          },
+          "wall": "wKIT_N"
+        },
+        {
+          "id": "d_entry",
+          "kind": "door",
+          "center_mm": 3130,
+          "width_mm": 860,
+          "height_mm": 2100,
+          "swing": {
+            "dir": "in",
+            "hinge": "a"
+          },
+          "wall": "wL_S"
         }
       ]
     },
@@ -394,7 +510,90 @@
       "area_mm2": 2984100,
       "height_mm": 2750,
       "height_field": [],
-      "walls": []
+      "walls": [
+        {
+          "id": "wBATH_N",
+          "a": [
+            1560,
+            3074
+          ],
+          "b": [
+            3590,
+            3074
+          ],
+          "type": "partition",
+          "thickness_mm": 120,
+          "openings": []
+        },
+        {
+          "id": "wBATH_S",
+          "a": [
+            1560,
+            4724
+          ],
+          "b": [
+            3590,
+            4724
+          ],
+          "type": "partition",
+          "thickness_mm": 120,
+          "openings": [
+            {
+              "id": "d_bath_liv",
+              "kind": "door",
+              "center_mm": 400,
+              "width_mm": 700,
+              "height_mm": 2100,
+              "swing": {
+                "dir": "in",
+                "hinge": "a"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wBATH_E",
+          "a": [
+            3650,
+            3074
+          ],
+          "b": [
+            3650,
+            4724
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 390,
+          "openings": []
+        },
+        {
+          "id": "wBATH_W",
+          "a": [
+            1560,
+            3074
+          ],
+          "b": [
+            1560,
+            4724
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": []
+        }
+      ],
+      "openings": [
+        {
+          "id": "d_bath_liv",
+          "kind": "door",
+          "center_mm": 400,
+          "width_mm": 700,
+          "height_mm": 2100,
+          "swing": {
+            "dir": "in",
+            "hinge": "a"
+          },
+          "wall": "wBATH_S"
+        }
+      ]
     },
     {
       "id": "kitchen",
@@ -423,7 +622,90 @@
       "area_mm2": 3796440,
       "height_mm": 2750,
       "height_field": [],
-      "walls": []
+      "walls": [
+        {
+          "id": "wKIT_N",
+          "a": [
+            100,
+            4754
+          ],
+          "b": [
+            2140,
+            4754
+          ],
+          "type": "partition",
+          "thickness_mm": 120,
+          "openings": [
+            {
+              "id": "d_kit",
+              "kind": "door",
+              "center_mm": 1500,
+              "width_mm": 900,
+              "height_mm": 2100,
+              "swing": {
+                "dir": "in",
+                "hinge": "a"
+              }
+            }
+          ]
+        },
+        {
+          "id": "wKIT_E",
+          "a": [
+            2140,
+            4754
+          ],
+          "b": [
+            2140,
+            6615
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 390,
+          "openings": []
+        },
+        {
+          "id": "wKIT_W",
+          "a": [
+            100,
+            4754
+          ],
+          "b": [
+            100,
+            6615
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 100,
+          "openings": []
+        },
+        {
+          "id": "wKIT_S",
+          "a": [
+            100,
+            6615
+          ],
+          "b": [
+            2140,
+            6615
+          ],
+          "type": "load_bearing",
+          "thickness_mm": 250,
+          "openings": []
+        }
+      ],
+      "openings": [
+        {
+          "id": "d_kit",
+          "kind": "door",
+          "center_mm": 1500,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "swing": {
+            "dir": "in",
+            "hinge": "a"
+          },
+          "wall": "wKIT_N"
+        }
+      ]
     }
   ],
   "connections": [],

@@ -126,6 +126,26 @@ def win(oid, center, width, sill=900, height=1350):
 
 
 def build():
+    # 浴室四面墙（南墙上有门）
+    w_bath_n = wall("wBATH_N", (BX0, BY0-WALL_THIN), (BX1, BY0-WALL_THIN), WALL_THIN, [], "partition")
+    w_bath_s = wall("wBATH_S", (BX0, BY1 + WALL_THIN // 2), (BX1, BY1 + WALL_THIN // 2),
+                    WALL_THIN, [door("d_bath_liv", 400, 700)], "partition")
+    w_bath_e = wall("wBATH_E", (BX1 + WALL_THIN // 2, BY0-WALL_THIN),
+                    (BX1 + WALL_THIN // 2, BY1 + WALL_THIN // 2), 390, [], "load_bearing")
+    w_bath_w = wall("wBATH_W", (X0, BY0-WALL_THIN), (X0, BY1 + WALL_THIN // 2),
+                    WALL_EXT, [], "load_bearing")
+    # 厨房四面墙（北墙上有门）
+    w_kit_n = wall("wKIT_N", (X["party_e"], Y["kit_n"]), (X["kit_e"], Y["kit_n"]),
+                   WALL_THIN, [door("d_kit", 1500, 900)], "partition")
+    w_kit_e = wall("wKIT_E", (X["kit_e"], Y["kit_n"]), (X["kit_e"], Y["y4"]), 390, [], "load_bearing")
+    w_kit_w = wall("wKIT_W", (X["party_e"], Y["kit_n"]), (X["party_e"], Y["y4"]),
+                   WALL_PARTY, [], "load_bearing")
+    w_south = wall("wL_S", (X["party_e"], Y["y4"]), (X["east_in"], Y["y4"]), WALL_EXT,
+                   [door("d_entry", 3130, 860)], "load_bearing")
+    # 厨房南墙单独一段：大门不在厨房范围内，共用整条 wL_S 会给厨房算出一个
+    # 门中心落在房外的假门扇净空区。
+    w_kit_s = wall("wKIT_S", (X["party_e"], Y["y4"]), (X["kit_e"], Y["y4"]), WALL_EXT, [], "load_bearing")
+
     rooms = [
         dict(id="living", label="客／飯廳", label_source="brochure_legend",
              label_score=1.0, polygon=[list(p) for p in LIV], holes=[],
@@ -133,7 +153,7 @@ def build():
              walls=[
                  wall("wL_N", (X0, Y["north_in"]), (X["east_in"], Y["north_in"]), WALL_EXT,
                       [win("n_liv1", 900, 1400), win("n_liv2", 3200, 1500)], "load_bearing"),
-                 wall("wL_W", (X0, Y["north_in"]), (X0, Y["kit_n"]), WALL_EXT,
+                 wall("wL_W", (X0, Y["north_in"]), (X0, BY0-WALL_THIN), WALL_EXT,
                       [win("n_liv3", 1900, 1100)], "load_bearing"),
                  wall("wL_E", (X["east_in"], Y["north_in"]), (X["east_in"], 2099), WALL_EXT, [], "load_bearing"),
                  wall("wL_E2", (X["east_in"], 3629), (X["east_in"], Y["y4"]), WALL_EXT, [], "load_bearing"),
@@ -144,23 +164,21 @@ def build():
                       [win("n_din2", 1600, 1400)], "load_bearing"),
                  wall("wL_NOOK_S", (X["east_in"], Y["nook_btm"]), (X["nook_e"]-WALL_EXT, Y["nook_btm"]), WALL_EXT, [], "load_bearing"),
                  wall("wL_SPINE", (X["spine_w"], Y["north_in"]), (X["spine_w"], Y["spine_bot"]), WALL_MAIN, [], "load_bearing"),
-                 wall("wL_BATH_N", (BX0, BY0-WALL_THIN), (BX1, BY0-WALL_THIN), WALL_THIN, [], "partition"),
-                 wall("wL_BATH_S", (BX0, BY1+WALL_THIN//2), (BX1, BY1+WALL_THIN//2), WALL_THIN,
-                      [door("d_bath_liv", 400, 700)], "partition"),
-                 wall("wL_BATH_E", (BX1+WALL_THIN//2, BY0-WALL_THIN), (BX1+WALL_THIN//2, BY1+WALL_THIN//2), 390, [], "load_bearing"),
-                 wall("wL_KIT_N", (X["party_e"], Y["kit_n"]), (X["kit_e"], Y["kit_n"]), WALL_THIN,
-                      [door("d_kit", 1500, 900)], "partition"),
-                 wall("wL_KIT_E", (X["kit_e"], Y["kit_n"]), (X["kit_e"], Y["y4"]), 390, [], "load_bearing"),
-                 wall("wL_S", (X["party_e"], Y["y4"]), (X["east_in"], Y["y4"]), WALL_EXT,
-                      [door("d_entry", 3130, 860)], "load_bearing"),
+                 w_bath_n, w_bath_s, w_bath_e, w_bath_w,
+                 w_kit_n, w_kit_e, w_kit_w, w_south,
              ]),
         dict(id="bath", label="浴室", label_source="brochure_legend", label_score=1.0,
              polygon=[list(p) for p in BATH], holes=[], area_mm2=0, height_mm=H_ROOM,
-             height_field=[], walls=[]),
+             height_field=[], walls=[w_bath_n, w_bath_s, w_bath_e, w_bath_w]),
         dict(id="kitchen", label="廚房", label_source="brochure_legend", label_score=1.0,
              polygon=[list(p) for p in KIT], holes=[], area_mm2=0, height_mm=H_ROOM,
-             height_field=[], walls=[]),
+             height_field=[], walls=[w_kit_n, w_kit_e, w_kit_w, w_kit_s]),
     ]
+    # 共用墙要在两间房的 walls 里各出现一次：door_approach_zones() 按 room.openings
+    # 去找 wall id，再问「墙的哪一侧在房间多边形里」决定门向哪边开。
+    # 另外 load_flat 只读房间层的 openings，wall 里嵌套的会被丢掉。
+    for r in rooms:
+        r["openings"] = [dict(o, wall=w["id"]) for w in r["walls"] for o in w["openings"]]
     for r in rooms:
         a = 0.0
         q = r["polygon"]

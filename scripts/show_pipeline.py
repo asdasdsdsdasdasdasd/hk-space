@@ -45,53 +45,72 @@ def draw_pipeline(outp: str) -> None:
             ax.text((x1 + x2) / 2, (y1 + y2) / 2 + 1.2, label, ha="center",
                     fontsize=9, color=color)
 
-    ax.text(50, 97, "hk-space 当前全流程", ha="center", fontsize=16, weight="bold")
+    ax.text(50, 97, "hk-space - current pipeline", ha="center",
+            fontsize=16, weight="bold")
 
-    box(2, 82, 20, 11, "① 输入层\n真实户型图 / 售楼说明书\n(房委会矢量 PDF)", "#e8f0fe", 10)
-    box(26, 82, 20, 11, "② 转录\nservices/floorplan/\nmake_*.py → plan JSON", "#e8f0fe", 10)
-    box(50, 82, 22, 11, "客户需求\n(自然语言)", "#fdf3e3", 10)
-    box(76, 82, 22, 11, "家具库\n150 IKEA HK SKU\n+ 定制家具", "#fdf3e3", 10)
+    box(2, 82, 20, 11, "1. INPUT\nreal floor plan / sales\nbrochure (HKHA vector PDF)", "#e8f0fe", 10)
+    box(26, 82, 20, 11, "2. TRANSCRIPTION\nservices/floorplan/\nmake_*.py -> plan JSON", "#e8f0fe", 10)
+    box(50, 82, 22, 11, "customer brief\n(natural language)", "#fdf3e3", 10)
+    box(76, 82, 22, 11, "furniture library\n150 IKEA HK SKUs\n+ custom pieces", "#fdf3e3", 10)
 
-    box(2, 64, 44, 13, "③ LLM / agent（大脑）\n"
-                       "set_brief：清单 + 尺寸上限\n"
-                       "change_item：shrink / move / drop / add / custom\n"
-                       "★ 绝不输出坐标", "#ffe9e9", 10)
-    box(50, 64, 48, 13, "④ L1 房间分配 assign_rooms\n"
-                        "品类 → 房间功能（偏好 + 容量软罚 + 未分配出口）", "#e9f7ef", 10)
+    box(2, 64, 44, 13, "3. LLM / agent  (the brain)\n"
+                       "set_brief: item list + size caps\n"
+                       "change_item: shrink / move / drop / add / custom\n"
+                       "* NEVER outputs coordinates", "#ffe9e9", 10)
+    box(50, 64, 48, 13, "4. L1 room assignment (assign_rooms)\n"
+                        "category -> room function\n"
+                        "(preference + capacity soft penalty + unassigned exit)", "#e9f7ef", 10)
 
     box(50, 47, 48, 13,
-        "⑤ L2 每间房 CP-SAT（并行 6 进程）\n"
-        "候选格代价表：曝光度 / 贴墙 / 朝向 / 遮挡 / 关系 / 前景 / 门口\n"
-        "顺序锚定 → 批量求解 → 旋转修复 → 门口修复 → 坐标下降", "#e9f7ef", 9.5)
-    box(2, 47, 44, 13, "⑤b 锚定阶段的三个补丁\n"
-                       "· Hub top-40 重排（餐桌要留位给餐椅）\n"
-                       "· 每件最多 150 候选格（否则 CP-SAT 交白卷）\n"
-                       "· 门扇区放宽阶梯 0.6/0.4/0.25（永不到 0）", "#e9f7ef", 9.5)
+        "5. L2 per-room CP-SAT  (6 parallel processes)\n"
+        "per-cell cost table: exposure / wall-hug / orientation /\n"
+        "occlusion / relations / front clearance / doorway\n"
+        "sequential anchoring -> batch solve -> rotation repair\n"
+        "-> doorway repair -> coordinate descent", "#e9f7ef", 9.5)
+    box(2, 47, 44, 13, "5b. three patches in the anchoring stage\n"
+                       "- hub top-40 re-rank (table must leave room for chairs)\n"
+                       "- max 150 candidate cells per item\n"
+                       "  (otherwise CP-SAT silently returns nothing)\n"
+                       "- door-swing relax ladder 0.6 / 0.4 / 0.25 (never 0)", "#e9f7ef", 9.5)
 
     box(50, 31, 48, 12,
-        "⑥ L3 整屋校验 livability（12 条）+ verify_house\n"
-        "越界 / 重叠 / 门口 / 走得到 / 马桶 / 沙发朝电视\n"
-        "餐椅离餐桌 / 朝向 / 主通路宽度 / SVR·BVC·CS", "#fff4d6", 10)
-    box(2, 31, 44, 12, "⑦ advisory 顾问意见\n"
-                       "把违规翻译成「差几多 mm + 几个选项」\n"
-                       "★ 只有可行性问题，没有布局质量问题", "#fff4d6", 10)
+        "6. L3 whole-house verification\n"
+        "livability (12 checks) + verify_house\n"
+        "out-of-bounds / overlap / doorway / reachability / toilet /\n"
+        "sofa faces TV / chair-table distance / orientation /\n"
+        "main-artery width / SVR, BVC, CS", "#fff4d6", 9.5)
+    box(2, 31, 44, 12, "7. advisory\n"
+                       "translates each violation into\n"
+                       "'how many mm short + N options'\n"
+                       "* feasibility only, no layout-quality advice", "#fff4d6", 9.5)
 
     box(2, 14, 96, 13,
-        "⑧ 回灌 LLM：change_item / 重新 generate_design  ←→  回到 ④\n"
-        "★ 已知缺口：① 批量阶段曾「静静鸡交白卷」；② 关系只在锚定件之间查；\n"
-        "   ③ 局部搜索优化部分代理指标时，必然在别处换出新的违规（实测按下葫芦浮起瓢）", "#f2e6ff", 10)
+        "8. FEED BACK TO THE LLM:  change_item / re-run generate_design  <-->  back to 4\n"
+        "* known gaps, all observed in practice:\n"
+        "   (a) the batch stage used to silently return zero items;\n"
+        "   (b) relations are only checked between already-anchored items;\n"
+        "   (c) local search that optimises one proxy metric necessarily creates\n"
+        "       a new violation somewhere else - whack-a-mole", "#f2e6ff", 9.5)
 
-    box(2, 2, 96, 9,
-        "⑨【论文建议、我们未做】逐件提议 → 逐件验证 → 逐件提交\n"
-        "   Agentic Designer 的 Generator / Evaluator / Refiner —— 唯一能同时满足"
-        "「关系对 + 走廊够阔 + 不面壁」的路径", "#ffe0e0", 10)
+    box(1, 0.5, 98, 11.5,
+        "9. NOT IMPLEMENTED YET  (recommended by the two papers we compared against)\n"
+        "   propose -> verify -> commit, one item at a time.\n"
+        "   Agentic Designer's Generator / Evaluator / Refiner - the only path we have\n"
+        "   found that satisfies 'relations correct + corridor wide enough + nothing\n"
+        "   facing a wall' at the same time", "#ffe0e0", 9.5)
 
     arrow(22, 87.5, 26, 87.5); arrow(46, 87.5, 50, 87.5); arrow(98, 82, 98, 77)
     arrow(76, 82, 74, 77); arrow(24, 82, 24, 77)
     arrow(74, 64, 74, 60); arrow(50, 53.5, 46, 53.5)
     arrow(74, 47, 74, 43); arrow(46, 43, 46, 37)
     arrow(24, 31, 24, 27); arrow(74, 31, 74, 27)
-    arrow(50, 14, 50, 11, "⑧ 循环", "#c0392b")
+    # 8 -> LLM feedback loop, drawn down the far-left margin (x < 1.4) so that it
+    # never crosses box 5b / 7 / 9.  Ends on box 3 = "feed back to the LLM / agent".
+    arrow(1.4, 20.0, 0.55, 20.0, "", "#c0392b")
+    arrow(0.55, 20.0, 0.55, 70.5, "", "#c0392b")
+    arrow(0.55, 70.5, 1.9, 70.5, "", "#c0392b")
+    ax.text(0.05, 45.0, "8. feeds back to 3 / 4", rotation=90, ha="center",
+            va="center", fontsize=9, color="#c0392b", weight="bold")
     fig.tight_layout()
     fig.savefig(outp, dpi=95, bbox_inches="tight")
     print("->", outp)

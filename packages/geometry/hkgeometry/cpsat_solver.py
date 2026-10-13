@@ -21,6 +21,8 @@ from __future__ import annotations
 
 import math
 import os
+import sys
+import time
 
 from dataclasses import dataclass
 
@@ -132,6 +134,11 @@ DOOR_BLOCK_SCALE = 300.0
 #   冇量過「條走廊有幾闊」。實測安柏苑 05 室：走得，但最窄處只有 335mm ——
 #   即係要側身。呢個係用戶口中「家具挡着走廊」嘅真正量化版本。
 ARTERY_MIN_MM = 900.0
+
+# ★ 2026-10：坐標下降時，先用 _cheap_bad 篩幾個候選，再連主通路窄度一齊排。
+#   為什麼要有 K：主通路窄度要跑一次次掃描（~10ms），唔可以逐格計；
+#   但只留一個候選就等於「主通路只可否決、唔可以搜尋」（舊 bug）。
+ARTERY_TOPK = 12
 
 
 def min_corridor_width(room, lay, step: int = 150) -> float:
@@ -425,6 +432,7 @@ def repair_door_blocks(room, lay, max_pass: int = 3, step: int = 200) -> "Layout
 def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
     """唔用 check_livability 嘅快速「有幾差」指標：
     (踩門件數, 踩門總面積 cm2, 前方淨空唔過件數)。"""
+    shapely.prepare(poly)
     # ★ 第一格：違反功能關係嘅件數。
     #   為什麼要放**第一**：坐標下降嘅驗收標準如果唔包含關係，
     #   佢就會為咗「走廊闊啲 / 門口乾淨啲」而把餐椅由餐桌旁邊搬走 ——
@@ -442,8 +450,16 @@ def _cheap_bad(room, placements, zones, poly, tol_mm2: float = 30000.0):
     a_door = 0.0
     n_front = 0
     fps = [p.footprint() for p in placements]
+    # ★ 2026-10：先做便宜的 intersects 快篩再算 intersection。
+    #   坐标下降每个候选都要跑一次 _cheap_bad，而这里原本对**每个 zone**都无条件做
+    #   一次 shapely intersection（最贵的操作之一）。绝大多数家具根本不碰任何门扇区。
+    for _z in zones:
+        shapely.prepare(_z)
     for i, p in enumerate(placements):
-        a = sum(fps[i].intersection(z).area for z in zones)
+        a = 0.0
+        for z in zones:
+            if fps[i].intersects(z):
+                a += fps[i].intersection(z).area
         if a > tol_mm2:
             n_door += 1
             a_door += a
@@ -485,14 +501,25 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
     if cur_bad == (0, 0, 0, 0) and cur_art == 0:
         return lay
     b = poly.bounds
+    _prog = os.environ.get("HK_STAGE_PROGRESS")
+    _t0 = time.perf_counter()
+    _tlog("%-8s relayout start: n=%d cur=%s art=%d step=%d bounds=%s "
+          "nx=%d ny=%d per_rot=%d"
+          % (room.id, len(cur), cur_bad, cur_art, step,
+             tuple(round(v) for v in b),
+             int((b[2] - b[0]) // step) + 1, int((b[3] - b[1]) // step) + 1,
+             4 * (int((b[2] - b[0]) // step) + 1) * (int((b[3] - b[1]) // step) + 1)))
     for _p in range(max_passes):
         improved = False
         for idx in range(len(cur)):
+            _ti = time.perf_counter()
             p = cur[idx]
             others = cur[:idx] + cur[idx + 1:]
             obst = [q.footprint() for q in others]
             need = FRONT_DEPTH_MIN.get(p.category, 0)
-            best = None
+            shortlist = []
+            _ncand = 0
+            _t_bad = 0.0
             for rot in (0, 90, 180, 270):
                 w, d = (p.w, p.d) if rot in (0, 180) else (p.d, p.w)
                 fx, fy = front_dir(rot)
@@ -509,30 +536,65 @@ def relayout_search(room, lay, step: int = 150, max_passes: int = 3):
                                 inst=p.inst, sku=p.sku, category=p.category,
                                 x=int(x), y=int(y), rot=rot, w=p.w, d=p.d, h=p.h,
                                 visual=dict(p.visual), price_hkd=p.price_hkd)
+                            _ncand += 1
+                            if _prog and _ncand % 200 == 0:
+                                _tlog("%-8s   ..item%d cand=%d rot=%d x=%.0f y=%.0f "
+                                      "w=%d d=%d %.1fs"
+                                      % (room.id, idx, _ncand, rot, x, y, w, d,
+                                         time.perf_counter() - _ti))
+                            _tb = time.perf_counter()
                             bad = _cheap_bad(room, others + [cand], zones, poly)
-                            if best is None or bad < best[0]:
-                                best = (bad, cand)
+                            _t_bad += time.perf_counter() - _tb
+                            # ⚠️ 這裡**絕對不可以寫 continue**！
+                            #   continue 作用的是最內層的 while y 迴圈，
+                            #   會跳過下面的 y += step —— 直接死迴圈。
+                            #   2026-10 就是這樣卡了 40 分鐘：x=1490 y=3630 不變，
+                            #   而候選計數器一路升到 63 萬（網格只容得下 2,024 個位）。
+                            if bad <= cur_bad:
+                                if len(shortlist) < ARTERY_TOPK:
+                                    shortlist.append((bad, cand))
+                                    shortlist.sort(key=lambda t: t[0])
+                                elif bad < shortlist[-1][0]:
+                                    shortlist[-1] = (bad, cand)
+                                    shortlist.sort(key=lambda t: t[0])
                         y += step
                     x += step
+            # ★★ 2026-10 修：主通路窄度必須**參與搜尋**，唔可以只做否決。
+            #   舊寫法先用 _cheap_bad 揀出唯一一個候選，再問佢主通路得唔得 ——
+            #   即係「狹窄」只可以否決，永遠唔可以令人去搵一個闊啲嘅位。
+            #   實測 onpak05 客廳：餐椅貼住床尾，最窄 350mm，改極都唔動，
+            #   因為 _cheap_bad 眼中嗰個位同其他位一樣好。
+            #   修法：先用 _cheap_bad 篩出 ARTERY_TOPK 個候選，再連主通路一齊排。
+            best = None
+            for _bad, _cand in shortlist:
+                _art = _narrow_artery_penalty(
+                    room, Layout(room_id=room.id, placements=others + [_cand]))
+                if best is None or (_bad, _art) < best[0]:
+                    best = ((_bad, _art), _cand)
             # ★ 守衛：_cheap_bad 只係**代理指標**（踩門 + 沿邊 600mm 淨空），
             #   同 livability 真正嘅檢查唔完全一致 —— 實測淨係睇代理指標會
             #   把「雪櫃踩門」換成「雪櫃擋住檯面」，總分反而跌。
             #   所以最終要過一次真檢查：硬傷數目唔准上升。
-            if best is not None and best[0] <= cur_bad:
+            _tlog("%-8s   relay p%d %-16s short=%2d best=%s cur=%s  %.1fs"
+                  " (cand=%d cheap_bad=%.1fs / 4rot, wall=%.1fs)"
+                  % (room.id, _p, p.inst, len(shortlist),
+                     None if best is None else best[0], (cur_bad, cur_art),
+                     time.perf_counter() - _ti,
+                     _ncand, _t_bad, time.perf_counter() - _ti))
+            if best is not None and best[0] < (cur_bad, cur_art):
                 from .livability import check_livability
                 cand = others + [best[1]]
-                cand_art = _narrow_artery_penalty(
-                    room, Layout(room_id=room.id, placements=cand))
-                # ★ 驗收標準：(代理指標, 主通路窄度) 兩者都唔准變差，至少一項要變好。
-                if (best[0], cand_art) < (cur_bad, cur_art) \
-                        and len(check_livability(room, Layout(
-                            room_id=room.id, placements=cand)).hard) \
+                if len(check_livability(room, Layout(
+                        room_id=room.id, placements=cand)).hard) \
                         <= len(check_livability(room, Layout(
                             room_id=room.id, placements=cur)).hard):
                     cur[idx] = best[1]
-                    cur_bad = best[0]
-                    cur_art = cand_art
+                    cur_bad = best[0][0]
+                    cur_art = best[0][1]
                     improved = True
+        _tlog("%-8s relayout pass%d done improved=%s cur=%s  %.1fs"
+              % (room.id, _p, improved, (cur_bad, cur_art),
+                 time.perf_counter() - _t0))
         if not improved or (cur_bad == (0, 0, 0, 0) and cur_art == 0):
             break
     return Layout(room_id=room.id, placements=cur)
@@ -1237,17 +1299,28 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
         print("[dbg] room=%s items=%s" % (room.id, [i.inst for i in items]))
         for oi, o in enumerate(orders):
             print("[dbg]   order%d = %s" % (oi, [i.inst for i in o]))
+    _tlog("%-8s start: %d items, %d orders, %d door zones, %d spines"
+          % (room.id, len(items), len(orders), len(doors), len(spines)))
     best = None
     for oi, anchors_order in enumerate(orders):
+        _t_o = time.perf_counter()
         lay, info = _solve_with_order(room, items, anchors_order, emap, W, corridors,
                                       doors, spines, time_limit_s, seed,
                                       verbose and oi == 0, soft_paths=soft_paths)
+        _t_solve = time.perf_counter() - _t_o
         if not lay.placements:
+            _tlog("%-8s order%d EMPTY after %.1fs" % (room.id, oi, _t_solve))
             continue
         from .livability import check_livability
         from .spaciousness import spaciousness_report
+        _t_l = time.perf_counter()
         lv = check_livability(room, lay)
+        _t_liv = time.perf_counter() - _t_l
+        _t_l = time.perf_counter()
         sp = spaciousness_report(room, lay, emap, corridors)
+        _t_sp = time.perf_counter() - _t_l
+        _tlog("%-8s order%d  solve=%.1fs livability=%.1fs spaciousness=%.1fs"
+              % (room.id, oi, _t_solve, _t_liv, _t_sp))
         # ⚠️ 漏放的家具必须算硬伤！
         # 曾经只比 len(lv.hard)，结果「少放一件家具」反而硬伤更少、分数更高 ——
         # 电视柜放不下就直接不放，求解器还觉得自己很对。
@@ -1352,21 +1425,35 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
     return best[1], best[2]
 
 
+# ★ 2026-10：分階段計時。設 HK_STAGE_TIMING=1 就會把每一段的耗時寫去 stderr。
+#   存在的理由：打開門之後求解由 21 秒變成唔知幾多分鐘，
+#   而「再跑一次大實驗」永遠查唔出邊一段食咗時間 —— 一定要逐段量。
+def _tlog(msg: str) -> None:
+    if os.environ.get("HK_STAGE_TIMING"):
+        print("[stage] %s" % msg, file=sys.stderr, flush=True)
+
+
 def _solve_with_order(room, items, anchors_order, emap, W, corridors, doors, spines,
                       time_limit_s, seed, verbose, soft_paths=()):
     rest = [it for it in items if it not in anchors_order]
     placed: list[Placement] = []
     total_t = 0.0
+    _t_anchor = 0.0
+    _t_grids = 0.0
+    _t_start = time.perf_counter()
     # ---- 第 1 步：按关系链逐个锚定 ----
     for it in anchors_order:
         # 先按「关系必须满足」求；实在没有候选就退回软约束（宁可有瑕疵也别放不下）
         p = None
+        _ta = time.perf_counter()
         for strict in (True, False):
+            _tg = time.perf_counter()
             grids, nx, ny, ncells = _cost_grids(room, [it], emap, W, corridors, doors,
                                                 spines, placed, [],
                                                 strict_relations=strict,
                                                 soft_paths=soft_paths,
                                                 sat_items=items)
+            _t_grids += time.perf_counter() - _tg
             p = _place_anchor(room, it, grids, nx, ny, ncells,
                               sat_items=items, anchors=placed)
             if p is not None:
@@ -1375,30 +1462,55 @@ def _solve_with_order(room, items, anchors_order, emap, W, corridors, doors, spi
                 break
             if verbose and strict:
                 print("   [anchor] %-14s 嚴格關係下無解，放寬" % it.inst)
+        _t_anchor += time.perf_counter() - _ta
         if p is None:
             if verbose:
                 print("   [anchor] %-14s 放不下" % it.inst)
             continue
         placed.append(p)
+        _tlog("%-8s   anchor %-16s %.1fs (cum %.1fs)"
+              % (room.id, it.inst, time.perf_counter() - _ta, _t_anchor))
         if verbose:
             fx, fy = front_dir(p.rot)
             arrow = {(0, 1): "上", (-1, 0): "左", (0, -1): "下", (1, 0): "右"}[(fx, fy)]
             print("   [anchor] %-14s (%5d,%5d) r=%3d 正面朝 %s"
                   % (p.inst, p.x, p.y, p.rot, arrow))
+    _tlog("%-8s anchors done: %.1fs for %d items (grids %.1fs)"
+          % (room.id, _t_anchor, len(placed), _t_grids))
     # ---- 第 2 步：其余一次解完（锚点作为障碍）----
     info = SolveInfo(status="ANCHOR-ONLY")
     if rest:
+        _tg = time.perf_counter()
         grids, nx, ny, ncells = _cost_grids(room, rest, emap, W, corridors, doors,
                                             spines, placed, [], soft_paths=soft_paths)
+        _t_grids += time.perf_counter() - _tg
+        _tg = time.perf_counter()
         got, info = _solve_batch(room, rest, grids, nx, ny, ncells, time_limit_s,
                                  seed, verbose)
+        _t_batch = time.perf_counter() - _tg
+        _tlog("%-8s batch done: %.1fs for %d -> got %d (%s)"
+              % (room.id, _t_batch, len(rest), len(got), info))
         placed += got
+    else:
+        _t_batch = 0.0
     if verbose:
         print("   [cpsat] %s" % info)
     lay = Layout(room_id=room.id, placements=placed)
+    _t = time.perf_counter()
     lay = repair_rotations(room, lay)
+    _t_rot = time.perf_counter() - _t
+    _tlog("%-8s repair_rotations done: %.1fs" % (room.id, _t_rot))
+    _t = time.perf_counter()
     lay = repair_door_blocks(room, lay)      # ★ 門口修復（見該函式說明）
+    _t_door = time.perf_counter() - _t
+    _tlog("%-8s repair_door_blocks done: %.1fs" % (room.id, _t_door))
+    _t = time.perf_counter()
     lay = relayout_search(room, lay)         # ★ 同一批件、全局重排
+    _t_relay = time.perf_counter() - _t
+    _tlog("%-8s anchors=%.1fs (grids %.1f) batch=%.1fs repair_rot=%.1fs "
+          "repair_door=%.1fs relayout=%.1fs  TOTAL=%.1fs  n=%d/%d"
+          % (room.id, _t_anchor, _t_grids, _t_batch, _t_rot, _t_door, _t_relay,
+             time.perf_counter() - _t_start, len(lay.placements), len(items)))
     return lay, info
 
 

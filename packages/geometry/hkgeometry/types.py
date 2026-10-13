@@ -210,12 +210,23 @@ class Placement:
     visual: dict = field(default_factory=dict)
     price_hkd: int = 0
 
+    # ★ 2026-10：footprint 缓存。
+    #   坐标下降每跑一次要评估约两万个候选位，每个候选都要问「其他 10 件家具在哪」——
+    #   也就是每次重建 ~100 个 shapely box。实测这是整个 relayout_search 的瓶颈。
+    #   key 用 (x,y,rot,w,d)，所以即使有人**原地改** p.x 也不会读到过期值。
+    _fp_key: tuple | None = field(default=None, repr=False, compare=False)
+    _fp_val: object | None = field(default=None, repr=False, compare=False)
+
     def footprint(self) -> Polygon:
         """轴对齐 footprint（rot ∈ {0,90,180,270} 所以永远是矩形）。"""
-        w, d = (self.w, self.d)
-        if self.rot in (90, 270):
-            w, d = d, w
-        return shapely.box(self.x, self.y, self.x + w, self.y + d)
+        k = (self.x, self.y, self.rot, self.w, self.d)
+        if self._fp_key != k:
+            w, d = (self.w, self.d)
+            if self.rot in (90, 270):
+                w, d = d, w
+            self._fp_val = shapely.box(self.x, self.y, self.x + w, self.y + d)
+            self._fp_key = k
+        return self._fp_val
 
     def visual_mass_raw(self) -> float:
         """原始视觉体量：面积(m²) x 高(m) x 实心度 x (1 - 明度)。"""
@@ -240,9 +251,11 @@ class Placement:
         return raw ** VISUAL_MASS_EXPONENT if raw > 0 else 0.0
 
     def center(self) -> tuple[float, float]:
-        p = self.footprint()
-        c = p.centroid
-        return c.x, c.y
+        # 直接算，不用建 shapely box（这是 relayout 里调用最频繁的函数）。
+        w, d = (self.w, self.d)
+        if self.rot in (90, 270):
+            w, d = d, w
+        return (self.x + w / 2.0, self.y + d / 2.0)
 
     def front_dir(self) -> tuple[int, int]:
         return front_dir(self.rot)
