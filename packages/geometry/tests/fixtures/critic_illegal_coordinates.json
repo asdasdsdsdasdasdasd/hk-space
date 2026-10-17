@@ -1,0 +1,6 @@
+{
+  "severe": ["basin is enclosed"],
+  "actions": [
+    {"type": "move_group", "group": "bath", "x": 10, "y": 20}
+  ]
+}

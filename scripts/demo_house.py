@@ -15,6 +15,12 @@ import os
 import sys
 import time
 
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "packages", "geometry"))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))

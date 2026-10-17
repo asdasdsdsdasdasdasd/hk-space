@@ -22,7 +22,7 @@ from shapely.ops import nearest_points
 
 from .corridor import default_corridors
 from .exposure import ExposureMap
-from .types import Layout, Placement, Room, front_dir
+from .types import Layout, Placement, Room, front_dir, hinge_at_start
 
 GRID = 150            # 候选位置步长（mm）
 DOOR_W = 900          # 门洞走道宽
@@ -98,7 +98,7 @@ def door_approach_zones(room: Room, width: int = DOOR_W, depth: int = DOOR_D):
             zones.append((op.id, thr))
             continue
         # 内开：铰链在 center -/+ u*half；"left" 约定为靠 wall.a 那一端
-        hinge_sign = -1.0 if (sw.get("hinge") or "left") == "left" else 1.0
+        hinge_sign = -1.0 if hinge_at_start(sw) else 1.0
         hx, hy = px + ux * hinge_sign * half, py + uy * hinge_sign * half
         # 门扇由「贴墙」扫到「垂直入房」-> 扫掠区由 (-hinge_sign*u) 和 n 张成
         ex, ey = -hinge_sign * ux, -hinge_sign * uy

@@ -1,0 +1,50 @@
+{
+  "status": "verified",
+  "hypothesis": "wall-cells",
+  "confidence": {
+    "living": 0.8,
+    "bath": 0.6,
+    "kitchen": 0.6
+  },
+  "evidence": [
+    {
+      "kind": "polygon",
+      "source": "unit-fill",
+      "detail": "客/飯廳 from unit-fill",
+      "confidence": 0.8,
+      "status": "observed"
+    },
+    {
+      "kind": "polygon",
+      "source": "wall-cell",
+      "detail": "浴室 from wall-cell",
+      "confidence": 0.6,
+      "status": "inferred"
+    },
+    {
+      "kind": "polygon",
+      "source": "wall-cell",
+      "detail": "廚房 from wall-cell",
+      "confidence": 0.6,
+      "status": "inferred"
+    }
+  ],
+  "failures": [],
+  "llm": [],
+  "overlays": [
+    "out\\plan_hk_chingfu_b36_understood_overlay.png",
+    "out\\plan_hk_chingfu_b36_understood_render.png"
+  ],
+  "rounds": 1,
+  "signature": "42245d3b3887297b",
+  "overlay_metrics": {
+    "per_room": {
+      "living": 0.881,
+      "bath": 0.835,
+      "kitchen": 0.811
+    },
+    "living_agreement": 0.881,
+    "blocking": false
+  },
+  "vector_matches_render": true
+}

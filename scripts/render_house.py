@@ -16,8 +16,20 @@ sys.path.insert(0, os.path.join(ROOT, "packages", "geometry"))
 from hkgeometry.house import load_flat
 
 OUT = os.path.join(ROOT, "out")
-BLENDER = "/mnt/d/openclaw/tools/blender-4.2.1-linux-x64/blender"
 TEMPLATES = os.path.join(OUT, "templates")
+
+
+def find_blender() -> str:
+    env = os.environ.get("HKSPACE_BLENDER")
+    candidates = [
+        env or "",
+        "/mnt/d/openclaw/tools/blender-4.2.1-linux-x64/blender",
+        r"C:\Users\info\tools\blender-4.2.23-windows-x64\blender.exe",
+    ]
+    for path in candidates:
+        if path and os.path.isfile(path):
+            return path
+    return candidates[1]
 
 TPL = {
     "sofa": "sofa_2", "chaise_longue": "chaise_longue", "tv_bench": "tv_console",
@@ -105,7 +117,7 @@ def color_for(v, cat):
 
 
 def main(plan_path: str = "", layout_path: str = "", out_png: str = "",
-         tag: str = ""):
+         tag: str = "", model_path: str = ""):
     """★ 戶型同布局都必須可以指定。
 
     踩過的坑（致命）：這裡以前寫死 plan_hk_a.json，而 house_layout.json 卻係
@@ -130,7 +142,10 @@ def main(plan_path: str = "", layout_path: str = "", out_png: str = "",
         pls = []
         for p in h["placements"]:
             v = {}
-            pls.append({"inst": p["inst"], "template": TPL.get(p["category"], "cabinet_2door"),
+            template = TPL.get(p["category"], "cabinet_2door")
+            if p["category"] == "bed" and int(p["w"]) < 1200:
+                template = "bed_single"
+            pls.append({"inst": p["inst"], "template": template,
                         "x": p["x"], "y": p["y"], "rot": p["rot"],
                         "w": p["w"], "d": p["d"], "h": p["h"],
                         "color": color_for(v, p["category"])})  # 颜色稍后按真实 SKU 覆盖
@@ -138,7 +153,8 @@ def main(plan_path: str = "", layout_path: str = "", out_png: str = "",
             "id": r.id, "label": r.label, "func": h["func"],
             "polygon": [[int(x), int(y)] for x, y in r.polygon],
             "height_mm": r.height_mm,
-            "walls": [{"a": list(w.a), "b": list(w.b), "type": w.type} for w in r.walls],
+            "walls": [{"id": w.id, "a": list(w.a), "b": list(w.b), "type": w.type,
+                       "thickness_mm": w.thickness_mm} for w in r.walls],
             "openings": [{"id": o.id, "wall": o.wall, "kind": o.kind,
                           "center_mm": o.center_mm, "width_mm": o.width_mm,
                           "sill_h_mm": o.sill_h_mm} for o in r.openings],
@@ -167,9 +183,13 @@ def main(plan_path: str = "", layout_path: str = "", out_png: str = "",
     with open(sp, "w", encoding="utf-8") as f:
         json.dump(scene, f, ensure_ascii=False, indent=1)
 
-    out_png = out_png or os.path.join(OUT, "dollhouse_house.png")
-    cmd = [BLENDER, "--background", "--factory-startup", "--python",
+    out_png = os.path.abspath(out_png or os.path.join(OUT, "dollhouse_house.png"))
+    model_path = os.path.abspath(model_path) if model_path else ""
+    blender = find_blender()
+    cmd = [blender, "--background", "--factory-startup", "--python",
            os.path.join(ROOT, "scripts", "blender_dollhouse.py"), "--", sp, out_png]
+    if model_path:
+        cmd.append(model_path)
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=1200)
     for ln in r.stdout.splitlines():
         if "[dollhouse]" in ln or "Error" in ln:
@@ -181,4 +201,12 @@ def main(plan_path: str = "", layout_path: str = "", out_png: str = "",
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--plan", default="")
+    ap.add_argument("--layout", default="")
+    ap.add_argument("--out", default="")
+    ap.add_argument("--model", default="")
+    ap.add_argument("--tag", default="")
+    args = ap.parse_args()
+    main(args.plan, args.layout, args.out, args.tag, args.model)

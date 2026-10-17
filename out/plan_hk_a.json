@@ -24,7 +24,7 @@
       "area_mm2": 15170000,
       "label": "客廳",
       "label_source": "area-rank",
-      "label_score": 0.0,
+      "label_score": 0.631,
       "id": "living",
       "height_mm": 2450,
       "height_field": [],
@@ -217,7 +217,7 @@
       "area_mm2": 8755200,
       "label": "睡房",
       "label_source": "image",
-      "label_score": 0.843,
+      "label_score": 0.813,
       "id": "bedroom",
       "height_mm": 2450,
       "height_field": [],
@@ -319,7 +319,7 @@
       "area_mm2": 7448000,
       "label": "廚房",
       "label_source": "image",
-      "label_score": 0.842,
+      "label_score": 0.79,
       "id": "kitchen",
       "height_mm": 2450,
       "height_field": [],
@@ -413,7 +413,7 @@
       "area_mm2": 4499200,
       "label": "浴室",
       "label_source": "image",
-      "label_score": 0.725,
+      "label_score": 0.657,
       "id": "bath",
       "height_mm": 2450,
       "height_field": [],
@@ -515,7 +515,7 @@
       "area_mm2": 3131200,
       "label": "儲物房",
       "label_source": "image",
-      "label_score": 0.829,
+      "label_score": 0.786,
       "id": "storage",
       "height_mm": 2450,
       "height_field": [],
@@ -632,51 +632,21 @@
   },
   "meta": {
     "source": "floorplan_upload",
-    "confidence": 0.941,
+    "confidence": 0.761,
     "mm_per_px": 5.0,
     "origin_px": [
       370.0,
       360.0
     ],
-    "scale_source": "ocr",
-    "scale_method": "wall-span",
+    "scale_source": "wall-thickness",
+    "scale_method": "dim-line",
     "ocr_engine": "template",
     "ocr_tokens": [
-      "20",
-      "320",
-      "2600",
-      "3000",
-      "8400",
-      "1600",
-      "1200",
-      "20"
+      "32",
+      "74",
+      "12"
     ],
-    "scale_votes": [
-      [
-        4.995,
-        2600,
-        520.5,
-        "2600"
-      ],
-      [
-        5.0,
-        3000,
-        600.0,
-        "3000"
-      ],
-      [
-        5.0,
-        1600,
-        320.0,
-        "1600"
-      ],
-      [
-        5.01,
-        1200,
-        239.5,
-        "1200"
-      ]
-    ],
+    "scale_votes": [],
     "image_size_px": [
       2220,
       1680
@@ -686,15 +656,16 @@
     "walls_detected": 8,
     "openings_detected": 10,
     "confidence_terms": {
-      "scale": 0.16,
+      "scale": 0.03,
       "rooms": 0.12,
       "wall_coverage": 0.151,
       "openings": 0.08,
-      "skew": 0.079,
-      "clean": 0.05
+      "skew": 0.079
     },
-    "warnings": [],
-    "rectified_image": "out/plan_hk_a_rectified.png",
-    "overlay": "/mnt/d/openclaw/hk-space/out/floorplan_overlay.png"
+    "warnings": [
+      "按承重墙≈200mm 反推比例尺 5.000 mm/px (未经尺寸标注校验)"
+    ],
+    "rectified_image": "out\\plan_hk_a_rectified.png",
+    "overlay": "out\\floorplan_overlay.png"
   }
 }

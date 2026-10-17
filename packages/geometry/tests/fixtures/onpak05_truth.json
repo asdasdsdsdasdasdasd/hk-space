@@ -1,0 +1,7 @@
+{
+  "flat_id": "onpak-05",
+  "source": "Sales brochure, On Pak Court unit 05, printed millimetres",
+  "saleable_m2": 45.8,
+  "note": "Expected rooms from the brochure. This file is not a copy of the layout output.",
+  "rooms": ["living", "bedroom", "bedroom", "kitchen", "bath"]
+}

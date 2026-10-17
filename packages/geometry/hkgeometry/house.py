@@ -22,11 +22,12 @@ from .corridor import default_corridors
 from .exposure import ExposureMap, exposure_map, layout_visual_load
 from .greedy import GreedyWeights, door_approach_zones
 from .spaciousness import spaciousness_report
-from .types import Layout, Opening, Placement, Room, Wall
+from .types import Layout, Opening, Placement, Room, Service, Wall
 
 # ---------------------------------------------------------------- 房间功能
 LABEL_TO_FUNC = {
-    "客廳": "living", "客廳/飯廳": "living", "飯廳": "living", "客厅": "living",
+    "客廳": "living", "客廳/飯廳": "living", "客／飯廳": "living", "客/飯廳": "living",
+    "飯廳": "living", "客厅": "living",
     "living": "living", "起居室": "living",
     "睡房": "bedroom", "主人房": "bedroom", "客房": "bedroom", "卧室": "bedroom",
     "bedroom": "bedroom", "書房": "bedroom",
@@ -126,6 +127,8 @@ class Connection:
     b: str
     width_mm: int = 800
     kind: str = "doorway"
+    door_id: str = ""
+    swing: dict | None = None
 
 
 @dataclass
@@ -172,9 +175,7 @@ class HouseReport:
 
 
 # ---------------------------------------------------------------- 加载
-def load_flat(path: str) -> Flat:
-    with open(path, encoding="utf-8") as f:
-        d = json.load(f)
+def flat_from_dict(d: dict) -> Flat:
     rooms = []
     allpts = []
     for r in d["rooms"]:
@@ -200,13 +201,15 @@ def load_flat(path: str) -> Flat:
             a = T(w["a"]); b = T(w["b"])
             walls.append(Wall(w["id"], (a[0], a[1] - ymin), (b[0], b[1] - ymin),
                               w.get("type", "partition"),
-                              int(w.get("thickness_mm", 100) or 100)))
+                              int(w.get("thickness_mm", 100) or 100),
+                              bool(w.get("movable", False))))
         ops = [Opening(o["id"], o.get("wall", ""), o.get("kind", "door"),
                        int(o.get("center_mm", 0) or 0),
                        int(o.get("width_mm", 800) or 800),
                        int(o.get("height_mm", 2000) or 2000),
                        int(o.get("sill_h_mm", 0) or 0),
-                       int(o.get("sill_depth_mm", 0) or 0))
+                       int(o.get("sill_depth_mm", 0) or 0),
+                       swing=o.get("swing"))
                for o in r.get("openings", [])]
         holes = [[T(p) for p in h] for h in r.get("holes", [])]
         holes = [[(x, y - ymin) for x, y in h] for h in holes]
@@ -214,12 +217,60 @@ def load_flat(path: str) -> Flat:
                           height_mm=int(r.get("height_mm", 2450) or 2450),
                           walls=walls, openings=ops, holes=holes))
     conns = [Connection(c["a"], c["b"], int(c.get("width_mm", 800) or 800),
-                        c.get("type", "doorway")) for c in d.get("connections", [])]
+                        c.get("type", c.get("kind", "doorway")),
+                        c.get("door_id", "") or "",
+                        c.get("swing"))
+             for c in d.get("connections", [])]
     ent = d.get("entry", {}) or {}
     ep = T(ent.get("point", [0, 0]))
+    meta = dict(d.get("meta", {}) or {})
+
+    def M(p):
+        q = T(p)
+        return [int(q[0]), int(q[1] - ymin)]
+
+    if meta.get("portals"):
+        meta["portals"] = [[M(p) for p in ring] for ring in meta["portals"]]
+    if meta.get("outline"):
+        meta["outline"] = [M(p) for p in meta["outline"]]
+    program = meta.get("program") or {}
+    zones = program.get("zones") or {}
+    if zones:
+        program = dict(program)
+        program["zones"] = {k: [M(p) for p in ring] for k, ring in zones.items()}
+        meta["program"] = program
+    _attach_services(d, rooms, T, ymin)
     return Flat(id=d.get("flat_id", "flat"), rooms=rooms, connections=conns,
                 entry_room=ent.get("room", rooms[0].id),
-                entry_point=(int(ep[0]), int(ep[1] - ymin)), meta=d.get("meta", {}))
+                entry_point=(int(ep[0]), int(ep[1] - ymin)), meta=meta)
+
+
+def _attach_services(d: dict, rooms: list[Room], transform, ymin: int) -> None:
+    """上传图里的固定洁具要进房间，不能在读入时丢掉。"""
+    for raw in d.get("fixed_services") or []:
+        if not isinstance(raw, dict):
+            continue
+        pt = raw.get("point") or raw.get("at")
+        if not pt or len(pt) < 2:
+            continue
+        mapped = transform(pt)
+        point = (int(mapped[0]), int(mapped[1] - ymin))
+        host = next((room for room in rooms if room.id == raw.get("room")), None)
+        if host is None:
+            host = next((room for room in rooms if room.geo().buffer(80).covers(Point(point))), None)
+        if host is None:
+            continue
+        host.services.append(Service(
+            id=str(raw.get("id") or "service"),
+            kind=str(raw.get("kind") or "service"),
+            point=point,
+            room=host.id,
+        ))
+
+
+def load_flat(path: str) -> Flat:
+    with open(path, encoding="utf-8") as f:
+        return flat_from_dict(json.load(f))
 
 
 def infer_room_functions(flat: Flat) -> dict[str, str]:
@@ -231,7 +282,9 @@ def infer_room_functions(flat: Flat) -> dict[str, str]:
         f = LABEL_TO_FUNC.get(lab)
         if f is None:
             f = LABEL_TO_FUNC.get(r.id.lower())
-        if f and f not in used:
+        if f:
+            # 房名写明了就照用。睡房可以有两间，不能因为第一间占了
+            # "bedroom" 就把第二间丢掉。
             funcs[r.id] = f
             used.add(f)
     # 剩下的按面积从大到小补：living -> bedroom -> kitchen -> bath -> storage

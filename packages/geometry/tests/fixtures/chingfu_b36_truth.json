@@ -1,0 +1,10 @@
+{
+  "flat_id": "chingfu-b36",
+  "source": "out/ref/Brochure-Ching-Fu.pdf page 23",
+  "saleable_m2": 42.6,
+  "note": "Topology taken from the brochure drawing, not from a hand-built shell.",
+  "rooms": ["living", "bath", "kitchen"],
+  "adjacency": [["living", "bath"], ["living", "kitchen"]],
+  "living_concave": true,
+  "bath_on_the_right": true
+}

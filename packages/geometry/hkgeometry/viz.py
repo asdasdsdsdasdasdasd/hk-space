@@ -22,10 +22,13 @@ from .isovist import isovist
 from .spaciousness import SpaciousnessReport
 
 CJK_CANDIDATES = [
-    "Noto Sans CJK TC", "Noto Sans CJK SC", "Noto Sans TC", "Noto Sans SC",
-    "Source Han Sans TC", "Source Han Sans SC", "WenQuanYi Zen Hei",
-    "WenQuanYi Micro Hei", "Microsoft JhengHei", "Microsoft YaHei",
-    "PingFang TC", "Heiti TC", "SimHei", "Arial Unicode MS",
+    "Noto Sans CJK TC", "Noto Sans CJK SC", "Source Han Sans TC", "Source Han Sans SC",
+    # 完整的 Windows 字体放在 Noto Sans TC 前面。本机的 Noto Sans TC 是区域子集，
+    # 缺「关键指标」这类简体字，图上会变成方框。
+    "Microsoft JhengHei", "Microsoft YaHei", "MingLiU", "SimSun", "SimHei",
+    "Noto Sans TC", "Noto Sans SC",
+    "WenQuanYi Zen Hei", "WenQuanYi Micro Hei",
+    "PingFang TC", "Heiti TC", "Arial Unicode MS",
 ]
 
 

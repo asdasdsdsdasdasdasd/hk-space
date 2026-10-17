@@ -873,35 +873,20 @@ def entry_corridor_zones(room: Room, entry_point, depth: int = 1100):
     return zones
 
 
-def circulation_paths(room: Room, entry_point, width: int = 650):
-    """★ 从**入口**走到每扇门内侧的走道 —— 只给入口房间用。
-
-    为什么需要：门口的净空区只保证「门口本身不堆东西」，
-    **不保证从大门走得到那个门口**。
-    实测客廳（8200x1850，入口和 4 扇门都在它身上）的家具会把
-    去睡房 / 浴室 / 厨房的路堵死，而 Level 3 只查净空区，报「0 cm² 侵占」，
-    看起来一切正常 —— 用户一眼就看出来了。
-    """
-    poly = room.usable_geo()
-    zones = []
+def circulation_paths(room: Room, entry_point, width: int = 900):
+    """入口到每扇门的通道。以前是一条斜穿房间的直线，现在沿可走的最短路。"""
+    if entry_point is None:
+        return []
+    from .circulation import _opening_xy, corridor_keepouts
+    targets = []
     for op in room.openings:
         if op.kind != "door":
             continue
-        wall = next((w for w in room.walls if w.id == op.wall), None)
-        if wall is None:
-            continue
-        ax, ay = wall.a
-        bx, by = wall.b
-        L = max(1.0, math.hypot(bx - ax, by - ay))
-        ux, uy = (bx - ax) / L, (by - ay) / L
-        t = max(0.0, min(1.0, op.center_mm / L))
-        px, py = ax + ux * L * t, ay + uy * L * t
-        nx, ny = -uy, ux
-        if not poly.contains(Point(px + nx * 200, py + ny * 200)):
-            nx, ny = -nx, -ny
-        inner = (px + nx * 500, py + ny * 500)
-        zones.append((op.id + "_path", _band(tuple(entry_point), inner, width)))
-    return zones
+        xy = _opening_xy(room, op)
+        if xy is not None:
+            targets.append(xy)
+    zones = corridor_keepouts(room, entry_point, targets, width=width)
+    return [("path_%d" % i, zone) for i, zone in enumerate(zones)]
 
 
 def front_zone(item: Placement, need: int, rot: int | None = None):
@@ -1306,6 +1291,9 @@ def solve_cpsat(room: Room, items: list[Placement], emap: ExposureMap | None = N
     # （改回硬约束是对的 —— 走廊贴墙又窄，占地远小于斜带，不会挤掉沙发）
     if entry_point is not None:
         doors = list(doors) + entry_corridor_zones(room, entry_point)
+        if room.geo().area >= 18e6:
+            from .circulation import artery_keepout_zones
+            doors = list(doors) + artery_keepout_zones(room, entry_point)
     soft_paths = []
     doors = list(doors) + list(extra_zones)
     spines = circulation_zones(room)

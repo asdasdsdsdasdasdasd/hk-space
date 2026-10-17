@@ -397,8 +397,8 @@ def build_wall(name, wall, ops, H, cx, cy, mat, mat_glass):
     ax, ay = wall["a"][0] * MM, wall["a"][1] * MM
     bx, by = wall["b"][0] * MM, wall["b"][1] * MM
     L = math.hypot(bx - ax, by - ay)
-    if L < 1:
-        return []
+    if L < 0.02:
+        return [], (ax, ay, 1.0, 0.0, 0.0, 1.0, 0.1, L)
     ux, uy = (bx - ax) / L, (by - ay) / L
     mx, my = (ax + bx) / 2, (ay + by) / 2
     nx, ny = mx - cx, my - cy
@@ -469,7 +469,7 @@ def build_room_multi(scene, rdef):
         "storage": (0.86, 0.83, 0.70),   # 米灰
     }
     paint(floor, material("mat_floor_" + rdef["id"],
-                          TINT.get(rdef["id"], (0.88, 0.85, 0.79)), 0.75))
+                          TINT.get(rdef.get("func"), TINT.get(rdef["id"], (0.88, 0.85, 0.79))), 0.75))
     # 楼板加厚：0.14 太薄，从斜上方看像纸片。0.30 才读得出是一块楼板。
     sol = floor.modifiers.new("solid", "SOLIDIFY")
     sol.thickness = 0.30
@@ -535,7 +535,7 @@ def build_room_multi(scene, rdef):
               (px + ux * half + nx * t, py + uy * half + ny * t, dh),
               (px + ux * half, py + uy * half, dh),
               (px - ux * half, py - uy * half, dh)]
-        lv = lv + [(x, y, dh + 0.12) for x, y in lv]
+        lv = lv + [(x, y, dh + 0.12) for x, y, _z in lv]
         ob = mesh_obj("lintel_%s_%s" % (rdef["id"], op["id"]), lv,
                       [(0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4),
                        (2, 3, 7, 6), (0, 3, 7, 4), (1, 2, 6, 5)])
@@ -591,6 +591,9 @@ def main():
         setup(scene, walls, args[1])
     bpy.ops.render.render(write_still=True)
     log("rendered ->", args[1])
+    if len(args) > 2:
+        bpy.ops.export_scene.gltf(filepath=args[2], export_format="GLB")
+        log("model ->", args[2])
 
 
 def add_room_labels(scene, az_deg: float = -118.0, z_m: float = 2.85):
@@ -726,4 +729,9 @@ def setup_house(scene, walls, out_png):
     sc.render.filepath = out_png
 
 
-main()
+try:
+    main()
+except Exception:
+    import traceback
+    traceback.print_exc()
+    sys.exit(1)

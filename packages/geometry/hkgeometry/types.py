@@ -74,6 +74,15 @@ def front_dir(rot: int) -> tuple[int, int]:
     return ROT_TO_FRONT[int(rot) % 360]
 
 
+def hinge_at_start(swing: dict | None) -> bool:
+    """铰链在墙段起点（wall.a / 开口的 p0）那一端。
+
+    接受 left/a/start。其余值（right/b/end）算在终点。
+    """
+    hinge = ((swing or {}).get("hinge") or "left").lower()
+    return hinge in ("a", "left", "start", "0")
+
+
 @dataclass
 class HeightPatch:
     """高度场的一块 —— 层高不是常数（横梁 / 假天花 / 冷气机）。"""
@@ -92,6 +101,7 @@ class Wall:
     b: tuple[int, int]
     type: str = "partition"     # load_bearing | partition
     thickness_mm: int = 100
+    movable: bool = False       # 装修隔墙可以改；结构墙不行
 
 
 @dataclass

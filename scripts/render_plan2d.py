@@ -25,6 +25,12 @@ import math
 import os
 import sys
 
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -34,7 +40,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "packages", "geometry"))
 
 from hkgeometry.house import load_flat
-from hkgeometry.types import Placement, front_dir
+from hkgeometry.types import Placement, front_dir, hinge_at_start
 from hkgeometry.viz import setup_font
 
 setup_font()          # 冇這一步所有中文都會變豆腐格
@@ -53,7 +59,7 @@ def _unit(a, b):
     return dx / L, dy / L, L
 
 
-def draw_wall_with_gaps(ax, wall, openings, zorder=3):
+def draw_wall_with_gaps(ax, wall, openings, zorder=3, poly=None):
     """把一面牆按開口切成幾段畫出來 —— 開口位置是**真的斷開**。"""
     a, b = tuple(wall.a), tuple(wall.b)
     ux, uy, L = _unit(a, b)
@@ -85,7 +91,7 @@ def draw_wall_with_gaps(ax, wall, openings, zorder=3):
             continue
         # 開口段
         if op.kind == "door":
-            draw_door(ax, p0, p1, (ux, uy), th, op)
+            draw_door(ax, p0, p1, (ux, uy), th, op, poly=poly)
         else:
             draw_window(ax, p0, p1, (ux, uy), th, op)
 
@@ -114,12 +120,12 @@ def draw_door(ax, p0, p1, u, th, op, poly=None):
     inward = (sw.get("dir") or "in").lower() in ("in", "inward")
     if not inward:
         nx, ny = -nx, -ny
-    hinge = (sw.get("hinge") or "left").lower()
-    hx, hy = (x0, y0) if hinge == "left" else (x1, y1)
-    # 門扇：開盡時垂直於牆、貼向房內
+    hx, hy = (x0, y0) if hinge_at_start(sw) else (x1, y1)
+    # 门扇另一端，用来画扫掠弧
+    ox, oy = (x1, y1) if hinge_at_start(sw) else (x0, y0)
+    # 門扇：開盡時垂直於牆、貼向開向那一側
     ax.plot([hx, hx + nx * w], [hy, hy + ny * w], color=DOOR, lw=2.2, zorder=6)
     # 掃掠弧：由門框另一端掃到門扇位置
-    ox, oy = (x1, y1) if hinge == "left" else (x0, y0)
     a0 = math.degrees(math.atan2(oy - hy, ox - hx))
     a1 = math.degrees(math.atan2(ny, nx))
     # 取較短的那一段弧（<180°）
@@ -181,7 +187,7 @@ def main() -> None:
             if key in seen_walls:
                 continue
             seen_walls.add(key)
-            draw_wall_with_gaps(ax, w, r.openings, zorder=3)
+            draw_wall_with_gaps(ax, w, r.openings, zorder=3, poly=r.geo())
 
     # 家具 + 正面箭頭
     for rid, h in lay.items():
@@ -208,7 +214,7 @@ def main() -> None:
     for r in flat.rooms:
         b = r.usable_geo().bounds
         c = r.usable_geo().representative_point()
-        ax.text(c.x, c.y, "%s\n%.1f m²  净 %dx%d"
+        ax.text(c.x, c.y, "%s\n%.1f m²  淨 %dx%d"
                 % (r.label or r.id, r.usable_geo().area / 1e6, b[2] - b[0], b[3] - b[1]),
                 ha="center", va="center", fontsize=10.5, weight="bold",
                 color="#333", zorder=9,

@@ -24,7 +24,7 @@
       "area_mm2": 10138800,
       "label": "客廳",
       "label_source": "image",
-      "label_score": 0.814,
+      "label_score": 0.83,
       "id": "living",
       "height_mm": 2450,
       "height_field": [],
@@ -161,7 +161,7 @@
       "area_mm2": 8605200,
       "label": "睡房",
       "label_source": "image",
-      "label_score": 0.798,
+      "label_score": 0.791,
       "id": "bedroom",
       "height_mm": 2450,
       "height_field": [],
@@ -284,7 +284,7 @@
       "area_mm2": 8029500,
       "label": "飯廳",
       "label_source": "image",
-      "label_score": 0.829,
+      "label_score": 0.812,
       "id": "dining",
       "height_mm": 2450,
       "height_field": [],
@@ -412,8 +412,8 @@
       ],
       "area_mm2": 3806400,
       "label": "廚房",
-      "label_source": "area-rank",
-      "label_score": 0.0,
+      "label_source": "image",
+      "label_score": 0.67,
       "id": "kitchen",
       "height_mm": 2450,
       "height_field": [],
@@ -536,8 +536,8 @@
       ],
       "area_mm2": 3074400,
       "label": "浴室",
-      "label_source": "image",
-      "label_score": 0.724,
+      "label_source": "area-rank",
+      "label_score": 0.648,
       "id": "bath",
       "height_mm": 2450,
       "height_field": [],
@@ -655,7 +655,7 @@
       "area_mm2": 2964600,
       "label": "儲物房",
       "label_source": "image",
-      "label_score": 0.852,
+      "label_score": 0.791,
       "id": "storage",
       "height_mm": 2450,
       "height_field": [],
@@ -783,19 +783,9 @@
       364.0
     ],
     "scale_source": "wall-thickness",
-    "scale_method": "wall-span",
+    "scale_method": "-",
     "ocr_engine": "template",
-    "ocr_tokens": [
-      "220",
-      "220",
-      "120",
-      "180",
-      "60",
-      "3200",
-      "5200",
-      "2000",
-      "00"
-    ],
+    "ocr_tokens": [],
     "scale_votes": [],
     "image_size_px": [
       1580,
@@ -813,10 +803,9 @@
       "skew": 0.077
     },
     "warnings": [
-      "OCR 反推的比例尺 0.502 mm/px 与墙厚不一致 (墙体推断 5.000), 已弃用",
       "按承重墙≈200mm 反推比例尺 5.000 mm/px (未经尺寸标注校验)"
     ],
-    "rectified_image": "out/plan_hk_c_rectified.png",
-    "overlay": "/mnt/d/openclaw/hk-space/out/floorplan_overlay.png"
+    "rectified_image": null,
+    "overlay": null
   }
 }

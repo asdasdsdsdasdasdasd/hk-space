@@ -1,0 +1,1311 @@
+{
+  "flat_id": "Brochure-Ching-Fu-B35",
+  "units": "mm",
+  "rooms": [
+    {
+      "id": "living",
+      "label": "客/飯廳",
+      "polygon": [
+        [
+          2135,
+          4900
+        ],
+        [
+          6333,
+          4900
+        ],
+        [
+          6333,
+          1484
+        ],
+        [
+          4571,
+          1484
+        ],
+        [
+          4571,
+          2532
+        ],
+        [
+          2848,
+          2532
+        ],
+        [
+          2848,
+          947
+        ],
+        [
+          2667,
+          947
+        ],
+        [
+          2667,
+          2199
+        ],
+        [
+          1301,
+          2199
+        ],
+        [
+          1301,
+          2390
+        ],
+        [
+          376,
+          2390
+        ],
+        [
+          376,
+          4752
+        ],
+        [
+          0,
+          4752
+        ],
+        [
+          0,
+          5041
+        ],
+        [
+          2135,
+          5041
+        ]
+      ],
+      "holes": [],
+      "area_mm2": 17182548,
+      "height_mm": 2450,
+      "height_field": [],
+      "walls": [
+        {
+          "id": "living_w0",
+          "a": [
+            2135,
+            4900
+          ],
+          "b": [
+            6333,
+            4900
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w1",
+          "a": [
+            6333,
+            4900
+          ],
+          "b": [
+            6333,
+            1484
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w2",
+          "a": [
+            6333,
+            1484
+          ],
+          "b": [
+            4571,
+            1484
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w3",
+          "a": [
+            4571,
+            1484
+          ],
+          "b": [
+            4571,
+            2532
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w4",
+          "a": [
+            4571,
+            2532
+          ],
+          "b": [
+            2848,
+            2532
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w5",
+          "a": [
+            2848,
+            2532
+          ],
+          "b": [
+            2848,
+            947
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w7",
+          "a": [
+            2667,
+            947
+          ],
+          "b": [
+            2667,
+            2199
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w8",
+          "a": [
+            2667,
+            2199
+          ],
+          "b": [
+            1301,
+            2199
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w10",
+          "a": [
+            1301,
+            2390
+          ],
+          "b": [
+            376,
+            2390
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w11",
+          "a": [
+            376,
+            2390
+          ],
+          "b": [
+            376,
+            4752
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w12",
+          "a": [
+            376,
+            4752
+          ],
+          "b": [
+            0,
+            4752
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w13",
+          "a": [
+            0,
+            4752
+          ],
+          "b": [
+            0,
+            5041
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w14",
+          "a": [
+            0,
+            5041
+          ],
+          "b": [
+            2135,
+            5041
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "bath_w1",
+          "a": [
+            4570,
+            1458
+          ],
+          "b": [
+            6326,
+            1458
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w0",
+          "a": [
+            2861,
+            956
+          ],
+          "b": [
+            2861,
+            2508
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w1",
+          "a": [
+            2861,
+            2508
+          ],
+          "b": [
+            4551,
+            2508
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w2",
+          "a": [
+            4551,
+            2508
+          ],
+          "b": [
+            4551,
+            956
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        }
+      ],
+      "openings": [
+        {
+          "id": "d_kitchen_living",
+          "wall": "kitchen_w1",
+          "kind": "door",
+          "center_mm": 1215,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "sill_h_mm": 0,
+          "swing": {
+            "hinge": "right"
+          }
+        },
+        {
+          "id": "d_bath_living",
+          "wall": "bath_w1",
+          "kind": "door",
+          "center_mm": 1044,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "sill_h_mm": 0,
+          "swing": {
+            "hinge": "right"
+          }
+        },
+        {
+          "id": "d_entry",
+          "wall": "living_w1",
+          "kind": "door",
+          "center_mm": 2383,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "sill_h_mm": 0,
+          "swing": {
+            "hinge": "right"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "polygon",
+          "source": "unit-fill",
+          "detail": "客/飯廳 from unit-fill",
+          "confidence": 0.8,
+          "status": "observed"
+        }
+      ]
+    },
+    {
+      "id": "bath",
+      "label": "浴室",
+      "polygon": [
+        [
+          4570,
+          0
+        ],
+        [
+          4570,
+          1458
+        ],
+        [
+          6326,
+          1458
+        ],
+        [
+          6326,
+          0
+        ]
+      ],
+      "holes": [],
+      "area_mm2": 2560248,
+      "height_mm": 2450,
+      "height_field": [],
+      "walls": [
+        {
+          "id": "living_w2",
+          "a": [
+            6333,
+            1484
+          ],
+          "b": [
+            4571,
+            1484
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "bath_w0",
+          "a": [
+            4570,
+            0
+          ],
+          "b": [
+            4570,
+            1458
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "bath_w1",
+          "a": [
+            4570,
+            1458
+          ],
+          "b": [
+            6326,
+            1458
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "bath_w2",
+          "a": [
+            6326,
+            1458
+          ],
+          "b": [
+            6326,
+            0
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "bath_w3",
+          "a": [
+            6326,
+            0
+          ],
+          "b": [
+            4570,
+            0
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w2",
+          "a": [
+            4551,
+            2508
+          ],
+          "b": [
+            4551,
+            956
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        }
+      ],
+      "openings": [
+        {
+          "id": "d_bath_living",
+          "wall": "bath_w1",
+          "kind": "door",
+          "center_mm": 1044,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "sill_h_mm": 0,
+          "swing": {
+            "hinge": "right"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "polygon",
+          "source": "wall-cell",
+          "detail": "浴室 from wall-cell",
+          "confidence": 0.6,
+          "status": "inferred"
+        }
+      ]
+    },
+    {
+      "id": "kitchen",
+      "label": "廚房",
+      "polygon": [
+        [
+          2861,
+          956
+        ],
+        [
+          2861,
+          2508
+        ],
+        [
+          4551,
+          2508
+        ],
+        [
+          4551,
+          956
+        ]
+      ],
+      "holes": [],
+      "area_mm2": 2622880,
+      "height_mm": 2450,
+      "height_field": [],
+      "walls": [
+        {
+          "id": "living_w3",
+          "a": [
+            4571,
+            1484
+          ],
+          "b": [
+            4571,
+            2532
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w4",
+          "a": [
+            4571,
+            2532
+          ],
+          "b": [
+            2848,
+            2532
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "living_w5",
+          "a": [
+            2848,
+            2532
+          ],
+          "b": [
+            2848,
+            947
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "bath_w0",
+          "a": [
+            4570,
+            0
+          ],
+          "b": [
+            4570,
+            1458
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w0",
+          "a": [
+            2861,
+            956
+          ],
+          "b": [
+            2861,
+            2508
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w1",
+          "a": [
+            2861,
+            2508
+          ],
+          "b": [
+            4551,
+            2508
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w2",
+          "a": [
+            4551,
+            2508
+          ],
+          "b": [
+            4551,
+            956
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        },
+        {
+          "id": "kitchen_w3",
+          "a": [
+            4551,
+            956
+          ],
+          "b": [
+            2861,
+            956
+          ],
+          "type": "partition",
+          "thickness_mm": 150,
+          "movable": false
+        }
+      ],
+      "openings": [
+        {
+          "id": "d_kitchen_living",
+          "wall": "kitchen_w1",
+          "kind": "door",
+          "center_mm": 1215,
+          "width_mm": 900,
+          "height_mm": 2100,
+          "sill_h_mm": 0,
+          "swing": {
+            "hinge": "right"
+          }
+        }
+      ],
+      "evidence": [
+        {
+          "kind": "polygon",
+          "source": "wall-cell",
+          "detail": "廚房 from wall-cell",
+          "confidence": 0.6,
+          "status": "inferred"
+        }
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "a": "living",
+      "b": "kitchen",
+      "type": "doorway",
+      "width_mm": 900,
+      "door_id": "d_kitchen_living",
+      "swing": {
+        "hinge": "right"
+      }
+    },
+    {
+      "a": "living",
+      "b": "bath",
+      "type": "doorway",
+      "width_mm": 900,
+      "door_id": "d_bath_living",
+      "swing": {
+        "hinge": "right"
+      }
+    }
+  ],
+  "fixed_services": [],
+  "entry": {
+    "room": "living",
+    "point": [
+      5883,
+      2517
+    ]
+  },
+  "meta": {
+    "source": "floorplan_understanding",
+    "hypothesis": "wall-cells",
+    "outline": [
+      [
+        0,
+        4752
+      ],
+      [
+        0,
+        4757
+      ],
+      [
+        0,
+        5036
+      ],
+      [
+        0,
+        5041
+      ],
+      [
+        5,
+        5041
+      ],
+      [
+        2130,
+        5041
+      ],
+      [
+        2135,
+        5041
+      ],
+      [
+        2137,
+        5036
+      ],
+      [
+        2141,
+        5027
+      ],
+      [
+        2151,
+        5008
+      ],
+      [
+        2162,
+        4991
+      ],
+      [
+        2175,
+        4975
+      ],
+      [
+        2189,
+        4960
+      ],
+      [
+        2205,
+        4946
+      ],
+      [
+        2222,
+        4934
+      ],
+      [
+        2240,
+        4924
+      ],
+      [
+        2259,
+        4915
+      ],
+      [
+        2279,
+        4909
+      ],
+      [
+        2299,
+        4904
+      ],
+      [
+        2319,
+        4901
+      ],
+      [
+        2340,
+        4900
+      ],
+      [
+        6328,
+        4900
+      ],
+      [
+        6333,
+        4900
+      ],
+      [
+        6333,
+        4895
+      ],
+      [
+        6333,
+        1489
+      ],
+      [
+        6333,
+        1484
+      ],
+      [
+        6333,
+        1483
+      ],
+      [
+        6329,
+        1466
+      ],
+      [
+        6327,
+        1448
+      ],
+      [
+        6326,
+        1430
+      ],
+      [
+        6326,
+        5
+      ],
+      [
+        6326,
+        0
+      ],
+      [
+        6321,
+        0
+      ],
+      [
+        4575,
+        0
+      ],
+      [
+        4570,
+        0
+      ],
+      [
+        4570,
+        5
+      ],
+      [
+        4570,
+        736
+      ],
+      [
+        4569,
+        758
+      ],
+      [
+        4566,
+        779
+      ],
+      [
+        4561,
+        800
+      ],
+      [
+        4553,
+        820
+      ],
+      [
+        4544,
+        840
+      ],
+      [
+        4533,
+        858
+      ],
+      [
+        4520,
+        876
+      ],
+      [
+        4506,
+        892
+      ],
+      [
+        4490,
+        906
+      ],
+      [
+        4472,
+        919
+      ],
+      [
+        4454,
+        930
+      ],
+      [
+        4434,
+        939
+      ],
+      [
+        4414,
+        947
+      ],
+      [
+        4393,
+        952
+      ],
+      [
+        4372,
+        955
+      ],
+      [
+        4350,
+        956
+      ],
+      [
+        2910,
+        956
+      ],
+      [
+        2892,
+        955
+      ],
+      [
+        2874,
+        953
+      ],
+      [
+        2857,
+        949
+      ],
+      [
+        2848,
+        947
+      ],
+      [
+        2843,
+        947
+      ],
+      [
+        2672,
+        947
+      ],
+      [
+        2667,
+        947
+      ],
+      [
+        2667,
+        952
+      ],
+      [
+        2667,
+        1979
+      ],
+      [
+        2666,
+        2001
+      ],
+      [
+        2663,
+        2022
+      ],
+      [
+        2658,
+        2043
+      ],
+      [
+        2650,
+        2063
+      ],
+      [
+        2641,
+        2083
+      ],
+      [
+        2630,
+        2101
+      ],
+      [
+        2617,
+        2119
+      ],
+      [
+        2603,
+        2135
+      ],
+      [
+        2587,
+        2149
+      ],
+      [
+        2569,
+        2162
+      ],
+      [
+        2551,
+        2173
+      ],
+      [
+        2531,
+        2182
+      ],
+      [
+        2511,
+        2190
+      ],
+      [
+        2490,
+        2195
+      ],
+      [
+        2469,
+        2198
+      ],
+      [
+        2447,
+        2199
+      ],
+      [
+        1306,
+        2199
+      ],
+      [
+        1301,
+        2199
+      ],
+      [
+        1301,
+        2202
+      ],
+      [
+        1296,
+        2224
+      ],
+      [
+        1290,
+        2246
+      ],
+      [
+        1281,
+        2266
+      ],
+      [
+        1270,
+        2286
+      ],
+      [
+        1258,
+        2304
+      ],
+      [
+        1243,
+        2321
+      ],
+      [
+        1227,
+        2337
+      ],
+      [
+        1209,
+        2350
+      ],
+      [
+        1190,
+        2362
+      ],
+      [
+        1170,
+        2372
+      ],
+      [
+        1149,
+        2380
+      ],
+      [
+        1128,
+        2385
+      ],
+      [
+        1105,
+        2389
+      ],
+      [
+        1083,
+        2390
+      ],
+      [
+        381,
+        2390
+      ],
+      [
+        376,
+        2390
+      ],
+      [
+        376,
+        2395
+      ],
+      [
+        376,
+        4532
+      ],
+      [
+        375,
+        4554
+      ],
+      [
+        372,
+        4575
+      ],
+      [
+        367,
+        4596
+      ],
+      [
+        359,
+        4616
+      ],
+      [
+        350,
+        4636
+      ],
+      [
+        339,
+        4654
+      ],
+      [
+        326,
+        4672
+      ],
+      [
+        312,
+        4688
+      ],
+      [
+        296,
+        4702
+      ],
+      [
+        278,
+        4715
+      ],
+      [
+        260,
+        4726
+      ],
+      [
+        240,
+        4735
+      ],
+      [
+        220,
+        4743
+      ],
+      [
+        199,
+        4748
+      ],
+      [
+        178,
+        4751
+      ],
+      [
+        156,
+        4752
+      ],
+      [
+        5,
+        4752
+      ]
+    ],
+    "portals": [
+      [
+        [
+          3626,
+          2763
+        ],
+        [
+          4526,
+          2763
+        ],
+        [
+          4526,
+          2253
+        ],
+        [
+          3626,
+          2253
+        ]
+      ],
+      [
+        [
+          5164,
+          1713
+        ],
+        [
+          6064,
+          1713
+        ],
+        [
+          6064,
+          1203
+        ],
+        [
+          5164,
+          1203
+        ]
+      ],
+      [
+        [
+          6588,
+          2967
+        ],
+        [
+          6588,
+          2067
+        ],
+        [
+          6078,
+          2067
+        ],
+        [
+          6078,
+          2967
+        ]
+      ]
+    ],
+    "mm_per_px": 32.6615,
+    "origin_pt": [
+      838.5482278157747,
+      576.7576904296875
+    ],
+    "dimensions": [
+      {
+        "value": 4515,
+        "mm_per_unit": 45.915,
+        "length_pt": 98.33,
+        "axis": "h",
+        "status": "rejected",
+        "method": "orange-dimension-line"
+      },
+      {
+        "value": 6050,
+        "mm_per_unit": 65.054,
+        "length_pt": 93.0,
+        "axis": "h",
+        "status": "observed",
+        "method": "orange-dimension-line"
+      },
+      {
+        "value": 4050,
+        "mm_per_unit": 65.323,
+        "length_pt": 62.0,
+        "axis": "h",
+        "status": "observed",
+        "method": "orange-dimension-line"
+      }
+    ],
+    "evidence": [
+      {
+        "kind": "polygon",
+        "source": "unit-fill",
+        "detail": "客/飯廳 from unit-fill",
+        "confidence": 0.8,
+        "status": "observed"
+      },
+      {
+        "kind": "polygon",
+        "source": "wall-cell",
+        "detail": "浴室 from wall-cell",
+        "confidence": 0.6,
+        "status": "inferred"
+      },
+      {
+        "kind": "polygon",
+        "source": "wall-cell",
+        "detail": "廚房 from wall-cell",
+        "confidence": 0.6,
+        "status": "inferred"
+      }
+    ],
+    "program": {
+      "min_counts": {
+        "living": 1,
+        "bath": 1,
+        "kitchen": 1
+      },
+      "required_links": [
+        [
+          "living",
+          "kitchen"
+        ],
+        [
+          "living",
+          "bath"
+        ]
+      ],
+      "door_sides": {},
+      "furniture": []
+    },
+    "origin_px": [
+      40.0,
+      40.0
+    ],
+    "audit_status": "verified",
+    "layout_allowed": true,
+    "overlay": "C:\\Users\\info\\hk-space\\out\\plan_hk_chingfu_b35_understood_overlay.png",
+    "rectified_image": "C:\\Users\\info\\hk-space\\out\\plan_hk_chingfu_b35_understood_render.png",
+    "walls_detected": 21,
+    "openings_detected": 3,
+    "confidence": 0.873,
+    "scale_source": "dimension-consensus",
+    "ocr_engine": "template"
+  }
+}

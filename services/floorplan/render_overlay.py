@@ -48,7 +48,11 @@ def _find_cjk_font(size: int):
               "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc",
               "/usr/share/fonts/truetype/arphic/uming.ttc",
               "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
-              "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"):
+              "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+              "C:/Windows/Fonts/msjh.ttc",
+              "C:/Windows/Fonts/msyh.ttc",
+              "C:/Windows/Fonts/mingliu.ttc",
+              "C:/Windows/Fonts/simsun.ttc"):
         if Path(p).exists():
             try:
                 return ImageFont.truetype(p, size)
@@ -144,8 +148,12 @@ def render_overlay(image_path: Path, json_path: Path, out_path: Path,
                     q1, q2 = P(c - u * hw + off * s), P(c + u * hw + off * s)
                     cv2.line(img, q1, q2, C_WIN, 3, cv2.LINE_AA)
             else:
-                cv2.line(img, p1, p2, C_DOOR, 4, cv2.LINE_AA)
-                hinge = p1 if op.get("swing", {}).get("hinge", "left") == "left" else p2
+                entry = op.get("id") == "d_entry"
+                color = C_ENTRY if entry else C_DOOR
+                thick = 8 if entry else 4
+                cv2.line(img, p1, p2, color, thick, cv2.LINE_AA)
+                swing = op.get("swing") or {}
+                hinge = p1 if swing.get("hinge", "left") == "left" else p2
                 other = p2 if hinge is p1 else p1
                 # 90 度开启弧: 从另一侧门垛转到门扇末端 (门扇朝房间内摆)
                 cen = np.array([np.mean([q[0] for q in room["polygon"]]),
@@ -153,14 +161,23 @@ def render_overlay(image_path: Path, json_path: Path, out_path: Path,
                 n2 = np.array([-u[1], u[0]])
                 h_mm = np.array([(hinge[0] - ox) * mm_px, (hinge[1] - oy) * mm_px])
                 side = 1.0 if np.dot(cen - h_mm, n2) > 0 else -1.0
-                leaf = np.array([(hinge[0] + n2[0] * side * S(op["width_mm"]) * mm_px - ox) * 0 + hinge[0] + n2[0] * side * op["width_mm"] / mm_px,
+                leaf = np.array([hinge[0] + n2[0] * side * op["width_mm"] / mm_px,
                                  hinge[1] + n2[1] * side * op["width_mm"] / mm_px])
                 a0 = math.degrees(math.atan2(other[1] - hinge[1], other[0] - hinge[0]))
                 a1 = math.degrees(math.atan2(leaf[1] - hinge[1], leaf[0] - hinge[0]))
                 d = (a1 - a0 + 540) % 360 - 180
-                cv2.ellipse(img, hinge, (max(6, S(op["width_mm"])), max(6, S(op["width_mm"]))),
-                            0, a0, a0 + d, C_DOOR, 2, cv2.LINE_AA)
-                cv2.line(img, hinge, (int(leaf[0]), int(leaf[1])), C_DOOR, 2, cv2.LINE_AA)
+                radius = max(8, S(op["width_mm"]))
+                cv2.ellipse(img, hinge, (radius, radius), 0, a0, a0 + d, color, 3 if entry else 2, cv2.LINE_AA)
+                cv2.line(img, hinge, (int(leaf[0]), int(leaf[1])), color, 3 if entry else 2, cv2.LINE_AA)
+                if entry:
+                    mid = ((p1[0] + p2[0]) // 2, (p1[1] + p2[1]) // 2)
+                    pad = 18
+                    cv2.rectangle(img, (min(p1[0], p2[0]) - pad, min(p1[1], p2[1]) - pad),
+                                  (max(p1[0], p2[0]) + pad, max(p1[1], p2[1]) + pad), C_ENTRY, 3)
+                    cv2.circle(img, hinge, 10, C_ENTRY, -1, cv2.LINE_AA)
+                    tx = max(12, min(img.shape[1] - 190, mid[0] - 90))
+                    ty = max(8, mid[1] - 42)
+                    img = _txt(img, "ENTRY DOOR", (tx, ty), 26, C_ENTRY)
 
     # ---- 入口 ----
     entry = doc.get("entry")
@@ -168,7 +185,8 @@ def render_overlay(image_path: Path, json_path: Path, out_path: Path,
         q = P(entry["point"])
         cv2.circle(img, q, 9, C_ENTRY, -1, cv2.LINE_AA)
         cv2.circle(img, q, 14, (255, 255, 255), 2, cv2.LINE_AA)
-        img = _txt(img, "ENTRY", (q[0] + 16, q[1] - 10), 22, (150, 20, 150))
+        tx = max(12, min(img.shape[1] - 110, q[0] - 80 if q[0] > img.shape[1] * 0.65 else q[0] + 16))
+        img = _txt(img, "ENTRY", (tx, q[1] - 10), 22, (150, 20, 150))
 
     # ---- 房间名 + 面积 ----
     for i, room in enumerate(doc.get("rooms", [])):
@@ -178,24 +196,6 @@ def render_overlay(image_path: Path, json_path: Path, out_path: Path,
         img = _txt(img, "%s %s" % (room["id"], room.get("label", "")),
                    (int(c[0]) - 40, int(c[1]) - 14), 30, (30, 30, 30))
         img = _txt(img, "%.2f m2" % area, (int(c[0]) - 40, int(c[1]) + 20), 24, (70, 70, 70))
-
-    # ---- 图例 ----
-    meta = doc.get("meta", {})
-    lines = [title or "floorplan vectorize overlay",
-             "confidence %.3f   比例尺 %.4f mm/px (%s)" %
-             (meta.get("confidence", 0), meta.get("mm_per_px", 0), meta.get("scale_source", "?")),
-             "OCR: %s %s" % (meta.get("ocr_engine", "-"),
-                             ",".join(meta.get("ocr_tokens", [])[:6])),
-             "房间 %d   墙 %d 段   开口 %d   (红=承重墙  蓝=间隔墙  绿=门  青=窗)" %
-             (len(doc.get("rooms", [])), meta.get("walls_detected", 0),
-              meta.get("openings_detected", 0))]
-    h = 30 * len(lines) + 20
-    box = img.copy()
-    cv2.rectangle(box, (10, 10), (min(img.shape[1] - 10, 900), 10 + h), (255, 255, 255), -1)
-    img = cv2.addWeighted(img, 0.25, box, 0.75, 0)
-    cv2.rectangle(img, (10, 10), (min(img.shape[1] - 10, 900), 10 + h), (60, 60, 60), 1)
-    for i, ln in enumerate(lines):
-        img = _txt(img, ln, (22, 20 + 30 * i), 21 if i else 24, (20, 20, 20))
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(out_path), img)
@@ -223,6 +223,37 @@ def side_by_side(orig_path: Path, overlay_path: Path, out_path: Path) -> Path:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(out_path), both)
     return out_path
+
+
+def measure_alignment(image_path: Path, doc: dict) -> dict:
+    """房间多边形盖回原图。客厅内部大部分应该还是填色，而不是白纸。"""
+    image = cv2.imread(str(image_path), cv2.IMREAD_COLOR)
+    if image is None:
+        return dict(per_room={}, living_agreement=0.0, blocking=True)
+    meta = doc.get("meta") or {}
+    mm = float(meta.get("mm_per_px") or 1.0)
+    origin = meta.get("origin_px") or [0.0, 0.0]
+    ox, oy = float(origin[0]), float(origin[1])
+    scores = {}
+    for room in doc.get("rooms") or []:
+        pts = np.array([[int(round(ox + p[0] / mm)), int(round(oy + p[1] / mm))]
+                        for p in room.get("polygon") or []], np.int32)
+        if len(pts) < 3:
+            scores[room.get("id", "?")] = 0.0
+            continue
+        mask = np.zeros(image.shape[:2], np.uint8)
+        cv2.fillPoly(mask, [pts], 1)
+        ys, xs = np.where(mask > 0)
+        if len(xs) == 0:
+            scores[room.get("id", "?")] = 0.0
+            continue
+        step = max(1, len(xs) // 900)
+        sample = image[ys[::step], xs[::step]]
+        colored = (sample.min(axis=1) < 245)
+        not_ink = sample.mean(axis=1) > 45
+        scores[room.get("id", "?")] = round(float((colored & not_ink).mean()), 3)
+    living = float(scores.get("living", 0.0))
+    return dict(per_room=scores, living_agreement=living, blocking=living < 0.45)
 
 
 def main():

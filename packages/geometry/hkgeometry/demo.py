@@ -14,6 +14,12 @@ import json
 import os
 import sys
 
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from hkgeometry.corridor import default_corridors
@@ -22,7 +28,17 @@ from hkgeometry.spaciousness import spaciousness_report
 from hkgeometry.types import HeightPatch, Opening, Placement, Room, Wall, Layout
 from hkgeometry.viz import _HAS_CJK, _FONT, render_analysis, render_side_by_side
 
-OUT = os.environ.get("HKSPACE_OUT", "/mnt/d/openclaw/hk-space/out")
+def _default_out() -> str:
+    """WSL 上的原输出目录还在就沿用；Windows 上改写到仓库的 out/。"""
+    wsl = "/mnt/d/openclaw/hk-space/out"
+    if os.path.isdir(os.path.dirname(wsl)):
+        return wsl
+    here = os.path.dirname(os.path.abspath(__file__))
+    repo = os.path.dirname(os.path.dirname(os.path.dirname(here)))
+    return os.path.join(repo, "out")
+
+
+OUT = os.environ.get("HKSPACE_OUT", _default_out())
 
 # L 形：3200 x 2800 的方形，左上角挖掉 1600 x 900 的凹位（入門玄關 / 廚房位）
 # 这个凹位在房间内制造出真正的「遮挡阴影」= 低曝光区

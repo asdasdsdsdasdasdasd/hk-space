@@ -25,7 +25,7 @@ from render_plan2d import setup_font                          # noqa: E402
 setup_font()          # 中文字体（唔设的话全部变豆腐块）
 
 import bench_hk as B                                              # noqa: E402
-from hkgeometry.house import load_flat, solve_house               # noqa: E402
+from hkgeometry.house import flat_from_dict, load_flat, solve_house  # noqa: E402
 
 
 def draw_pipeline(outp: str) -> None:
@@ -117,10 +117,17 @@ def draw_pipeline(outp: str) -> None:
 
 
 def render_case(name: str, case: dict):
-    flat = load_flat(os.path.join(ROOT, case["plan"]))
+    if case.get("document") is not None:
+        flat = flat_from_dict(case["document"])
+    else:
+        flat = load_flat(os.path.join(ROOT, case["plan"]))
     items = B.build_items(case)
     assign = {i: r for i, _c, _w, _d, _h, r in case["items"]}
-    house = solve_house(flat, items, time_limit_s=60.0, parallel=True, assignment=assign)
+    if case.get("solver") == "progressive":
+        from hkgeometry.progressive import solve_progressive
+        house = solve_progressive(flat, items, assign)
+    else:
+        house = solve_house(flat, items, time_limit_s=60.0, parallel=True, assignment=assign)
     lay = {}
     funcs = flat.functions()
     for rid, l in house.by_room.items():
@@ -144,9 +151,19 @@ def main() -> None:
     draw_pipeline(os.path.join(ROOT, "out", "pipeline.png"))
     for name, case in B.CASES.items():
         laypath, title = render_case(name, case)
-        os.system("cd %s && python3 scripts/render_plan2d.py --plan %s --layout %s "
-                  "--out out/plan2d_%s_engine.png --title %s >/dev/null 2>&1"
-                  % (ROOT, case["plan"], laypath, name, shlex.quote(title)))
+        if case.get("document") is not None:
+            out_plan = os.path.join(ROOT, case["plan"])
+            os.makedirs(os.path.dirname(out_plan), exist_ok=True)
+            with open(out_plan, "w", encoding="utf-8") as f:
+                json.dump(case["document"], f, ensure_ascii=False)
+        import subprocess
+        subprocess.check_call([
+            sys.executable, os.path.join(ROOT, "scripts", "render_plan2d.py"),
+            "--plan", os.path.join(ROOT, case["plan"]),
+            "--layout", laypath,
+            "--out", os.path.join(ROOT, "out", "plan2d_%s_engine.png" % name),
+            "--title", title,
+        ], cwd=ROOT)
         print("  -> out/plan2d_%s_engine.png" % name)
 
 

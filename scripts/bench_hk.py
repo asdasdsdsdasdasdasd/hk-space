@@ -54,56 +54,28 @@ def min_corridor_width(room, lay, step=100):
         worst = min(worst, best)
     return worst
 
-from hkgeometry.house import load_flat, solve_house, HouseLayout   # noqa: E402
+from hkgeometry.house import load_flat, solve_house, HouseLayout, flat_from_dict   # noqa: E402
 from hkgeometry.types import Layout, Placement, FRONT_CLEARANCE    # noqa: E402
 from hkgeometry.greedy import door_approach_zones                  # noqa: E402
 from hkgeometry.livability import check_livability, _unreachable_items  # noqa: E402
 from hkgeometry.exposure import exposure_map, layout_visual_load   # noqa: E402
 
-# ---------------------------------------------------------------- 案例
-# 家具清单来自「居屋寶 安柏苑 05 室 擺位設計圖」上实际画出来的家具
-ONPAK05 = dict(
-    plan="out/plan_hk_onpak05.json",
-    label="安柏苑 05 室（真實香港居屋 493 呎）",
-    # ★ v3 转录之后，房间只有 客／飯廳 / 浴室 / 廚房 —— 图上没有任何「睡房」房名，
-    #   493 呎的 05 室是开放式单位，睡床只能放客厅。旧清单里的 bedroom/bedroom2
-    #   是 v2 那张错误轮廓臆想出来的，已经删掉。
-    items=[
-        # 客／飯廳 30.4 m2（含 2010x3000 的饭厅凹位）
-        ("#bed_main", "bed", 1370, 1900, 500, "living"),
-        ("#wardrobe_main", "wardrobe", 1900, 600, 1800, "living"),
-        ("#sofa", "sofa", 1400, 700, 750, "living"),
-        ("#coffee", "coffee_table", 700, 700, 400, "living"),
-        ("#tv", "tv_bench", 1200, 400, 500, "living"),
-        ("#dining", "dining_table", 1400, 800, 750, "living"),
-        ("#chair1", "chair", 450, 450, 780, "living"),
-        ("#chair2", "chair", 450, 450, 780, "living"),
-        ("#chair3", "chair", 450, 450, 780, "living"),
-        ("#chair4", "chair", 450, 450, 780, "living"),
-        # 浴室 3.0 m2
-        ("#toilet", "toilet", 700, 400, 750, "bath"),
-        ("#basin", "basin", 600, 450, 850, "bath"),
-        ("#shower", "shower", 900, 900, 2000, "bath"),
-        # 廚房 3.8 m2（淨 2040 x 1861，北牆上有一扇 900 寬的門，門扇區吃掉東北角）
-        #
-        # ★ 2026-10 修正：**灶台不再是地面家具**。
-        #   原本清單是 檯面 1700x600 + 雪櫃 + 灶台 + 洗衣機 四件**地面**家具。
-        #   實測（scripts/diag_kitchen.py）：
-        #     門扇區 = x 1050..1950, y 961..1861
-        #     扣掉之後，西牆夠長放 1700 檯面；
-        #     南帶只剩 1440 x 961，塞得落兩件 600 寬的電器；
-        #     東北角 450 寬，塞唔落第三件。
-        #   → **四件地面家具在物理上放唔落**（最多三件）。
-        #   但現實中香港廚房的灶台是**嵌在檯面裡**的，根本不是一件地面家具 ——
-        #   把它當地面件是建模錯誤，等於同一個空間要兩次。
-        #   所以：灶台改為「檯面內建」，地面件只留三件。
-        #   （四件版的不可行性仍然量得到，見 scripts/diag_kitchen.py 與
-        #     docs/STATUS.md；這裡不是為了讓分數好看，是因為原本的簡報不真實。）
-        ("#counter", "kitchen_counter", 1700, 600, 850, "kitchen"),
-        ("#fridge", "fridge", 600, 650, 1700, "kitchen"),
-        ("#washer", "washing_machine", 600, 600, 850, "kitchen"),
-    ],
-)
+# 家具清单来自居屋寶安柏苑 05 室两房方案，坐标钉在房委会官方壳上，不缩放。
+def _reference_case():
+    from hkgeometry.onpak05_reference import build_reference
+    doc = build_reference()
+    items = [(r["inst"], r["category"], r["w"], r["d"], r["h"], r["room"])
+             for r in doc["meta"]["program"]["furniture"]]
+    return dict(
+        document=doc,
+        plan="out/plan_hk_onpak05_reference.json",
+        label="安柏苑 05 室两房方案（官方壳 + 居屋寶隔墙）",
+        solver="progressive",
+        items=items,
+    )
+
+
+ONPAK05 = _reference_case()
 # ★ 照 Design-MLLM §5.3 的 Stress Test 做的两个极端户型（见 make_stress_flats.py）
 STRESS_TINY = dict(
     plan="out/plan_stress_tiny.json",
@@ -153,9 +125,27 @@ def check(flat, case, house):
     def add(tag, ok, detail=""):
         rows.append((tag, ok, detail))
 
+    spec = (flat.meta or {}).get("program") or {}
+    if spec:
+        from hkgeometry.program import opening_side, validate_program
+        from hkgeometry.circulation import artery_clear, unreachable_rooms
+        errs = validate_program(flat)
+        add("0 任务书（两房/门/不缩放）", not errs, "; ".join(errs)[:120])
+        placed_now = {rid: lay.placements for rid, lay in house.by_room.items()}
+        lost = unreachable_rooms(flat, placed_now, person_mm=600)
+        add("0b 入口走到每间房", not lost, ", ".join(lost) if lost else "通")
+        add("0c 主通道连着每扇门且>=900mm", artery_clear(flat, placed_now, 900),
+            "断开或窄于 900mm" if not artery_clear(flat, placed_now, 900) else "通")
+        bath = next((r for r in flat.rooms if r.id == "bath"), None)
+        if bath is not None and any(o.id == "d_bath" for o in bath.openings):
+            side = opening_side(bath, "d_bath")
+            add("0d 浴室门在东墙", side == "east", side)
+
     # 1 全部放得下
+    wanted = len(case["items"])
     missing = [i for i, _c, _w, _d, _h, _r in case["items"] if i not in placed]
-    add("1 全部家具都放得下", not missing, ("漏放 " + ", ".join(missing)) if missing else "19/19")
+    add("1 全部家具都放得下", not missing,
+        ("漏放 " + ", ".join(missing)) if missing else "%d/%d" % (wanted, wanted))
 
     # 2 不重叠
     ov = []
@@ -294,36 +284,13 @@ def check(flat, case, house):
                 facing_bad.append("%s@%s" % (p.inst, rid))
     add("11 朝向没错（没面壁）", not facing_bad, str(facing_bad[:4]))
 
-    # ── 12 中央通路：沿房间长轴走，自由宽度的最小值（照 Design-MLLM 的
-    #    「linear along the walls to maintain a clear central pathway」）
-    # ★ 2026-10 修正：这条**不可以对所有房间一刀切**。
-    #   在 2.98m² 浴室 / 3.8m² 厨房里，「每一个横截面都留得下 900mm 净空」
-    #   是物理上不可能的 —— 这类房必定 FAIL，所以这条判据对它们**零信息量**，
-    #   却会把整栋楼的分数按死。
-    #   实测 onpak05（living 30.4 / bath 2.98 / kitchen 3.80）：
-    #     living 930mm 合格，bath 90mm，kitchen 81mm
-    #   —— 基准报出来的却是厨房那 81mm，而客厅其实没问题。
-    #
-    #   终端房（厨房/浴室）真正要保证的是另外两条，而且早就有了：
-    #     第 6 条 门口走道不被侵占；第 7 条 走得到每一件家具前面。
-    #   所以这里只对「人真的会走过去」的房间判：入口房 + 面积 >= 8m² 的房间。
-    #   同时把每一间的数都打出来，免得以后又变成「看不出是谁挂的」。
-    per_room = {}
-    for rid, r in rooms.items():
-        lay = house.by_room.get(rid)
-        if not lay or not lay.placements:
-            continue
-        per_room[rid] = min_corridor_width(r, lay)
-    CIRCULATION_AREA_MM2 = 8e6
-    circ = {rid: w for rid, w in per_room.items()
-            if rid == flat.entry_room or rooms[rid].geo().area >= CIRCULATION_AREA_MM2}
-    worst_w = min(circ.values()) if circ else 1e9
-    ok12 = worst_w >= 900
-    detail = "  ".join("%s %d" % (rid, w) for rid, w in sorted(per_room.items()))
-    if circ:
-        detail += "   [判定: %s]" % ", ".join(sorted(circ))
-    add("12 中央通路 >=900mm", ok12,
-        detail if per_room else "无家具")
+    # ── 12 主通道必须从入口连到每扇门，不能用一条不相连的截面充数。
+    from hkgeometry.circulation import artery_clear
+    placed_map = {rid: (house.by_room.get(rid).placements if house.by_room.get(rid) else [])
+                  for rid in rooms}
+    ok12 = artery_clear(flat, placed_map, min_width=900)
+    add("12 主通道从入口连通且>=900mm", ok12, "通" if ok12 else "断开或窄于 900mm")
+    worst_w = 900.0 if ok12 else 0.0
 
     # ── 场景级指标（Agentic Designer 的 SVR / BVC / CS）
     n_bad = sum(1 for p in ps
@@ -355,28 +322,35 @@ def main() -> None:
     all_rows = {}
     for name in names:
         case = CASES[name]
-        flat = load_flat(os.path.join(ROOT, case["plan"]))
         items = build_items(case)
+        assign = {}
+        for inst, _cat, _w, _d, _h, room in case["items"]:
+            assign[inst] = room
+        if case.get("document") is not None:
+            out_plan = os.path.join(ROOT, case["plan"])
+            os.makedirs(os.path.dirname(out_plan), exist_ok=True)
+            with open(out_plan, "w", encoding="utf-8") as f:
+                json.dump(case["document"], f, ensure_ascii=False, indent=1)
+            flat = flat_from_dict(case["document"])
+        else:
+            flat = load_flat(os.path.join(ROOT, case["plan"]))
         print("=" * 76)
         print("案例 %s —— %s" % (name, case["label"]))
         print("  房间:", ", ".join("%s(%.1fm2,%s)" % (r.id, r.geo().area / 1e6, r.label)
                                   for r in flat.rooms))
-        # ★ 客人講明邊件擺邊間房（「主床擺主人房」），所以房間分配照用客戶指定。
-        #   唔 pin 嘅話，L1 會把兩張床塞埋同一間房 -> 一張放唔落 -> 憑空消失，
-        #   量到嘅就變成「分配」問題而唔係「擺位」問題。
-        assign = {}
-        for inst, cat, _w, _d, _h, room in case["items"]:
-            assign[inst] = room
         t0 = time.time()
-        house = solve_house(flat, items, time_limit_s=args.time_limit, parallel=True,
-                            assignment=assign)
+        if case.get("solver") == "progressive":
+            from hkgeometry.progressive import solve_progressive
+            house = solve_progressive(flat, items, assign)
+        else:
+            house = solve_house(flat, items, time_limit_s=args.time_limit, parallel=True,
+                                assignment=assign)
         dt = time.time() - t0
         rows, metrics = check(flat, case, house)
         all_rows[name] = [dict(tag=t, ok=o, detail=d) for t, o, d in rows]
         npass = sum(1 for _t, o, _d in rows if o)
         print("  求解 %.1fs" % dt)
-        for rid in ("kitchen", "bath", "bedroom", "living"):
-            lay = house.by_room.get(rid)
+        for rid, lay in house.by_room.items():
             if lay and lay.placements:
                 print("   %s: %s" % (rid, ", ".join(
                     "%s(%dx%d @%d,%d r%d)" % (p.inst, p.w, p.d, p.x, p.y, p.rot)
@@ -384,10 +358,42 @@ def main() -> None:
             else:
                 print("   %s: (空)" % rid)
         for t, o, d in rows:
-            print("   [%s] %-22s %s" % ("PASS" if o else "FAIL", t, d[:90]))
+            print("   [%s] %-28s %s" % ("PASS" if o else "FAIL", t, d[:90]))
         print("  --> %d/%d 通过   |  SVR %.0f%%  BVC %d  CS %.2f  最窄通路 %s mm"
               % (npass, len(rows), metrics["SVR"], metrics["BVC"], metrics["CS"],
                  metrics["min_corridor"]))
+        if case.get("solver") == "progressive":
+            from hkgeometry.house import infer_room_functions
+            funcs = infer_room_functions(flat)
+            lay = {}
+            for rid, layout in house.by_room.items():
+                lay[rid] = {
+                    "func": funcs.get(rid, rid),
+                    "placements": [dict(inst=p.inst, sku=p.sku, category=p.category,
+                                        x=p.x, y=p.y, rot=p.rot, w=p.w, d=p.d, h=p.h)
+                                   for p in layout.placements],
+                }
+            laypath = os.path.join(ROOT, "out", "layout_%s.json" % name)
+            with open(laypath, "w", encoding="utf-8") as f:
+                json.dump(lay, f, ensure_ascii=False, indent=1)
+            import subprocess
+            from hkgeometry.layout_loop import hard_errors
+            errs = hard_errors(flat, house)
+            # 几何没过，或者评分里还有失败项，都不能写成正式方案。
+            failed = bool(errs) or npass < len(rows)
+            title = "NOT PUBLISHABLE" if failed else "%s geometry clear" % case["label"]
+            out_png = "plan2d_%s_candidate.png" % name if failed else "plan2d_%s_engine.png" % name
+            subprocess.check_call([
+                sys.executable, os.path.join(HERE, "render_plan2d.py"),
+                "--plan", os.path.join(ROOT, case["plan"]),
+                "--layout", laypath,
+                "--out", os.path.join(ROOT, "out", out_png),
+                "--title", title,
+            ], cwd=ROOT)
+            subprocess.check_call([
+                sys.executable, os.path.join(HERE, "render_onpak05_audit.py"),
+                "--out", os.path.join(ROOT, "out", "plan2d_%s_routes.png" % name),
+            ], cwd=ROOT)
 
     outp = os.path.join(ROOT, args.out)
     with open(outp, "w", encoding="utf-8") as f:

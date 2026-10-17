@@ -24,6 +24,7 @@ import os
 import re
 import urllib.error
 import urllib.request
+import base64
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
@@ -609,6 +610,39 @@ class LLMClient:
         with urllib.request.urlopen(req, timeout=20) as r:
             data = json.loads(r.read().decode("utf-8"))
         return [m.get("id", "") for m in data.get("data", [])]
+
+    def chat_images(self, system: str, user: str, images: list[bytes],
+                    temperature: float = 0.0, max_tokens: int = 4000) -> str:
+        """把平面图交给 deepseek-flash。图片只放在 user 消息里。"""
+        parts = [{"type": "text", "text": user}]
+        for raw in images:
+            b64 = base64.b64encode(raw).decode("ascii")
+            parts.append({"type": "image_url", "image_url": {
+                "url": "data:image/png;base64," + b64, "detail": "high"}})
+        body = {
+            "model": self.model,
+            "messages": [{"role": "system", "content": system},
+                         {"role": "user", "content": parts}],
+            "temperature": temperature,
+            "max_tokens": max_tokens,
+            "stream": False,
+            "response_format": {"type": "json_object"},
+        }
+        if self.dialect == "deepseek" and self.effort:
+            body["reasoning_effort"] = self.effort
+        req = urllib.request.Request(
+            self.base_url + "/chat/completions",
+            data=json.dumps(body).encode("utf-8"),
+            headers={"Content-Type": "application/json",
+                     "Authorization": "Bearer " + self.api_key},
+            method="POST")
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as r:
+                data = json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            raise RuntimeError("LLM HTTP %s: %s" % (e.code, e.read()[:400])) from e
+        msg = (data.get("choices") or [{}])[0].get("message") or {}
+        return (msg.get("content") or "").strip()
 
     def chat(self, system: str, user: str, temperature: float = 0.2,
              max_tokens: int = 0) -> str:

@@ -37,6 +37,12 @@ from typing import Dict, List, Optional, Sequence, Tuple
 import cv2
 import numpy as np
 
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 if str(HERE) not in sys.path:
@@ -418,7 +424,10 @@ def _find_font(size: int):
     for p in ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
               "/usr/share/fonts/truetype/lato/Lato-Medium.ttf",
               "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-              "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc"):
+              "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+              "C:/Windows/Fonts/arial.ttf",
+              "C:/Windows/Fonts/calibri.ttf",
+              "C:/Windows/Fonts/segoeui.ttf"):
         if Path(p).exists():
             try:
                 return ImageFont.truetype(p, size)
@@ -442,7 +451,10 @@ def _templates() -> Dict[str, np.ndarray]:
         for font_path in ("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
                           "/usr/share/fonts/truetype/dejavu/DejaVuSansCondensed.ttf",
                           "/usr/share/fonts/truetype/lato/Lato-Medium.ttf",
-                          "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"):
+                          "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+                          "C:/Windows/Fonts/arial.ttf",
+                          "C:/Windows/Fonts/calibri.ttf",
+                          "C:/Windows/Fonts/segoeui.ttf"):
             if not Path(font_path).exists():
                 continue
             try:
@@ -588,7 +600,11 @@ def _label_templates() -> Dict[str, np.ndarray]:
     for p in ("/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
               "/usr/share/fonts/opentype/noto/NotoSansCJK-Medium.ttc",
               "/usr/share/fonts/truetype/arphic/uming.ttc",
-              "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"):
+              "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+              "C:/Windows/Fonts/msjh.ttc",
+              "C:/Windows/Fonts/msyh.ttc",
+              "C:/Windows/Fonts/mingliu.ttc",
+              "C:/Windows/Fonts/simsun.ttc"):
         if Path(p).exists():
             font_path = p
             break
@@ -694,7 +710,13 @@ def _read_label_from(mask: np.ndarray, inner: np.ndarray, tpl: Dict[str, np.ndar
     if not scored:
         return "", 0.0
     sc, lab_ = scored[0]
-    return (lab_, float(sc)) if sc >= min_score else ("", float(sc))
+    second = scored[1][0] if len(scored) > 1 else 0.0
+    # 第一名和第二名贴在一起（差 < 0.02）就是噪声，不是读到了房名。
+    # 微软正黑体下，门弧粘住「客廳」时最高分只有 ~0.63，和次名几乎相同。
+    # 退回空标签，让后面按面积排名补，避免把客厅标成浴室。
+    if sc >= min_score and (sc - second) >= 0.02:
+        return lab_, float(sc)
+    return "", float(sc)
 
 
 def read_room_label(bw: np.ndarray, poly_px, tpl: Dict[str, np.ndarray],
@@ -1475,7 +1497,8 @@ def _room_wall_coverage(rooms, walls_mm) -> float:
 # 6. 入口
 # ============================================================================
 def vectorize(image_path: Path, out_path: Path, params: Params,
-              overlay_path: Optional[Path] = None, verbose: bool = True) -> dict:
+              overlay_path: Optional[Path] = None, verbose: bool = True,
+              persist: bool = True) -> dict:
     gray, notes = load_gray(image_path)
     bw, ink = binarize(gray)
     H, W = gray.shape
@@ -1601,6 +1624,8 @@ def vectorize(image_path: Path, out_path: Path, params: Params,
         overlay=None,
     ))
     doc = _sanitize(doc)
+    if not persist:
+        return doc
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(doc, ensure_ascii=False, indent=2), encoding="utf-8")

@@ -1,7 +1,7 @@
 {
- "generated_at": "2026-10-04T21:29:25",
+ "generated_at": "2026-10-14T20:01:26",
  "units": "mm (int) for the API; glTF file stores meters; Z-up, origin at footprint centre, +Y = front",
- "out_dir": "/mnt/d/openclaw/hk-space/out/templates",
+ "out_dir": "C:\\Users\\info\\hk-space\\out\\templates",
  "counts": {
   "templates": 30,
   "variants": 0
@@ -11,12 +11,12 @@
   "max": 13624,
   "sum": 74060
  },
- "total_bytes": 4255468,
+ "total_bytes": 4252264,
  "items": [
   {
    "id": "cabinet_2door",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/cabinet_2door.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\cabinet_2door.glb",
    "name_zh": "兩門櫃",
    "name_en": "2-door cabinet",
    "group": "櫃",
@@ -58,7 +58,7 @@
   {
    "id": "cabinet_3door",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/cabinet_3door.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\cabinet_3door.glb",
    "name_zh": "三門櫃",
    "name_en": "3-door cabinet",
    "group": "櫃",
@@ -105,7 +105,7 @@
   {
    "id": "wardrobe_tall",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/wardrobe_tall.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\wardrobe_tall.glb",
    "name_zh": "到頂衣櫃",
    "name_en": "full-height wardrobe",
    "group": "櫃",
@@ -159,7 +159,7 @@
   {
    "id": "open_shelf",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/open_shelf.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\open_shelf.glb",
    "name_zh": "開放格櫃",
    "name_en": "open grid shelf",
    "group": "櫃",
@@ -190,7 +190,7 @@
   {
    "id": "drawer_chest",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/drawer_chest.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\drawer_chest.glb",
    "name_zh": "抽屜櫃",
    "name_en": "drawer chest",
    "group": "櫃",
@@ -241,7 +241,7 @@
   {
    "id": "tv_console",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/tv_console.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\tv_console.glb",
    "name_zh": "電視櫃",
    "name_en": "TV console",
    "group": "櫃",
@@ -289,7 +289,7 @@
   {
    "id": "shoe_cabinet",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/shoe_cabinet.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\shoe_cabinet.glb",
    "name_zh": "鞋櫃",
    "name_en": "shoe cabinet",
    "group": "櫃",
@@ -338,7 +338,7 @@
   {
    "id": "bed_single",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_single.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\bed_single.glb",
    "name_zh": "單人床",
    "name_en": "single bed",
    "group": "床",
@@ -382,7 +382,7 @@
   {
    "id": "bed_double",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_double.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\bed_double.glb",
    "name_zh": "雙人床",
    "name_en": "double bed",
    "group": "床",
@@ -423,12 +423,12 @@
     800
    ],
    "z_min_mm": 0,
-   "bytes": 336108
+   "bytes": 334508
   },
   {
    "id": "bed_loft",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_loft.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\bed_loft.glb",
    "name_zh": "高架床",
    "name_en": "loft bed",
    "group": "床",
@@ -479,7 +479,7 @@
   {
    "id": "bed_storage",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/bed_storage.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\bed_storage.glb",
    "name_zh": "收納床(油壓)",
    "name_en": "hydraulic storage bed",
    "group": "床",
@@ -516,7 +516,7 @@
   {
    "id": "bunk_bed",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/bunk_bed.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\bunk_bed.glb",
    "name_zh": "上下舖",
    "name_en": "bunk bed",
    "group": "床",
@@ -575,7 +575,7 @@
   {
    "id": "desk",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/desk.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\desk.glb",
    "name_zh": "書桌",
    "name_en": "desk",
    "group": "桌",
@@ -613,7 +613,7 @@
   {
    "id": "dining_table",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/dining_table.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\dining_table.glb",
    "name_zh": "餐桌",
    "name_en": "dining table",
    "group": "桌",
@@ -646,7 +646,7 @@
   {
    "id": "side_table",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/side_table.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\side_table.glb",
    "name_zh": "邊桌",
    "name_en": "side table",
    "group": "桌",
@@ -675,7 +675,7 @@
   {
    "id": "chair",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/chair.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\chair.glb",
    "name_zh": "單椅",
    "name_en": "chair",
    "group": "座",
@@ -706,12 +706,12 @@
     850
    ],
    "z_min_mm": 0,
-   "bytes": 41060
+   "bytes": 39456
   },
   {
    "id": "sofa_2",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/sofa_2.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\sofa_2.glb",
    "name_zh": "雙人沙發",
    "name_en": "2-seat sofa",
    "group": "座",
@@ -748,7 +748,7 @@
   {
    "id": "sofa_3",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/sofa_3.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\sofa_3.glb",
    "name_zh": "三人沙發",
    "name_en": "3-seat sofa",
    "group": "座",
@@ -787,7 +787,7 @@
   {
    "id": "chaise_longue",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/chaise_longue.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\chaise_longue.glb",
    "name_zh": "貴妃椅",
    "name_en": "chaise longue",
    "group": "座",
@@ -822,7 +822,7 @@
   {
    "id": "shelf_unit",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/shelf_unit.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\shelf_unit.glb",
    "name_zh": "層架",
    "name_en": "shelf unit",
    "group": "收納",
@@ -859,7 +859,7 @@
   {
    "id": "storage_box",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/storage_box.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\storage_box.glb",
    "name_zh": "收納箱",
    "name_en": "storage box",
    "group": "收納",
@@ -887,7 +887,7 @@
   {
    "id": "wall_shelf",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/wall_shelf.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\wall_shelf.glb",
    "name_zh": "掛牆層架",
    "name_en": "wall shelf",
    "group": "收納",
@@ -920,7 +920,7 @@
   {
    "id": "pegboard",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/pegboard.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\pegboard.glb",
    "name_zh": "洞洞板",
    "name_en": "pegboard",
    "group": "收納",
@@ -952,7 +952,7 @@
   {
    "id": "fridge",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/fridge.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\fridge.glb",
    "name_zh": "雪櫃",
    "name_en": "fridge",
    "group": "電器",
@@ -989,7 +989,7 @@
   {
    "id": "washer",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/washer.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\washer.glb",
    "name_zh": "洗衣機",
    "name_en": "washing machine",
    "group": "電器",
@@ -1022,7 +1022,7 @@
   {
    "id": "microwave",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/microwave.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\microwave.glb",
    "name_zh": "微波爐",
    "name_en": "microwave",
    "group": "電器",
@@ -1056,7 +1056,7 @@
   {
    "id": "air_conditioner",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/air_conditioner.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\air_conditioner.glb",
    "name_zh": "冷氣機",
    "name_en": "split AC (indoor)",
    "group": "電器",
@@ -1086,7 +1086,7 @@
   {
    "id": "screen_divider",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/screen_divider.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\screen_divider.glb",
    "name_zh": "屏風",
    "name_en": "folding screen",
    "group": "其他",
@@ -1120,7 +1120,7 @@
   {
    "id": "mirror",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/mirror.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\mirror.glb",
    "name_zh": "鏡",
    "name_en": "full-length mirror",
    "group": "其他",
@@ -1148,7 +1148,7 @@
   {
    "id": "drying_rack",
    "kind": "template",
-   "path": "/mnt/d/openclaw/hk-space/out/templates/drying_rack.glb",
+   "path": "C:\\Users\\info\\hk-space\\out\\templates\\drying_rack.glb",
    "name_zh": "晾衫架",
    "name_en": "drying rack",
    "group": "其他",
