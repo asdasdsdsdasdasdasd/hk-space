@@ -1,619 +1,219 @@
-# hk-space —— 香港小户型空间优化 App（Demo）
+# hk-space — layout engine for small Hong Kong flats
 
-> 目标一句话：**30 秒内让人说出「哇」。**
->
-> 技术方案：`docs/hk-space-ai-tech-plan-v3.md`（v3.2）
+Whole-flat spatial optimisation for 200–500 sq ft flats: read a floor plan, decide where every piece of
+furniture goes, score how spacious each room actually *feels*, render the result, and let an LLM advisor
+argue with the geometry — while the geometry always has the last word.
 
-## 这个 Demo 在证明什么
+Design doc: [`docs/hk-space-ai-tech-plan-v3.md`](docs/hk-space-ai-tech-plan-v3.md) (v3.2).
+The original Chinese lab notebook (render iterations, bug hunts, the Farnsworth House comparison) is kept
+verbatim in [`docs/README.zh.md`](docs/README.zh.md).
 
-**「视觉显大」可以被精确计算，并且可以被 CP-SAT 优化到最优。**
+## What this proves
 
-家具一件都没少，只是把体量挪到看不见的地方、把主视线让出来、
-把深色实木衣柜换成浅色开放式的 —— 显大分从 **48** 跳到 **92**。
+**‘Feels spacious’ is computable, and CP-SAT can optimise it.** Same five pieces of furniture, nothing
+removed: move the bulky pieces into the low-exposure pockets of an L-shaped room, clear the sightline from
+door to window, swap the dark wardrobe for a pale open one — spaciousness **48 → 87 → 92**
+(`out/poster.png`).
 
-## 已经能跑的东西
+## Pipeline
 
-| 模块 | 位置 | 状态 |
+```text
+floor plan (scan / phone photo)
+  └─ services/floorplan/vectorize.py    OpenCV only: walls, openings, room polygons,
+                                        scale recovered from printed dimension numbers
+       → Room JSON (integer millimetres)
+       → hkgeometry.house.flat_from_dict
+            → solve_house()
+                 L1  room assignment          CP-SAT, 17/17 items in 0.13 s
+                 L2  per-room placement       CP-SAT, one worker per room (~41 s)
+                 L3  cross-room validation    reachability + door-swing intrusion (0 cm²)
+            → livability.py · spaciousness.py · bench_hk.check()
+                 verdict: 15/16 checks, per-room spaciousness, JSON detractors
+            → render_plan2d.py / render_dollhouse.py / blender_dollhouse.py
+                 2D plan, exposure heat, dollhouse PNG, GLB
+            → apps/web (live console)  +  llm_advisor.py (advice loop and chat)
+```
+
+## How it works
+
+### 1. Read the flat
+
+`services/floorplan/vectorize.py` (1.5k lines, OpenCV, no trained model, no dataset): deskew, detect
+bearing walls (solid black, ~200 mm) versus partitions (thin double lines, ~100 mm), recover openings, and
+recover the scale from the **printed dimension numbers** — the drawing’s own claim about physical size —
+with a template-matching OCR fallback (pytesseract is optional). When no numbers are readable it falls back
+to ‘bearing wall ≈ 200 mm’, then to `--assume-scale`. Every run reports `meta.ocr_engine` and a confidence
+breakdown. Room IoU against ground truth is **0.94–0.99** on the three test plans in `data/floorplans/`.
+
+### 2. Model the problem
+
+- **Integer millimetres, everywhere** (`units.py`, frozen). No floats in geometry, no unit conversion
+  except at the rendering edge. Angles are `0 / 90 / 180 / 270`.
+- A `Placement` is `inst, sku, category, x, y, rot, w, d, h`; `x, y` is the **min corner**; the footprint
+  swaps `w`/`d` at 90/270; front clearance is derived from `category`, not authored per item.
+- Visual mass is a four-factor product compressed with a **0.45 power**: the raw spread is 79×, compressed
+  to 7.2×, otherwise the optimiser only ever cares about the single biggest cabinet (`types.py`).
+
+### 3. Solve
+
+`house.solve_house()` runs three levels: assign items to rooms (CP-SAT, respects `CATEGORY_ROOMS`), solve
+each room independently in parallel, then validate across rooms. A greedy + local-search baseline is kept
+(`greedy.py`) because it fails in a revealing way: on a long room it *regresses* after optimisation (80 → 70)
+— a bad basin — where CP-SAT does not (67 → 78).
+
+| room | greedy + local search | CP-SAT |
 |---|---|---|
-| **几何内核**（isovist / 曝光度图 / 显大分 / 视觉诊断） | `packages/geometry/` | ✅ 跑通，出图 |
-| **SKU 种子库**（150 条 IKEA HK 风格，含视觉属性） | `data/catalog/` | ✅ 跑通 |
-| **家具 3D 模板**（30 个参数化模板 → GLB，4.06MB） | `packages/templates/` | ✅ 跑通 |
-| **3D 娃娃屋渲染**（Blender 4.2 headless） | `scripts/blender_dollhouse.py` | ✅ 跑通 |
-| **户型图矢量化**（图片 → Room JSON） | `services/floorplan/` | ✅ 跑通，房间 IoU **0.94–0.99** |
-| **CP-SAT 求解器**（方法 B，OR-Tools 9.15，生产主力） | `packages/geometry/hkgeometry/cpsat_solver.py` | ✅ 跑通，**OPTIMAL** |
-| **人性化检查器**（功能关系 / 通道连通 / 靠墙 / 开门空间） | `packages/geometry/hkgeometry/livability.py` | ✅ 跑通 |
-| **整屋三层分解**（分配 → 并行求解 → 跨房校验） | `packages/geometry/hkgeometry/house.py` | ✅ 跑通 |
-| **整屋 3D 娃娃屋**（多房间 + 墙体剖切） | `scripts/render_house.py` | ✅ 跑通 |
-| **规则 + 贪心放置器**（方法 A/C 兜底基线） | `packages/geometry/hkgeometry/greedy.py` | ✅ 跑通 |
-| **端到端串联**（户型图 → 3D + 诊断） | `scripts/demo_end2end.py` | ✅ 跑通 |
-| **LLM 顾问闭环**（意见 → LLM 决定 → 双通道修复 → 回滚裁决 → 重渲染） | `scripts/demo_llm_advisor.py` + `hkgeometry/llm_advisor.py` | ✅ 跑通，两个户型都是硬伤 **→ 0** |
+| demo (7.5 m², L-shaped) | 83 → 91 | **48 → 87 → 92** |
+| e2e (15.2 m², long strip) | 80 → **70** ❌ regression | **67 → 78** ✅ |
 
-**整屋实测（plan_hk_a，39m²，5 间房，23 件家具含固定洁具）：**
+### 4. Judge
 
-| 层 | 结果 |
+- `livability.py` — hard geometric rules: front clearance, walkway, door swing, wall contact, reachability.
+- `spaciousness.py` — exposure-based score plus machine-readable detractors and fix options.
+- `bench_hk.py` — the acceptance harness (task program, doors, fit, overlap, in-room containment, reachable
+  fronts, corridor width). The web console shows these rows **verbatim**; it never re-derives them.
+
+### 5. Draw
+
+2D plan with walls at real thickness, real door openings with swing arcs, triple-line windows and room
+labels; exposure heat map; 3D dollhouse via Blender headless; GLB export.
+
+### 6. Converse
+
+`llm_advisor.py` — **the LLM never emits coordinates.** It picks actions (`add_item`, `define_custom`,
+`shrink_sku`, `move_item`, `drop_item`, `try_nudge`, `keep`); deterministic code applies them
+(`apply_decisions`), then the engine re-solves and re-checks. Feasibility is always the geometry’s verdict,
+never the model’s. The same machinery backs the web chat.
+
+## Three rules that keep it honest
+
+1. **One unit.** Everything is integer millimetres, in memory and over the wire. Display converts; the
+   model does not.
+2. **One ruler.** The UI must never implement a criterion of its own. Every pass/fail and every score comes
+   from `bench_hk.check()`, `livability`, `spaciousness` or `overlays_json()`. The historical trap: a
+   self-made `min_corridor_width` in the front end disagreed with the bench ruler, and the product looked
+   broken when the engine was right.
+3. **Labels must not lie.** `解算` (solve) is solver time only; `即時核查` (live verify) is the whole
+   verify / repair / import request; `傾偈` (chat) is one LLM call. A request that solved nothing never shows
+   a solve label. An item the engine could not place is reported as such — including items added by chat.
+
+## Module map
+
+| path | role |
 |---|---|
-| Level 1 房间分配 | 17/17 件，**0.13s**（CP-SAT） |
-| Level 2 房间内求解 | 5 间房**多进程并行**，41s |
-| Level 3 跨房间校验 | 可达性全通、5 间房门洞走廊侵占 **0 cm²** |
+| `packages/geometry/hkgeometry/` | geometry kernel: rooms, placements, isovist, exposure, corridor, livability, spaciousness, program, cp-sat / greedy / progressive solvers, house decomposition, LLM advisor, visual eval |
+| `packages/templates/` | 30 parametric furniture templates → GLB |
+| `services/floorplan/` | raster floor plan → Room JSON (OpenCV), PDF extraction (needs PyMuPDF), test-plan generator |
+| `data/catalog/` | ~160 SKU seed rows (IKEA HK style) with visual attributes |
+| `data/floorplans/` | three synthetic test plans + ground truth |
+| `scripts/` | demos, benchmarks (`bench_hk.py`), renderers, posters, Farnsworth comparison |
+| `apps/web/` | zero-dependency live console: solve, drag, re-verify, auto-repair, export/import, chat |
+| `docs/` | design doc, placement audit, benchmarks, the Chinese lab notebook |
 
-每间房宜居分：**客廳 100 / 浴室 100 / 儲物房 100** / 睡房 78 / 廚房 56
-每间房显大分：77 ~ 99
+## Results (measured, not aspirational)
 
-### 渲染迭代（看图改到合理为止）
+Whole flat — `plan_hk_a`, 39 m², 5 rooms, 23 items including fixed fixtures:
 
-娃娃屋渲染经过 ~12 轮「渲染 → 看图 → 列问题 → 修 → 再渲染」：
-
-| 轮次 | 看图发现的问题 | 修法 |
-|---|---|---|
-| 1-2 | 墙矮(0.98m)且白 → 房间分界读不出 | 剖切 0.40 → 0.62，墙改暖灰 + 深色顶 |
-| 3 | 地板全白，分不出哪间是哪间 | 每间房一个明显不同的淡色地板 |
-| 4-5 | 门是贴的色板 | **改成真正切墙**（门洞是空的）+ 深色门槛 |
-| 6 | 没有房间标识 | 加 3D 文字标签（立起、面向相机、抬到 2.85m 高过家具） |
-| 7-8 | 地面巨大阴影三角切碎画面 | 地面收紧 + 太阳抬高到 68°，阴影短且贴脚 |
-| 9-10 | 家具像贴纸，没有落地感 | 开 ray tracing 接触阴影 + 楼板加厚到 0.30 |
-| 11 | 雪柜/洗衣機/微波爐颜色几乎一样 | 按品类给专属色板（不再只靠 SKU 明度） |
-| 12 | 「睡房」标签压在衣柜上 | 标签朝相机方向前移 |
-
-### 求解器迭代中发现的关键 bug
-
-| bug | 后果 |
+| level | result |
 |---|---|
-| **锚定顺序里没加「有净空要求的家具」** | 浴室/厨房全部走批量路径（无净空检查），马桶被淋浴间顶死；上一版写的顺序代码成了**死代码** |
-| **两类净空混在一张表** | 电视柜被当成"前方必须空 1800mm"的硬区，1850mm 深的客厅直接放不下沙发和电视柜。**「要站人」和「要面对东西」是两回事** |
-| 沿墙走廊在窄房间占掉太多 | 8200×1850 的客厅只剩 750mm，连 920 深的沙发都放不下。改成**自适应深度** |
-| 净空值定得过大 | 淋浴間要 600mm 前方 = 走进去的东西；雪柜要 950 = 标准门 800 就够 |
+| L1 room assignment | 17/17 items, **0.13 s** (CP-SAT) |
+| L2 in-room placement | 5 rooms in parallel, 41 s |
+| L3 cross-room validation | reachability all clear, corridor intrusion into door zones 0 cm² |
 
-**最终实测（22/22 件就位）：** 客廳 27 / 睡房 78 / 廚房 100 / 浴室 100 / 儲物房 100
+Per-room livability: living 100 / bath 100 / storage 100 / bedroom 78 / kitchen 56; spaciousness 77–99.
 
-**顾问意见诚实报告 3 处：** 客厅沙发没能面对电视（房间太窄，几何上放不下「沙发+电视+通行道」）、睡房书桌走不到、浴室放不下淋浴间。
+Selection-only optimisation (positions frozen, styles swapped from the catalogue): total price
+**$8,750 → $5,909 (−$2,841)** while spaciousness *rose* 5 points. E.g. wardrobe PAX 83 pts $4,490 versus
+VUKU 81 pts $790.
 
-### 渲染迭代（看图改到合理为止）
+The catalogue gap this exposes is a product finding, not a bug: a 1,400 × 700 sofa slot against IKEA HK’s
+smallest 1,680 × 920 sofa is a **500 mm** miss — which is exactly why cross-retailer comparison and custom
+furniture belong in the product.
 
-娃娃屋渲染经过约 12 轮「渲染 → 看图 → 列问题 → 修 → 再渲染」：
+LLM advisor loop: on both flats the hard violations reach **0**, with every decision and its reason kept in
+`out/llm_trace*.json`.
 
-| 轮次 | 看图发现的问题 | 修法 |
-|---|---|---|
-| 1-2 | 墙矮(0.98m)且白，房间分界读不出 | 剖切 0.40 → 0.62，墙改暖灰 + 深色顶 |
-| 3 | 地板全白，分不出哪间是哪间 | 每间房一个明显不同的淡色地板 |
-| 4-5 | 门是贴在墙上的色板 | **改成真正切墙**（门洞是空的）+ 深色门槛 |
-| 6 | 没有房间标识 | 3D 文字标签（立起、面向相机、抬到 2.85m 高过家具） |
-| 7-8 | 地面巨大阴影三角切碎画面 | 地面收紧 + 太阳抬到 68 度，阴影短且贴脚 |
-| 9-10 | 家具像贴纸，没有落地感 | 开 ray tracing 接触阴影 + 楼板加厚到 0.30 |
-| 11 | 雪柜/洗衣機/微波爐颜色几乎一样 | 按品类给专属色板（不再只靠 SKU 明度） |
-| 12 | 「睡房」标签压在衣柜上 | 标签朝相机方向前移 |
+Web console (`onpak05`): **15/16** checks, the only failure being `9 柜门/抽屉打得开 ['#toilet被#shower挡']`;
+`stress_tiny` and `stress_narrow` at 12/12. Live verify ~1 s, chat 2–6 s of LLM plus 1–4 s of re-solve.
 
-### 求解器迭代中发现的关键 bug
-
-| bug | 后果 |
-|---|---|
-| **锚定顺序里没加「有净空要求的家具」** | 浴室/厨房全部走批量路径（无净空检查），马桶被淋浴间顶死；上一版写的顺序代码成了**死代码** |
-| **两类净空混在一张表** | 电视柜被当成"前方必须空 1800mm"的硬区，1850mm 深的客厅直接放不下沙发和电视柜。**「要站人」和「要面对东西」是两回事** |
-| 沿墙走廊在窄房间占掉太多 | 8200×1850 的客厅只剩 750mm，连 920 深的沙发都放不下。改成**自适应深度** |
-| 净空值定得过大 | 淋浴間要 600mm 前方（它是走进去的）；雪柜要 950（标准门 800 就够） |
-
-**最终实测（22/22 件就位）：** 客廳 27 / 睡房 78 / 廚房 100 / 浴室 100 / 儲物房 100
-
-**顾问意见诚实报告 3 处：** 客厅沙发没能面对电视（房间太窄，几何上放不下「沙发+电视+通行道」）、睡房书桌走不到、浴室放不下淋浴间。
-
-**本轮诊断出的 8 个 bug（全部来自「画出来才看得见」）：**
-
-| # | 问题 | 后果 |
-|---|---|---|
-| 1 | 门是**贴在墙上的色板**，墙体完整 + 剖切到 40% | 门悬在半空，图里看不见 |
-| 2 | 家具库**没有固定洁具** | 浴室没马桶、厨房没灶台 |
-| 3 | 动线画成「大门→每扇门」的**斜带** | 横穿客厅，右半边完全走不进去 |
-| 4 | **三张互不一致的净空表** | 浴室那张里没有 toilet，马桶被淋浴间顶死也报「宜居 100」 |
-| 5 | 净空检查**单向** | 只查"我前面有没有人"，不查"我会不会挡别人的门" |
-| 6 | **批量求解不查互相净空**（只有 AddNoOverlap2D） | 浴室 4 件全走批量，洁具互相顶死 |
-| 7 | **旋转修复不检查净空区** | 马桶先放好，淋浴间再被"修复"转进马桶正前方 |
-| 8 | 诊断脚本自身：**门只查单侧**、**房间之间没连门洞** | 误报「室内侧走不到」 |
-
-**修正后的动线**（`out/diag_paths.png`）：沿「有门的那面墙」拉走廊 + 大门连接带，
-**硬约束**。客廳从「右半边全堵」变成「走廊全绿」。
-
-**修正后的净空**：`types.FRONT_CLEARANCE` 是全项目唯一的净空表；
-有净空要求的家具一律走顺序锚定；检查双向；旋转修复也遵守。
-
-**本轮补上的四件事**（都是看图之后才发现的问题）：
-1. **门看不见** —— 原来是把门画成贴在墙上的色板，墙本身是完整的；加上剖切到 40%，
-   门还悬在半空。**现在墙是按开口真正切开的**（`build_wall()`）——
-   门洞和窗洞就是空的，一眼看得出从哪走。
-2. **没有马桶/灶台** —— 家具库里根本没有固定洁具。新增 7 个模板
-   （座廁/洗手盆/淋浴間/浴缸/灶台/抽油煙機/廚櫃檯面，`packages/templates/fixtures.py`）
-   和独立目录 `data/catalog/fixtures.json`；它们由來去水位钉死，只能进厨房和浴室。
-3. **客厅挡住去其他房间的路** —— Level 3 只查「门口净空区」，**不查从大门走得到那个门口**。
-   新增 `circulation_paths()`：入口房间生成大门→每扇门的走道。
-4. **★ 装不下要明说，而不是硬摆** —— 新增 `advisory.py`（**LLM 下场的位置**）：
-   把几何结果翻译成「哪件放不下 / 差多少 mm / 有哪几个选择」，直接讲给客户听。
-   见 `out/house_layout.json` 同级输出的顾问意见。
-
-**展示图：**
-- `out/dollhouse_house.png` —— ⭐ **整屋 3D 娃娃屋**（5 个房间 + 全部家具，墙体切到 40% 高做剖切）
-
-- `out/poster.png` —— 三栏并排：同一套家具，**48 → 87 → 92**
-- `out/poster_e2e.png` —— 完整链路：**户型图 → 矢量化 → 选品 → CP-SAT 摆位 → 3D**，**67 → 78**
-
-### 求解器对比（实测，都是 OPTIMAL）
-
-| 房间 | 贪心 + 局部搜索 | **CP-SAT** |
-|---|---|---|
-| Demo（7.5m² L 形） | 83 → 91 | **48 → 87 → 92** |
-| e2e（15.2m² 长条形） | 80 → **70** ❌ 退化 | **67 → 78** ✅ |
-
-长条形房间上贪心会落进坏盆地，**优化后反而更差**；CP-SAT 没这个问题。
-
-## 跑起来
+## Quick start
 
 ```bash
-# 依赖
-pip install shapely trimesh manifold3d numpy matplotlib opencv-python pillow
+# dependencies (CP-SAT comes from ortools; PyMuPDF only if you feed PDFs)
+pip install shapely trimesh manifold3d numpy matplotlib opencv-python pillow ortools
 
-# ① 显大分对比 Demo（核心）
-cd packages/geometry && python3 hkgeometry/demo.py
+# 1. spaciousness demo (the core claim)
+cd packages/geometry && python3 hkgeometry/demo.py && cd ../..
 
-# ② 选品优化 Demo（位置不动，只换家具）
+# 2. selection-only optimisation
 python3 scripts/demo_selection.py
 
-# ③ 3D 娃娃屋（Blender headless，约 40s）
+# 3. 3D dollhouse (Blender headless, ~40 s)
 python3 scripts/render_dollhouse.py
 
-# ④ Demo 海报（3D + 2D 拼一张）
+# 4. poster: 3D + 2D side by side
 python3 scripts/make_poster.py
 
-# ⑤ 端到端：户型图 -> 矢量化 -> 选品 -> 摆位 -> 3D
-cd .. && python3 services/floorplan/make_test_floorplan.py
+# 5. end to end: floor plan → vectorise → selection → placement → 3D
+python3 services/floorplan/make_test_floorplan.py
 python3 services/floorplan/vectorize.py --image data/floorplans/plan_hk_a.png --out out/plan_hk_a.json
-python3 scripts/demo_end2end.py
-python3 scripts/make_poster_e2e.py
+python3 scripts/demo_end2end.py && python3 scripts/make_poster_e2e.py
 
-# ⑥ LLM 顾问闭环（默认走 DeepSeek-V4.1-Flash API）
-#    key 从 HKSPACE_LLM_KEY / DEEPSEEK_API_KEY / ~/.dsh/.credentials.yaml 读，
-#    不会写进 repo、日志或 prompt
+# 6. LLM advisor loop (DeepSeek API by default; key from HKSPACE_LLM_KEY /
+#    DEEPSEEK_API_KEY / ~/.dsh/.credentials.yaml — never written to the repo, logs or prompts)
 python3 scripts/demo_llm_advisor.py --max-rounds 4
 python3 scripts/demo_llm_advisor.py --plan out/plan_hk_b.json --tag b
-
-#    也可以切回本地 llama.cpp（方言会自动从 DeepSeek 换成 Qwen）：
-#    LD_LIBRARY_PATH=llama.cpp/build/bin llama-server -m <model.gguf> \
-#        --host 127.0.0.1 --port 8080 -ngl 99 -c 8192 --jinja
+#    or point it at a local llama.cpp server:
 python3 scripts/demo_llm_advisor.py --local --max-rounds 4
+
+# 7. web console, no extra dependencies (stdlib HTTP server + hand-written canvas)
+python3 -u apps/web/server.py --port 8791
+#    → http://127.0.0.1:8791
+#    pick a case → solve → drag furniture → live re-verify → auto-repair → export/import
+#    the chat on the right takes one sentence and regenerates the layout
 ```
 
-产出在 `out/`：平面图 + 曝光度热力图 + 等视域 + 显大分卡片。
-
-## 实测结果
-
-### 摆法优化（`demo.py`）
-
-同一个 L 形客廳（3200×2800，层高 2450，顶部有横梁），**同一套 5 件家具**：
-
-| 方案 | 显大分 | 关键差别 |
-|---|---|---|
-| 舊擺法 | **52** | 2.2m 深色衣柜正對大門；1.2m 電視櫃擋在進門→窗的斜線上 |
-| 新擺法 | **83** | 體量挪到 L 形凹位造成的低曝光區，主視線讓開 |
-| 新擺法 + 換矮櫃 | **89** | 再把 1.2m 電視櫃換成 0.45m 通透矮款 |
-
-### 选品优化（`demo_selection.py`）
-
-位置**完全不動**，只在 150 条真实 SKU 库里换款式：
-
-| 家具 | 最高分款 | 性价比款 | 差额 |
-|---|---|---|---|
-| 衣柜 | PAX 到頂衣櫃 83分 $4490 | VUKU 單門衣櫃 81分 $790 | **少 1 分，省 $3700** |
-| 電視櫃 | VITTSJÖ 電視櫃 90分 $1090 | LACK 電視櫃 89分 $590 | 少 2 分，省 $500 |
-| 層架 | BILLY 窄書櫃 83分 $490 | HYLLIS 層架 83分 $349 | 少 0 分，省 $141 |
-
-**总价 $8750 → $5909（−$2841），显大分反而 +5。**
-
-### ⚠️ SKU 库缺口（Demo 直接暴露出来的产品洞察）
-
-| 品类 | 小户型能用的位置 | IKEA HK 同类最小 | 差距 |
-|---|---|---|---|
-| 梳化 | 1400 × 700 | ÄPPLARYD 雙人 1680 × 920 | **差 500mm** |
-| 茶几 | 800 × 450 | LACK 茶几 900 × 550 | 差 200mm |
-
-> **IKEA HK 在售的梳化没有一款能放进香港小户型的常见位置。**
-> 这正是「跨零售商比价 + 定制傢俬」这条产品路线的现实依据 ——
-> 不是我们想做，是市场真的缺档。
-
-### plan_hk_b 改成真实尺度（2026-10）
-
-原来的 plan_hk_b 是 6000×4800（310 呎）、L 形客廳，但**尺寸不真实**：
-
-| | 旧 | 香港实际 |
-|---|---|---|
-| 睡房净深 | **1490**（4 呎 11 吋，储物房/劏房尺度） | 2000–2700 |
-| 廚房净面积 | **1.57 m²** | 3–4 m² |
-| 浴室净深 | **1240** | 1600+ |
-
-后果是整个 demo 一直在「1490 深放不落床」「1.57m² 放不落灶台」这些**假问题**上打转，
-连 LLM 都浪费轮次去处理它们。**改成真实上车盘尺度：**
-
-| 房间 | 净尺寸 | 面积 | 关键检查 |
-|---|---|---|---|
-| 客廳 | 7350 × 2290 | 16.8 m² | 沙發 920 + 通道 900 + 電視櫃 360 = 2180 ≤ 2290 ✓ |
-| 睡房 | 3390 × 2280 | 7.7 m² | **10 款床全部放得落**（最大 SONGESAND 1570×2090）|
-| 廚房 | 1730 × 2280 | 3.9 m² | 雪櫃 + 灶台 + 檯面全部放得落 |
-| 浴室 | 1890 × 2280 | 4.3 m² | 馬桶 + 洗手盆 + 淋浴間全部放得落 |
-
-总面积 7600×5000 = 38 m² ≈ 410 呎，一房一廳 —— 是香港真实的上车盘尺度。
-
-**顺带修掉一个会「吃掉一整间房」的矢量化 bug**：封住开口的补丁原来以**开口自己的中心**
-和厚度画，而门口开口的中心是由门弧反推的，与墙的中心线差了 13px（≈60mm）——
-于是墙上留了一条 10px 的缝，**客廳（17m²，最大的房间）从缝里漏出图外**，
-被当成「贴着图边的背景」丢掉，输出少一间房。改成用**宿主墙**的中心线和厚度来封。
-
-### ★ LLM 顾问闭环（`scripts/demo_llm_advisor.py`）
-
-求解器只会算，LLM 只会说。把「算」和「说」接起来，才有产品。
-
-```
-CP-SAT 解出方案
-  -> advisory.py 把几何结果翻译成结构化意见（哪件放不下 / 差多少 mm / 有几个选择）
-  -> LLM（默认 DeepSeek-V4.1-Flash API；也可切本地 llama.cpp）决定怎么改
-  -> 引擎分两条通道执行
-  -> 几何 + 产品规则裁决，不通过就整轮回滚
-  -> 重新渲染娃娃屋，并把执行结果回灌给 LLM 进入下一轮
-```
-
-**架构铁律（不可违反）**
-
-| 规则 | 为什么 |
-|---|---|
-| **LLM 不输出坐标**，只能输出 5 个动作 | `shrink_sku` / `move_item` / `drop_item` / `try_nudge` / `keep` |
-| `try_nudge` 的**方向和步长由引擎螺旋搜索决定** | LLM 说「试试挪这件」，引擎说「挪多少、往哪挪」 |
-| 可行性永远由**确定性几何**裁决 | 2.5D 分层未实现，所以「挂墙」这类动作干脆不开放给 LLM —— 宁可少一个动作，不要一个假动作 |
-| 引擎执行不了的动作必须**回灌**进下一轮 prompt | 不回灌，LLM 只会重复同一个动作直到轮次用完 |
-| **梳化和床不能 drop** | 没有沙发的客厅不是一个能交付的方案 |
-
-**实测一轮（plan_hk_a，39m²，23 件，基线 5 条意见）**
-
-| 轮 | LLM 的决定 | 引擎执行结果 |
-|---|---|---|
-| 1 | `try_nudge` ×4（沙发／电视柜／茶几／书桌）+ `keep` 淋浴间 | 四个补丁全部 ❌「原地已是最优，问题不在位置上」→ 引擎回灌「仍可行的动作」 |
-| 2 | `drop_item #tv_bench`（电视改挂墙）、`drop_item #coffee_table`、`shrink_sku #desk` | ✅ 重解 → 硬伤 4 → 1，意见 5 → 2 |
-| 3 | `move_item #desk` 睡房 → 客廳 | ✅ 重解 → **硬伤 1 → 0**，意见 2 → 1 |
-| 收敛 | 浴室所有动作都被标为「行唔通 / 唔准」→ `keep` | 报告：「需定制贴合尺寸或去第二间铺买」 |
-
-| 指标 | 基线 | LLM 闭环后 |
-|---|---|---|
-| 全屋硬伤 | 4 | **0** |
-| 客廳显大分 | 96.5 | **97.3** |
-| 睡房显大分 | 85.7 | **89.1** |
-| 整屋视觉负荷 | 0.1323 | **0.1312** |
-| 待客户决定的意见 | 5 | **1**（浴室淋浴间 → 建议定制） |
-| 就位 | 22/23 | 20/21（丢了电视柜和茶几，两条都写明了替代方案） |
-
-娃娃屋对照：`out/dollhouse_before.png`（有电视柜 + 圆茶几）→ `out/dollhouse_llm.png`
-（电视改挂墙、茶几撤掉，客厅净空）。LLM 的原文与理由全部留在 `out/llm_trace.json`。
-
-**闭环中暴露出来的 5 个问题（都是「跑起来才看得见」）**
-
-| # | 问题 | 修法 |
-|---|---|---|
-| 1 | **LLM 看不到家具库**，反复提「换小一号」—— 而 IKEA HK 最细的沙发就是 1680×920 | 引擎先替它查库，把每条意见的**可行动作**算好塞进 prompt（`feasibility()`）。决策仍然归 LLM，引擎只负责说「哪个做得到、哪个做不到」 |
-| 2 | 引擎反馈只说「做不了」，不说「**还能做什么**」 | LLM 原地打转、第 2 轮退化成 keep。必须每轮回灌「仍可行的动作清单」（已剔除试过失败的动作） |
-| 3 | 小房间的 3 条锚定顺序**其实一模一样** | 「试几种顺序」等于只试了一种：睡房三条都是 `bed → wardrobe → desk`。床先落，右边只剩 730mm，书桌连 500mm 坐位都放不下。改成 ≤4 件时**穷举 n!** |
-| 4 | 净空探测点的正面半宽写成「fy==0 时用 w」 | rot=270 的书桌起点被多推 300mm **推到房外**，「直望墙」被误判成「前方 1600mm 全空」。正面轴向的半宽**永远是 d/2**（模板约定 +Y 是正面） |
-| 5 | 只翻译了 2 条硬伤规则（walkway / sofa_faces_tv） | 客厅剩 1 条硬伤却报 0 条顾问意见，外层闭环**提前收敛**。现在所有硬伤都必须浮上来变成意见 |
-
-> LLM 是随机的（temperature 0.2），所以每一轮的具体决定会变；
-> 但收敛后的指标是稳的 —— plan_hk_a 上多次重跑都是「硬伤 → 0、意见 → 1」。
-
-> 第 3、4 条不是 LLM 的问题，是**求解器的问题**。它们在接上 LLM 之后才暴露出来，
-> 因为 LLM 会诚实地说「我改不了」—— 而它改不了的真正原因，是求解器把书桌摆在了
-> 一个「正面贴墙、床尾只留 10mm」的位置上。
-
-**通道裁决**：任何一轮改动之后，引擎会比 `(硬伤条数, 已就位的家具集合)`。
-硬伤变多、或者有家具被**静悄悄挤走**（不是 LLM 明说要丢的），整轮回滚并把理由回灌。
-实测抓到过一次：LLM 把书桌搬进客厅，结果客厅放不下沙发 —— 沙发被挤掉了，而**分数还涨了**
-（视觉负荷下降，因为东西变少了）。这正是「LLM 提议，几何裁决」存在的理由。
-
-## 2D 平面圖（看得見門）
-
-`scripts/render_plan2d.py` —— 畫得像一張真的建築圖：
-
-- **牆按真實厚度填色，門窗位置是真正斷開的缺口**（不是畫在牆上的一條顏色線）
-- **門：門扇 + 四分之一圓掃掠弧 + 開向**（內開/外開、鉸鏈在哪邊）
-- 窗：缺口 + 三條細線（標準窗符號）
-- 房名 + 面積 + **淨寬 × 淨深**
-- 家具：實心矩形 + 正面箭頭（朝向看得見）
-
-```bash
-python3 scripts/render_plan2d.py --plan out/plan_hk_b.json \
-    --layout out/house_layout_b.json --out out/plan2d_b.png
-```
-
-同時修好一個會**把淨空需求翻倍**的 bug：`vectorize.py` 之前把同一扇門
-在兩間房都記成 `dir: in` —— 等於兩邊都要求門扇掃掠區。
-現在按私密度選邊（浴室 > 睡房 > 廚房 > 儲物 > 飯廳 > 客廳），一扇門只掃進一間房。
-
-## LLM 拿到的資訊（v2）
-
-| | v1（之前） | v2（現在） |
-|---|---|---|
-| 房間 | 面積 + 長寬 | 面積 + 淨長寬 + **層高** + **每扇門（寬/開向/鉸鏈）** + 窗 + 樑 |
-| 家具 | 只有 `inst` 名 | `inst` + 品類 + w/d/h |
-| 家具庫 | 完全不給 | **154 條 SKU 全給**（id/尺寸/價錢/名） |
-| 動作 | 5 個 | **7 個**（多了 `add_item` / `define_custom`） |
-
-`add_item` / `define_custom` 由 LLM 自己定尺寸（或指名 SKU），引擎只做三件事：
-品類是否認識、w/d/h 是否齊全合理（100–4000mm）、**這間房塞不塞得入**（塞唔入就報差幾多 mm）。
-所以「庫裡沒有就訂造」現在是 LLM 可以自己走的路，而不是被擋在門外。
-
-## 户型数据的单位与真实性核查
-
-**单位是 mm —— 三条独立证据都对得上：**
-
-| 检查 | 结果 |
-|---|---|
-| 生成器源码 | `W, H = 6000, 4800`，注释写「约 310 呎」；6000×4800mm = 28.8m² = **310 sq ft** ✓（只有 mm 才对得上这条注释） |
-| truth 元数据 | `units: "mm"`、`plan_size_mm: [6000, 4800]`、`px_per_mm: 0.22` |
-| 矢量化自恢复的比例尺 | 从图上画的尺寸数字 OCR **独立**推出 **4.5455 mm/px** = 1/0.22，与生成器完全一致。若标注是呎，会差 304.8 倍 |
-
-矢量化读回来的尺寸与 truth 逐间房对得上（睡房 3440×1490、浴室 1940×1240、廚房 1390×1240）。
-OCR 也读到了 "6000"、"2400" 这两个数字 —— 正好是生成器的户型总宽和隔墙位置。
-
-**但单位对 ≠ 户型真实。** 把三个合成户型摊开跟香港实际比：
-
-| | plan_hk_a | plan_hk_b | plan_hk_c | 香港常见 |
-|---|---|---|---|---|
-| 面积 | 470 呎 | **310 呎** | 448 呎 | 200–500 呎（納米樓–上車盤） |
-| 睡房 | 3000×3200 | **3600×1600**（净深 **1490**） | 3200×3000 | 2000–2700 深 |
-| 廚房 | 2600×3200 | **1500×1400**（2.1m²） | 2000×2200 | 1500×2000 起 |
-| 浴室 | 1600×3200 | 2100×1400 | 2000×1800 | 1500×2000 起 |
-
-**plan_hk_b 的睡房净深 1490mm（4 呎 11 吋）不是真实睡房尺寸** —— 香港睡房实际上很少浅过 2.0m，
-1.5m 是储物房 / 劏房的尺度。所以：
-
-> ⚠️ 本 README 里「睡房净深 1490mm 放不下任何标准双人床」这类结论，
-> **适用于这张合成测试图，不代表香港市场**。要拿它当产品洞察，得先把 plan_hk_b 的
-> 睡房改到 ≥2000mm 深（真实盘），再看还剩几条「放不下」。
-
-（plan_hk_a 的客廳 8400×2000 也是刻意做出来的长条形极端案例，不是典型客廳。）
-
-### 开门方式：香港默认内开门（用户确认）
-
-门洞净空以前一律用「门洞宽 × 900-1200 的矩形走道」，等于假设**每扇门都在房中间扫出一大块方形**，
-两侧都要求净空，还假设门宽一律 900。真实情况：**内开门的门扇只绕铰链扫掠**，
-开尽时门扇贴墙 —— 真正要空的只有门框旁边那一块。
-
-现在按 `Opening.swing = {dir, hinge}` 分两种：
-
-| 开门方式 | 房内需要留空的区域 |
-|---|---|
-| **inward（香港默认）** | 以铰链为圆心、半径 = 门扇宽的**四分之一圆**（锚在铰链那一侧）+ 150mm 门槛带 |
-| outward / sliding | 只要 150mm 门槛带（门不向房内扫） |
-
-效果（plan_hk_b 睡房 3380×1430，两扇内开门 818/664）：
-
-| 模型 | 走道总面积 | 占比 | 床的最少重叠 | 完全唔踩到的位置 |
-|---|---|---|---|---|
-| 旧：门宽 900 × 深 805 矩形 | 1.45 m² | 30% | 0.354 m² | 0 |
-| **新：铰链侧四分之一圆** | **0.90 m²** | **19%** | **0.193 m²** | 0 |
-
-而且 `vectorize.py` 不再靠门弧几何去**猜**开门方向（实测 plan_hk_b 有两扇内开门被判成 `out`），
-按香港惯例直接默认 `dir: in`。门弧将来应该用来**确认**，不是用来**默认**。
-
-**剩下的结论**：睡房净深 1430mm，一扇 818 的内开门要 818 的扫掠半径、另一扇 664 要 664 —— 
-1430 − 818 − 664 = −52mm，两块扫掠区本身就重叠，任何 990 宽的床都避不开。
-所以报告给出的第一条选项是「**把内开门改成推拉門**」——
-这是香港小户型里唯一不用改墙、又能同时保住床和门的办法。
-
-### 换一张户型图（plan_hk_b）：一次暴露 10 个 bug
-
-plan_hk_b 是一个 25.5m² 的 4 房单位 —— L 形客廳 16.2m²、睡房 5.1m²（**净深只有 1490mm**）、
-厨房 2.4m²、浴室 1.7m²。同一份 23 件家具清单，第一版直接跑崩。
-**换户型图是最高性价比的测试**：plan_hk_a 上所有参数都「刚好」，B 一上来就全露。
-
-| # | 现象 | 根因 | 修法 |
-|---|---|---|---|
-| 1 | `[L1] INFEASIBLE 分配 8/23 件`，**15 件家具凭空消失**，连一条顾问意见都没有 | L1 每件家具都是 `AddExactlyOne`，房间容量（可用面积 × 0.55）一爆**整个模型无解**；`solver.Value()` 对未解出的模型乱答一气 | 每件家具加一个「哪间都去不了」的出口，重罚但**存在**（罚分 10⁷，远大于任何硬伤条数） |
-| 2 | 睡房输出**没有床** | 同上，容量是**硬约束**：4.8m² × 0.55 = 2.64m²，而一张双人床本身就 3.26m²，求解器唯一的出路是「不摆」 | 容量改成**软罚**（每超 1000mm² 罚 1 分）。宁可超标，也不许静静少一件家具 |
-| 3 | 报告写「就位 15/18」，而客户清单是 23 件 | `house.unplaced` 只记「没分配到房间」的，L2 房间内漏放的 2 件不计 | L2 漏放的一律入 `unplaced`；`advisory` 新增「全屋有 N 件没有任何一间房放得下」 |
-| 4 | 16.2m² 的 L 形客廳，沙发／茶几／鞋柜／储物箱**全部走不到** | 求解器代价表里**没有「保持房间连通」这一项**。L 形的凹角天然是低曝光区，家具全被推去那里，把两翼之间唯一的通道掐到 <600mm（诊断图见下） | ① 3 条启发式锚定顺序全有硬伤时做**随机重启**：实测 13 条随机顺序里有 1 条完全连通（硬伤 2、走不到 0），而 3 条启发式**全部封死房间**（10 件里 10 件走不到）② 解完再加一道 L2.5 局部修复遍 |
-| 5 | 一条 60mm 厚的**天花板晾衣杆**在客廳中间切出一堵 660mm 宽的墙 | 障碍缓冲半径无视物件高度（1200×60 的桿子照样按 300mm 人宽缓冲） | 障碍物只算 `h > 200mm` 的 —— 60mm 高的东西，人一定走得过去 |
-| 6 | LLM 学会「不要就解决了」：6 轮丢掉 6 件，硬伤 5→0、客廳 82→96，但清单从 23 件缩到 9 件 | 闭环的目标函数（硬伤 + 显大分）里**没有「保留客户的家具」**，而**丢东西一定让分数上升**（东西少 → 视觉负荷低 → 硬伤少） | `--max-drops` 预算（默认 2 件）；用完引擎直接拒绝并回灌理由：「靠『不要』是解决不了容量问题的」 |
-| 7 | LLM 决定把电视柜／鞋柜／储物箱**搬去 5.1m² 的睡房** | `_room_choices` 只按面积排序，没过 `CATEGORY_ROOMS` | 提议阶段就只列**品类允许**的房间；执行阶段再校验一次 |
-| 8 | ⚠️ **渲染图是一张根本不存在的平面图** | `render_house.py` 写死 `plan_hk_a.json`，而 `house_layout.json` 由调用方写入 —— 于是跑 B 的时候用的是 **A 的墙** + B 的家具坐标 | 户型／布局／输出路径全部参数化。**这个 bug 最危险：图画出来一切正常（有房有家具还有标签），只是那间屋不存在。** |
-| 9 | 🔴 **浴室里没有马桶** | 门洞走道是固定的 900×1200 = 1.08m²，而浴室可用面积只有 **1.57m²** —— 走道吃掉 **69%** 楼面，马桶／洗手盆／淋浴间全部「放不下」，求解器最后只摆得下一块 400×30 的**镜子**（唯一塞得进剩余空隙的东西） | 走道面积上限 = 房间可用面积的 30%，深度下限 600mm。修完马桶 + 洗手盆 + 镜子全部放得下（大房间完全不受影响，16m² 客厅上限 4.8m² 依然大于 1.08m²） |
-| 10 | 🔴 **整间浴室／厨房被报成「所有家具都走不到」** | `_unreachable_items` 从门口格开始洪水填充；门口格一旦落在某件家具的 300mm 缓冲里就直接 `return 全部家具`。1.57m² 的浴室里门口格**必然**被马桶盖住 | 门口格被占时，改从**最近的自由格**开始填充；真的找不到自由格才判定全不可达 |
-
-> 第 6 条是最值得记的一条：**只要目标函数里没有「保留」，优化器就一定会学会删除。**
-> 这不是 LLM 的问题 —— 换成任何搜索算法都会干同样的事。
-
-**最终（plan_hk_b，同一份 23 件清单）**
-
-| | 基线 | LLM 闭环后 |
-|---|---|---|
-| 全屋硬伤 | 3 | **0** |
-| 客廳显大分 | 80.7 | **93.2** |
-| 待客户决定的意见 | 7 | **3** |
-| 就位 | 18/23 | 18/22（丢了 1 件，写明替代方案） |
-
-浴室最终放下 **马桶 + 洗手盆 + 镜子**（修完第 9、10 条之后）。
-
-剩下 3 条全部是「这间屋真的放不下」，而且都能量化：
-
-- 睡房净深 **1490mm**，放不下任何标准双人床（IKEA 最细床框 SLÄKT 是 1490×2000，刚好卡在边上）
-- 厨房 2.2m²，放不下雪柜 + 灶台 + 抽油烟机 + 橱柜台面
-- 浴室 1.6m²，放不下马桶 + 洗手盆 + 淋浴间
-
-**这三条正是「跨零售商比价 + 定制傢俬」的产品依据，不是 bug。**
-
-### 🔴 换户型图还暴露了「读错户型图」—— 厨房和浴室整间对调
-
-plan_hk_b 的**浴室（2.41m²）比厨房（1.72m²）大**，而 `vectorize.py` 原来
-**只按面积排名猜房名**（最大=客廳，第二大=睡房，第三=廚房，第四=浴室）。
-plan_hk_a / plan_hk_c 碰巧都对，**plan_hk_b 于是把厨房和浴室整间对调** ——
-灶台摆进了浴室，马桶摆进了厨房，而图看起来完全正常。
-
-户型图上**本来就写着房名**，应该去读它：
-
-| 做法 | 结果 |
-|---|---|
-| 按面积排名猜（原做法） | plan_hk_b：廚房/浴室 **整间对调** |
-| 模板匹配读房名（现做法） | plan_hk_a 4/5 读到、plan_hk_b 4/4、plan_hk_c 5/6；读不到的才退回排名，而且**房名互斥**（不会再出现两间「浴室」）|
-
-模板匹配（PIL 渲染 CJK 房名 + cv2 归一化相关）踩了两个坑：
-
-| # | 坑 | 后果 |
-|---|---|---|
-| 1 | **极性写反**：`bw` 里 255 已经是墨，又做了一次 `255-x` | 拿反过来的字去比，所有房名相似度 0.45-0.55 **全是噪声** |
-| 2 | **细线串字**：门弧横穿房名（plan_hk_b 的「廚房」就是这样） | 字被并进一个大组件、再因「不完整落在房内」被丢掉，整块读不到。修法：原图和 5x5 开运算（去 ≈4px 墙线/门弧、保 ≈8px 笔画）**两种都试**，取分高的 |
-
-### 🔴 还有「明明放得下床，却输出一间没有床的睡房」
-
-plan_hk_b 的睡房 **3380×1430**。实测：990×2060 的单人床在房里合法位置有 **243 个**，
-但**避开门口走道的只有 0 个** —— 两扇门在两条长边、面对面，走道加起来切断整个进深。
-所以这个房间要放床，就一定要占用门洞走道。这一条又牵出四个 bug：
-
-| # | 问题 | 修法 |
-|---|---|---|
-| 11 | 门口走道**逐扇门**各自限 30%，两扇门加起来 45% | 上限改成**所有门加起来** 30% |
-| 12 | 库里的床**最小 1490×2000**，塞唔入 1430 深的房 | 补了 **4 张单人床**（970-990 × 2060）——这是真实的库缺口 |
-| 13 | 「换细一号」只查库、不查**换完塞唔塞得入这间房** | `_pick_smaller(room=...)` 只在真塞得入时才报可行 |
-| 14 | **漏放罚分一视同仁**：睡房放唔晒 3 件时，求解器在「唔摆床」和「唔摆床头柜」之间**分数一样**，于是它选了唔摆床 | 定义房间功能的家具（床/梳化/马桶/灶台）漏放**罚 4 倍** |
-| 15 | 通道①重解 + 通道②补丁**一起裁決、一起回滚**：换细床（正确）被同一个 round 里失败的补丁拖累，之后所有轮次都用返大床 | 两个通道**各自存盘、各自裁決** |
-| 16 | 守衛写成「少咗任何一件都算输」：换细床之后**床入咗、床头柜出咗**，被判「有家具被挤走」 —— 正是唯一能救睡房的动作被自己驳回 | 改问「**总件数**有冇少 + **主体家具**有冇被挤走」，允许等量交换 |
-
-修完之后（plan_hk_b，同一份 23 件清单）：
-
-| | 基线 | LLM 闭环后 |
-|---|---|---|
-| 全屋硬伤 | 3 | **0** |
-| 睡房 | **没有床** | **床 + 衣柜 + 床头柜 + 层架，硬伤 0** |
-| 浴室 | 只有镜子 | **马桶 + 洗手盆 + 镜子** |
-| 待客户决定的意见 | 7 | **2** |
-| 就位 | 18/23 | **19/23** |
-
-剩下 2 条全部是「这间屋真係放唔落」：浴室 1.6m² 放唔落淋浴间、厨房 1.7m² 放唔落雪柜+灶台+橱柜台面。
-
-跑法：`python3 scripts/demo_llm_advisor.py --plan out/plan_hk_b.json --tag b`
-（`out/dollhouse_b_before.png` / `out/dollhouse_b_llm.png` / `out/llm_trace_b.json`）
-
-> plan_hk_b 是 **L 形客廳**（左邊 2190mm 寬的整條 + 上方 5770×1590 的橫條），
-> 所以娃娃屋看起來會和 plan_hk_a 完全不同 —— 從圓茶几和梳化的位置就能一眼分出來。
-
-## 目录结构
-
-```
-hk-space/
-├─ packages/
-│  ├─ geometry/       ★ 几何内核（v3.2 §2 / §8 的参考实现）
-│  │  └─ hkgeometry/
-│  │     ├─ units.py          单位与数值精度规范（冻结）
-│  │     ├─ types.py          Room / Placement / Layout / 视觉体量
-│  │     ├─ isovist.py        等视域、遮挡角、关键视点
-│  │     ├─ exposure.py       ★ 曝光度图（可见性 × 显著性）
-│  │     ├─ corridor.py       视觉走廊「進門要能看到窗」
-│  │     ├─ spaciousness.py   显大分 + 自动诊断
-│  │     ├─ viz.py            平面图 / 热力图 / 分数卡
-│  │     ├─ demo.py           摆法对比 Demo
-│  │     └─ _calibrate.py     参数校准扫描脚本
-│  ├─ templates/      家具 3D 参数化模板（30 个 → GLB）
-│  └─ schema/         （待写）
-├─ services/
-│  ├─ floorplan/      户型图 → Room JSON
-│  └─ layout/         （待写：求解器）
-├─ data/
-│  ├─ catalog/        150 条 SKU 种子数据
-│  └─ floorplans/     测试户型图
-├─ scripts/
-│  ├─ demo_selection.py
-│  └─ run_demo.sh
-└─ out/               所有输出图
-```
-
-## 三条必须记住的技术结论
-
-**① 曝光度在凸的矩形空房间里会退化成纯距离。**
-矩形房间任何一点都看得见任何一点。曝光度真正发挥作用要靠非凸户型
-（L 形 / 凹位 / 玄關）和家具互相遮挡。演示户型因此用 L 形。
-详见 `packages/geometry/README.md`。
-
-**② 视觉体量必须压缩。**
-原始四因子连乘公式实测 max/min = 79 倍，会让优化器只在乎一件柜子。
-取 0.45 次方压到 7.2 倍。详见 `types.py: VISUAL_MASS_EXPOSURE`。
-
-**③ 所有阈值都是校准出来的，且尚未经过人类感知验证。**
-几何自洽 != 人对得上。
-**这正是方案里 M1（视觉目标）排在 M3（训 Transformer）之前的原因：先校准靶子，再造子弹。**
-
-## 还没做
-
-见技术方案 v3.2 §23 附录 B 的审计表。Demo 阶段明确不做：
-账号 / 持久化、Pareto 多方案对比、成本模型、测试策略、多人协作。
-
-已完成：**除户型图矢量化之外的全部 Demo 关键路径**。
-
-剩下：SKU 扩到 500 → 视觉目标 M1 的人类感知校准。
-
----
-
-# 换掉自造户型图：用 Mies 的 Farnsworth House 同真人比
-
-用户 2026-10 的判断：**「你自己生成嘅户型图太奇怪，我连家具都唔知点摆」**。
-于是全部自造户型图停用，改用一栋真实建筑 + 一份真人做嘅设计方案做对照。
-
-## 为什麽是 Farnsworth House
-
-| 条件 | Farnsworth 提供嘅嘢 |
-|---|---|
-| 几何够难 | **单一开放空间 + 浮喺中央嘅服务核心**，四周全部相通 —— 等视域指标唯一有意义嘅形状（凸矩形房里会退化成纯距离） |
-| 尺寸有据 | HABS No. IL-1105 实测图 8 张（2009）+ written data（1974），所有数字可逐条核对 |
-| 有真人对照 | National Trust 展览 *Edith Farnsworth Reconsidered*（2019-20）复原嘅 c.1955 实际陈设，画成一张有比例、有 A-Z 字母嘅平面图 |
-
-## 尺度（用户要求：开工前先确认）
-
-- 图上量得室内进深 1434 px，标注 **28'-8"** → 50.02 px/ft
-- 地面水磨石格 137.5 px，大样图 [C] 标 **2'-9"** → 50.0 px/ft
-- 两条独立证据都指向 **50.0 px/ft = 6.096 mm/px**，室内 **16840 x 8656 mm**
-- 服务核心：[C] 直接印住 **24'-7 1/2" x 12'-6 1/4" = 7506 x 3816 mm**
-  ⚠️ 我自己喺 [B] 上量到嘅进深只有 3371mm（量到嘅系核心南侧柜身，唔系核心最外缘）。
-  两个读数差 445mm，`out/plan_farnsworth.json` 嘅 meta 有记录，最后采用印刷尺寸。
-
-## 新增能力：房间可以有「洞」
-
-`Room.holes` —— 房间裡「本来就存在、拆唔走」嘅实体（服务核心 / 结构柱）。
-
-为什么唔可以「切成几间房」去建模：一栋开放式单位嘅连通性同曝光度系**整个空间**
-嘅性质，切开就一齐切死。Shapely 原生支持 shell + holes，其余几何运算零改动。
-
-## 结果（`scripts/compare_farnsworth.py`）
-
-同一个空间、同一份 22 件家具清单，一边系展览复原嘅 c.1955 摆法，一边系本引擎。
-
-| | 1949-55 原设计 | 本引擎 |
-|---|---|---|
-| 放低 | 22/22 | 22/22 |
-| 绝对视觉负荷 Σ(mass×exposure)/面积 | 0.01964 | **0.01733（−11.7%）** |
-| 宜居分 / 硬伤 | 0 / **4** | **86** / 0 |
-
-图：`out/farnsworth_compare.png`；对照组逐件叠返原图核对：`out/farnsworth_target_verify.png`
-
-## ★ 真正嘅结论：唔系「引擎赢咗」
-
-原设计挨嘅 4 条硬伤，**3 条系我哋自己嘅规则错**：
-
-- `bed_head_not_against_wall` / `not_backed_to_wall`（床、衣柜唔贴墙）——
-  喺一座四面都系玻璃、家具故意浮喺空间中间嘅房子里，「贴实墙」根本唔系一条
-  可用嘅规则。呢条规则系为香港嘅实心墙细房写嘅。
-- `coffee_not_in_front` —— 真实方案里茶几系配躺椅（slipper chairs），
-  唔系配daybed。
-
-所以正确嘅讲法系：**喺一栋真实嘅 Mies 建筑上，我哋手上嘅尺系错嘅尺。**
-引擎用「把傢俬推向边界、彼此拉开」换到低 11.7% 嘅视觉负荷，
-但呢个数字嘅下降有一半系来自满足一堆唔适用嘅假设。
-这也正是 M1（视觉目标的人类感知校准）要排在 M3（训 Transformer）之前嘅原因。
-
-## 点跑
-
-```bash
-python3 services/floorplan/make_farnsworth_plan.py       # 生成 out/plan_farnsworth.json
-python3 scripts/verify_target_overlay.py                 # 对照组叠返原图核对
-python3 scripts/compare_farnsworth.py --time-limit 90    # 求解 + 出对比图（约 5 分钟）
-python3 scripts/compare_farnsworth.py --reuse            # 唔重新求解，只重画
-```
-
-对照组数据：`data/targets/farnsworth_1955.json`（每件都标咗 evidence: drawn / label / inferred）
-研究笔记：`docs/farnsworth-furnishing-research.md`
+Artifacts land in `out/` (2D plan, exposure heat map, isovist, spaciousness cards).
+
+## Web console (`apps/web/`)
+
+Python standard library plus a hand-written canvas front end — no framework, no bundler, no CDN:
+
+- **Solve** with `auto` / `cp-sat` / `progressive`, time limit, variant; overlay toggles for base image,
+  exposure heat, front clearance, door swing zones, sightlines, the 900 mm artery, labels, 500 mm grid.
+- **Edit** by dragging, nudging (50 mm, Shift 250 mm), rotating (`R`), deleting (`⌫`), undoing (`Z`);
+  every edit re-verifies through `/api/verify` after a 350 ms debounce — the engine judges, the canvas only
+  paints.
+- **Auto-repair** nudges only the stuck items (`try_nudge`) and prints the engine’s own notes.
+- **Export / import** a layout JSON; import goes back through `/api/verify`, so a hand-edited layout is
+  judged by the engine and not by the editor.
+- **Chat** (‘同設計師講’): one sentence → the LLM picks actions → deterministic code applies them → the
+  engine re-solves and re-checks. Refusals (a wardrobe may not enter a living room, per `CATEGORY_ROOMS`)
+  and unplaceable additions are stated, not hidden.
+
+Details, endpoint table and measured round trips: [`apps/web/README.md`](apps/web/README.md).
+
+## What is not done
+
+- Accounts, persistence, multi-scheme (Pareto) comparison, a cost model, collaboration.
+- A test suite (no pytest configuration anywhere; `bench_hk.py` is the current acceptance harness).
+- Uploading **your own** floor plan in the console — the page serves three built-in cases; the vectoriser
+  exists and produces a compatible Room JSON, but the upload → solve path is not wired.
+- PDF plans: `services/floorplan/pdf_extract.py` needs PyMuPDF, which is not installed here.
+- Human perception calibration of the visual target. Thresholds are geometry-calibrated, not
+  human-validated — which is why the plan orders the visual objective (M1) before training (M3).
+
+## Data, provenance and third-party files
+
+- `out/ref/*.pdf` are Hong Kong Housing Authority sales brochures kept as source evidence. They remain the
+  copyright of their publisher and are **not** covered by this repository’s licence; drop them with
+  `git rm -r out/ref` if you do not want to redistribute them.
+- `data/floorplans/plan_hk_{a,b,c}.png` are synthetic test plans generated by
+  `services/floorplan/make_test_floorplan.py`, with ground truth beside them.
+- `data/catalog/` is a small hand-curated sample of IKEA-HK-style SKUs for demos; prices are approximate.
+- API keys are read from the environment or a local credentials file and are never written into the repo,
+  logs or prompts.
+
+## Licence
+
+MIT — see [`LICENSE`](LICENSE).

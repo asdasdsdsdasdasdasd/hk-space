@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>hk-space console</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">hk-space <span>floorplan → layout → acceptance</span></div>
+  <div class="controls">
+    <select id="case"></select>
+    <select id="solver" title="solver">
+      <option value="auto">solver: auto</option>
+      <option value="cpsat">CP-SAT (house)</option>
+      <option value="progressive">progressive</option>
+    </select>
+    <input id="timelimit" type="number" min="2" max="120" step="1" value="20" title="per-room CP-SAT time limit (s)">
+    <label class="chk"><input id="parallel" type="checkbox"> parallel</label>
+    <button id="solve">Solve</button>
+    <button id="repair" class="ghost" title="local nudges by the engine (try_nudge)">Auto-repair</button>
+    <button id="variant" class="ghost" title="re-run with another variant seed">Another variant</button>
+    <button id="undo" class="ghost">Undo</button>
+    <button id="reset" class="ghost">Reset</button>
+    <button id="export" class="ghost">Export JSON</button>
+    <input id="import" type="file" accept=".json,application/json" title="load an exported layout back and re-verify it with the engine">
+  </div>
+</header>
+
+<main>
+  <section id="stage">
+    <div id="toolbar">
+      <span class="grp">overlay</span>
+      <label class="chk" title="底圖：掃描／官方平面圖，45% 透明疊喺下面"><input type="checkbox" data-t="image"> plan image</label>
+      <label class="chk" title="曝光度熱力：exposure_map 逐格 0-100，橙色越深越擋視線"><input type="checkbox" data-t="heat"> exposure heat</label>
+      <label class="chk" title="傢俬正前方淨空（approach_zone）：開櫃門／拉抽屜要用嘅位"><input type="checkbox" data-t="clear" checked> front clearance</label>
+      <label class="chk" title="門扇掃掠區（door_approach_zones）：門開盡時掃過嘅扇形"><input type="checkbox" data-t="doorz" checked> door swing zone</label>
+      <label class="chk" title="視線走廊（corridor_reports）：紅＝被擋住嘅走廊線"><input type="checkbox" data-t="corridor" checked> sightlines</label>
+      <label class="chk" title="900 mm 主通道淨空區：入口房間減去傢俬，再向內侵蝕 450 mm 淨低嘅位；綠＝通，紅＝斷開"><input type="checkbox" data-t="artery"> 900mm artery</label>
+      <label class="chk" title="房間名 + 面積（有底色，唔會被傢俬蓋住）"><input type="checkbox" data-t="labels" checked> labels</label>
+      <label class="chk" title="500 mm 網格，方便估尺寸"><input type="checkbox" data-t="grid"> 500mm grid</label>
+      <span class="spacer"></span>
+      <span id="hint">drag a piece · <kbd>R</kbd> rotate · <kbd>⌫</kbd> unplace · <kbd>Z</kbd> undo</span>
+    </div>
+    <canvas id="cv"></canvas>
+    <div id="status"></div>
+  </section>
+
+  <aside id="panel">
+    <section id="chat">
+      <div class="chat-h"><b>同設計師講</b><span class="sub">講一句 → 引擎重新解算</span></div>
+      <div id="chatlog">
+        <div class="msg bot"><b>設計師</b><div class="txt">你講要求，我揀動作；擺位同核查交返引擎。例如「客廳多一個書架」。</div></div>
+      </div>
+      <form id="chatf">
+        <textarea id="chatmsg" rows="2" placeholder="例如：加多一個衣櫃喺主人房"></textarea>
+        <button id="chatsend" type="submit">Send</button>
+      </form>
+      <div class="chips">
+        <button type="button" class="chip">加多一個衣櫃喺主人房</button>
+        <button type="button" class="chip">客廳多一個書架</button>
+        <button type="button" class="chip">客廳想多啲走動空間</button>
+      </div>
+    </section>
+
+    <div id="headline"></div>
+    <nav id="tabs">
+      <button data-tab="checks" class="on">Acceptance</button>
+      <button data-tab="space">Spaciousness</button>
+      <button data-tab="items">Items</button>
+    </nav>
+    <div id="tab-checks" class="tab on"></div>
+    <div id="tab-space" class="tab"></div>
+    <div id="tab-items" class="tab"></div>
+    <div id="notes"></div>
+  </aside>
+</main>
+<script src="/static/app.js"></script>
+</body>
+</html>
